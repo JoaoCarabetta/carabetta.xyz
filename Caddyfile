@@ -1,0 +1,8 @@
+carabetta.xyz, www.carabetta.xyz {
+    root * /var/www/carabetta.xyz
+    file_server
+    encode gzip
+
+    @www host www.carabetta.xyz
+    redir @www https://carabetta.xyz{uri} permanent
+}

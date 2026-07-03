@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>joão carabetta</title>
+<meta name="description" content="physicist by training. builds public data infrastructure in Brazil.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,500;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAFAF7;
+    --ink:#141414;
+    --ink-soft:#6b6b66;
+    --azulejo:#2447c9;      /* portuguese-tile blue */
+    --night:#070b14;
+    --cyan:#5fd7ff;
+    --amber:#ffc46b;
+    --green:#7dffa8;
+    --rose:#ff7d9c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:300;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit}
+
+  /* ---------- HOME ---------- */
+  #home{
+    min-height:100svh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:8vh 8vw;
+    gap:3.2rem;
+  }
+  .name{
+    font-size:clamp(1.05rem,2vw,1.25rem);
+    font-weight:500;
+    letter-spacing:.02em;
+  }
+  .name::after{
+    content:"";
+    display:inline-block;
+    width:.55em;height:1.05em;
+    background:var(--ink);
+    margin-left:.35em;
+    vertical-align:text-bottom;
+    animation:blink 1.15s steps(1) infinite;
+  }
+  @keyframes blink{50%{opacity:0}}
+  .bio{
+    max-width:38ch;
+    font-size:clamp(.85rem,1.6vw,.95rem);
+    line-height:1.85;
+    color:var(--ink-soft);
+  }
+  .bio b{font-weight:400;color:var(--ink)}
+
+  .portals{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.6rem 2.4rem;
+    font-size:clamp(.95rem,1.9vw,1.1rem);
+  }
+  .portal-link{
+    background:none;border:none;cursor:pointer;
+    font:inherit;color:var(--ink);
+    padding:.35rem 0;
+    position:relative;
+    letter-spacing:.02em;
+    text-align:left;
+  }
+  .portal-link span{
+    white-space:nowrap;
+    border-bottom:1px solid var(--azulejo);
+    transition:color .2s,border-color .2s;
+  }
+  .portal-link span::before{content:"[ ";color:var(--ink-soft)}
+  .portal-link span::after {content:" ]";color:var(--ink-soft)}
+  .portal-link:hover span,
+  .portal-link:focus-visible span{color:var(--azulejo)}
+  .portal-link:focus-visible{outline:2px solid var(--azulejo);outline-offset:4px}
+  .portal-hint{
+    display:block;
+    font-size:.62rem;
+    color:var(--ink-soft);
+    margin-top:.15rem;
+    letter-spacing:.06em;
+    opacity:0;
+    transition:opacity .2s;
+    font-style:normal;
+  }
+  .portal-link:hover .portal-hint,
+  .portal-link:focus-visible .portal-hint{opacity:1}
+
+  footer{
+    font-size:.68rem;
+    color:var(--ink-soft);
+    display:flex;
+    flex-wrap:wrap;
+    gap:.4rem 1.4rem;
+    letter-spacing:.04em;
+  }
+  footer a{
+    text-decoration:none;
+    border-bottom:1px dotted var(--ink-soft);
+    transition:color .2s,border-color .2s;
+  }
+  footer a:hover{color:var(--azulejo);border-color:var(--azulejo)}
+
+  /* ---------- PORTAL SHELL ---------- */
+  .portal{
+    position:fixed;inset:0;
+    background:var(--night);
+    color:#e8e8e2;
+    z-index:50;
+    display:none;
+    overflow:hidden;
+  }
+  .portal.open{display:block;animation:portalIn .45s cubic-bezier(.2,.9,.25,1)}
+  @keyframes portalIn{
+    from{clip-path:circle(0% at var(--cx,50%) var(--cy,50%))}
+    to{clip-path:circle(140% at var(--cx,50%) var(--cy,50%))}
+  }
+  .portal canvas{position:absolute;inset:0;width:100%;height:100%}
+  .portal-ui{
+    position:absolute;inset:0;
+    pointer-events:none;
+    display:flex;flex-direction:column;
+    justify-content:space-between;
+    padding:clamp(1.2rem,4vw,3rem);
+  }
+  .portal-ui>*{pointer-events:none}
+  .portal-ui button, .portal-ui a{pointer-events:auto}
+  .portal-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
+  .portal-title{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;
+    font-size:clamp(2.2rem,7vw,5rem);
+    line-height:.95;
+    letter-spacing:-.02em;
+  }
+  .portal-kicker{
+    font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;
+    color:rgba(255,255,255,.45);margin-bottom:.6rem;
+  }
+  .portal-close{
+    background:none;border:1px solid rgba(255,255,255,.3);
+    color:#e8e8e2;font-family:'IBM Plex Mono',monospace;
+    font-size:.7rem;letter-spacing:.1em;
+    padding:.55rem .9rem;cursor:pointer;border-radius:2rem;
+    transition:border-color .2s,color .2s;
+    flex-shrink:0;
+  }
+  .portal-close:hover,.portal-close:focus-visible{border-color:#fff;color:#fff}
+  .portal-close:focus-visible{outline:2px solid #fff;outline-offset:3px}
+  .portal-bottom{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    gap:2rem;flex-wrap:wrap;
+  }
+  .portal-copy{
+    max-width:46ch;font-size:.78rem;line-height:1.8;
+    color:rgba(255,255,255,.72);
+    pointer-events:auto;
+  }
+  .portal-copy b{color:#fff;font-weight:500}
+  .portal-copy a{color:inherit;text-decoration:none;border-bottom:1px dotted rgba(255,255,255,.5)}
+  .portal-copy a:hover{color:#fff;border-color:#fff}
+  .portal-stat{
+    text-align:right;font-size:.68rem;letter-spacing:.08em;
+    color:rgba(255,255,255,.5);line-height:2;
+    pointer-events:auto;
+    display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;
+  }
+  .portal-stat b{
+    display:block;
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;font-size:clamp(1.4rem,3.4vw,2.2rem);
+    letter-spacing:0;color:#fff;
+  }
+  .hint{
+    font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+    color:rgba(255,255,255,.35);
+  }
+  .idea-btn{
+    background:none;border:1px solid rgba(255,255,255,.3);
+    color:#e8e8e2;font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;letter-spacing:.1em;
+    padding:.5rem .95rem;cursor:pointer;border-radius:2rem;
+    transition:border-color .2s,color .2s,background .2s;
+  }
+  .idea-btn:hover,.idea-btn:focus-visible{border-color:#fff;color:#000;background:#fff}
+  .idea-btn:focus-visible{outline:2px solid #fff;outline-offset:3px}
+
+  /* ---------- IDEA PANEL ---------- */
+  .idea-panel{
+    position:absolute;inset:0;
+    background:rgba(4,6,12,.78);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    z-index:5;
+    display:none;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+  }
+  .idea-panel.open{display:block;animation:fadeIn .3s ease}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .idea-inner{
+    max-width:62ch;
+    margin:0 auto;
+    padding:clamp(4.5rem,10vh,7rem) clamp(1.4rem,5vw,2rem) 6rem;
+    font-size:.8rem;
+    line-height:2;
+    color:rgba(255,255,255,.78);
+  }
+  .idea-inner h3{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;
+    font-size:clamp(1.5rem,4vw,2.2rem);
+    line-height:1.1;
+    color:#fff;
+    margin-bottom:2rem;
+    letter-spacing:-.01em;
+  }
+  .idea-inner h4{
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:500;
+    font-size:.68rem;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,.45);
+    margin:2.6rem 0 .9rem;
+  }
+  .idea-inner p{margin-bottom:1.1rem}
+  .idea-inner b{color:#fff;font-weight:500}
+  .idea-inner em{font-style:italic;color:rgba(255,255,255,.9)}
+  .idea-inner a{
+    color:#fff;text-decoration:none;
+    border-bottom:1px dotted rgba(255,255,255,.5);
+  }
+  .idea-inner a:hover{border-bottom-style:solid}
+  .idea-close{
+    position:sticky;
+    top:1.2rem;
+    float:right;
+    margin-right:clamp(1.2rem,4vw,3rem);
+    background:rgba(7,11,20,.6);
+    border:1px solid rgba(255,255,255,.3);
+    color:#e8e8e2;font-family:'IBM Plex Mono',monospace;
+    font-size:.7rem;letter-spacing:.1em;
+    padding:.55rem .9rem;cursor:pointer;border-radius:2rem;
+    z-index:6;
+  }
+  .idea-close:hover{border-color:#fff;color:#fff}
+  .artifact-list{list-style:none;margin-bottom:1.1rem}
+  .artifact-list li{
+    padding:.55rem 0;
+    border-bottom:1px dashed rgba(255,255,255,.15);
+    display:flex;gap:1rem;flex-wrap:wrap;align-items:baseline;
+  }
+  .artifact-list li:first-child{border-top:1px dashed rgba(255,255,255,.15)}
+  .artifact-list .what{color:rgba(255,255,255,.55);font-size:.72rem}
+
+  @media (max-width:640px){
+    .portal-bottom{flex-direction:column;align-items:flex-start}
+    .portal-stat{text-align:left;align-items:flex-start}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .name::after{animation:none}
+    .portal.open{animation:none}
+    .idea-panel.open{animation:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HOME ================= -->
+<main id="home">
+  <h1 class="name">joão carabetta</h1>
+
+  <p class="bio">
+    physicist by training.<br>
+    i build <b>public data infrastructure</b> in Brazil —<br>
+    open datasets, city platforms, and the tools between them.<br>
+    São Paulo, via Rio, Campinas &amp; London.
+  </p>
+
+  <nav class="portals" aria-label="portals">
+    <button class="portal-link" data-portal="p-dados"><span>data</span><em class="portal-hint">open data for 200 million people</em></button>
+    <button class="portal-link" data-portal="p-cidade"><span>city</span><em class="portal-hint">a city that can see itself</em></button>
+    <button class="portal-link" data-portal="p-ferramentas"><span>tools</span><em class="portal-hint">the geometry of territory</em></button>
+    <button class="portal-link" data-portal="p-pesquisa"><span>research</span><em class="portal-hint">the few forces that matter</em></button>
+  </nav>
+
+  <footer>
+    <a href="https://github.com/JoaoCarabetta" target="_blank" rel="noopener">github</a>
+    <a href="https://www.linkedin.com/in/joaocarabetta" target="_blank" rel="noopener">linkedin</a>
+    <a href="https://x.com/JoaoCarabetta" target="_blank" rel="noopener">x</a>
+    <a href="https://medium.com/@joaocarabetta" target="_blank" rel="noopener">medium</a>
+    <a href="https://basedosdados.org" target="_blank" rel="noopener">Base dos Dados</a>
+    <a href="mailto:hello@example.com">email</a>
+  </footer>
+</main>
+
+<!-- ================= PORTAL: DADOS ================= -->
+<section class="portal" id="p-dados" role="dialog" aria-modal="true" aria-label="data">
+  <canvas></canvas>
+
+  <div class="idea-panel" id="idea-dados">
+    <button class="idea-close">close ✕</button>
+    <div class="idea-inner">
+      <h3>public data should be infrastructure, not paperwork.</h3>
+
+      <h4>the idea</h4>
+      <p>Brazil produces extraordinary public data — censuses, elections, budgets,
+      schools, hospitals, every formal company and every formal job. but for decades
+      it lived scattered across hundreds of portals, each with its own formats,
+      encodings, broken links and undocumented quirks. the data was <em>technically</em>
+      public and <em>practically</em> inaccessible. access was rationed by suffering:
+      only people with time and engineering skills could use it.</p>
+      <p>the idea behind <b>Base dos Dados</b> is that access to quality public data
+      should behave like infrastructure — like a road: built once, maintained
+      centrally, free at the point of use. we clean the datasets once, standardize
+      the identifiers so tables actually join with each other (a municipality is the
+      same municipality in the census, the election and the budget), document
+      everything, and put it all in one warehouse anyone can query with plain SQL.</p>
+      <p>the trick that made it economically possible: hosting the data lake on
+      BigQuery, where the <em>consumption</em> cost is paid by the user — and since
+      every user gets a free monthly quota, most people pay nothing. a small
+      nonprofit could suddenly serve an entire country without owning a single
+      server. marginal cost of a query: approximately zero.</p>
+
+      <h4>where it started</h4>
+      <p>in 2015, during a strike at UNICAMP, i co-founded <b>UNICAMP
+      Transparency</b> — a student collective that used data to answer what the strike
+      was really about and how deep the budget cuts went. coordinating fifteen
+      contributors and defending analyses in front of assemblies of five hundred
+      people taught me the founding lesson: transparency is not a document, it's a
+      capability.</p>
+
+      <h4>what exists today</h4>
+      <p>Base dos Dados became a national reference for open data in Brazil —
+      hundreds of treated datasets, client packages in python, R and stata, and
+      millions of queries served. the methodology is written up in
+      <em>Data Basis: Universalizing Access to High-Quality Data</em>
+      (dahis, carabetta, scovino, israel &amp; oliveira, 2022).</p>
+
+      <h4>artifacts</h4>
+      <ul class="artifact-list">
+        <li><a href="https://basedosdados.org" target="_blank" rel="noopener">basedosdados.org</a><span class="what">the platform</span></li>
+        <li><a href="https://github.com/basedosdados/sdk" target="_blank" rel="noopener">basedosdados/sdk</a><span class="what">data lake maintenance code &amp; access packages</span></li>
+        <li><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4157813" target="_blank" rel="noopener">the paper (ssrn, 2022)</a><span class="what">how and why we built it</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="portal-ui">
+    <div class="portal-top">
+      <div>
+        <div class="portal-kicker">2015 → today · UNICAMP Transparency → Base dos Dados</div>
+        <h2 class="portal-title">open<br>data</h2>
+      </div>
+      <button class="portal-close">esc / close</button>
+    </div>
+    <div class="portal-bottom">
+      <p class="portal-copy">
+        every dot is public data waiting to be used. i co-founded
+        <a href="https://basedosdados.org" target="_blank" rel="noopener"><b>Base dos Dados</b></a>,
+        a nonprofit that cleans, standardizes and centralizes Brazil's public
+        datasets in one warehouse — free at the point of use, for a country of
+        200 million. move your cursor through the country. click to send a query.
+      </p>
+      <div class="portal-stat">
+        <b id="dados-counter">0</b>
+        queries and counting
+        <button class="idea-btn" data-idea="idea-dados">[ the idea ]</button>
+        <span class="hint">move · click · esc to leave</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PORTAL: CIDADE ================= -->
+<section class="portal" id="p-cidade" role="dialog" aria-modal="true" aria-label="city">
+  <canvas></canvas>
+
+  <div class="idea-panel" id="idea-cidade">
+    <button class="idea-close">close ✕</button>
+    <div class="idea-inner">
+      <h3>a city that can see itself can act before problems become crises.</h3>
+
+      <h4>the idea</h4>
+      <p>governments are usually blind in real time. the data exists — buses
+      broadcast GPS, schools take attendance, clinics log visits, citizens open
+      tickets — but it arrives late, trapped in silos, in formats nobody can join.
+      so the city governs by anecdote and quarterly report. my work in Rio was
+      about closing that loop: turning the city's own exhaust of records into a
+      live, governed, queryable picture of itself.</p>
+
+      <h4>where it started: the buses</h4>
+      <p>in 2021 i joined Rio's <b>transport department</b> to lead data
+      science. the first request sounded small: Rio's buses had carried GPS since
+      2011, but the feed was barely used. we built the pipeline to capture and
+      process it — every ping, every line, every operator — so the city could
+      finally answer basic questions: which bus passes where, at what headway,
+      and whether the companies were delivering the service they were paid for.
+      one live feed, honestly captured, changed the terms of an entire public
+      service conversation.</p>
+
+      <h4>data office → the data lake</h4>
+      <p>that pipeline became the seed of the <b>Data Office</b>, the
+      city's data office, which i founded and ran. in june 2022 we launched Rio's
+      <b>municipal data lake</b>: a single governed platform centralizing the
+      operational data of the whole city government — transport, health,
+      education, citizen services. it grew past <b>4.7 billion records</b>, feeding
+      real-time dashboards managers actually use: classroom attendance, health
+      visits, tickets on the 1746 citizen hotline. google cloud later featured the
+      office among its global public-sector cases, alongside governments of the
+      uk, netherlands and finland, the us air force and nasa.</p>
+
+      <h4>running the machine: iplanrio</h4>
+      <p>from there i became the city's chief data officer, then chief executive
+      of technology, and in 2025 president of <b>iplanrio</b> — Rio's municipal
+      technology company, founded in 1979, responsible for the systems the city
+      runs on: the 1746 hotline, carioca digital, processo.rio, and the health
+      network's information systems, including opening the city's health
+      statistics through tabnet. the job of a public technology company, as i
+      see it: make the invisible plumbing so reliable that citizens never have
+      to think about it. i led iplanrio until 2026.</p>
+
+      <h4>the principle</h4>
+      <p>real-time data changes the <em>tense</em> of government. a city that
+      only sees the past can only apologize; a city that sees the present can
+      dispatch a repair crew, call a family whose kid stopped showing up to
+      school, fix the bus line this week. that shift — from reactive to
+      proactive — is worth more than any dashboard.</p>
+
+      <h4>artifacts</h4>
+      <ul class="artifact-list">
+        <li><a href="https://dados.rio" target="_blank" rel="noopener">dados.rio</a><span class="what">Rio's open data portal &amp; data office</span></li>
+        <li><a href="https://cloud.google.com/customers/intl/pt-br/escritorio-de-dados-da-cidade-do-rio-de-janeiro?hl=pt-BR" target="_blank" rel="noopener">google cloud case study</a><span class="what">the data lake story, told from outside</span></li>
+        <li><a href="https://iplanrio.prefeitura.rio" target="_blank" rel="noopener">iplanrio</a><span class="what">the municipal technology company</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="portal-ui">
+    <div class="portal-top">
+      <div>
+        <div class="portal-kicker">2021 → 2026 · transport department → data office → president, iplanrio</div>
+        <h2 class="portal-title">the city<br>in real time</h2>
+      </div>
+      <button class="portal-close">esc / close</button>
+    </div>
+    <div class="portal-bottom">
+      <p class="portal-copy">
+        it started with one question: <b>where are the buses, right now?</b>
+        capturing Rio's live bus GPS feed became the seed of the
+        <b>Data Office</b> — and then a data platform for the whole city:
+        transport, health, education, citizen services, 4.7 billion records and
+        growing. i ran <b>iplanrio</b>, Rio's municipal technology company, until
+        2026. each moving light is a simulated bus on its route.
+      </p>
+      <div class="portal-stat">
+        <b id="bus-counter">0</b>
+        buses pinging their position
+        <button class="idea-btn" data-idea="idea-cidade">[ the idea ]</button>
+        <button class="idea-btn" id="rush-btn">rush hour</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PORTAL: FERRAMENTAS ================= -->
+<section class="portal" id="p-ferramentas" role="dialog" aria-modal="true" aria-label="tools">
+  <canvas></canvas>
+
+  <div class="idea-panel" id="idea-ferramentas">
+    <button class="idea-close">close ✕</button>
+    <div class="idea-inner">
+      <h3>cities speak geometry. tools should make geometry cheap.</h3>
+
+      <h4>the idea</h4>
+      <p>almost every hard question about a territory — where to put a clinic,
+      which streets flood, who lives more than thirty minutes from a school —
+      is secretly a geometry problem. and geometry, in practice, is where
+      analyses go to die: incompatible grid systems, gigantic polygons that
+      crash your queries, boundary files scattered across government FTP
+      servers. i build small, sharp open-source tools that remove exactly those
+      frictions, so that the analyst's afternoon is spent on the question, not
+      the plumbing. what you're seeing behind this text is the core trick:
+      <b>the same territory, readable at every resolution</b>.</p>
+
+      <h4>the tools</h4>
+      <p><b>babelgrid</b> — the world has several competing ways of dicing the
+      planet into cells (google's S2, uber's H3, quadtrees…). babelgrid is one
+      python API that speaks all of them, so you can pick a grid system the way
+      you pick a unit of measure. built and published open source with the
+      Inter-American Development Bank.</p>
+      <p><b>geobr</b> — official Brazilian spatial datasets (municipalities,
+      states, census tracts, biomes…) one function call away, in R and python.
+      i maintain the python side of this IPEA project — one of the most-used
+      geospatial libraries in the country.</p>
+      <p><b>osmpy</b> — a wrapper around openstreetmap's overpass API that lets
+      you query regions of any size and shape; it includes a "katana" routine
+      that slices huge polygons into digestible pieces so big-area queries stop
+      timing out.</p>
+      <p><b>isometric</b> — walking-distance polygons from any point in a city:
+      the honest answer to "what is actually nearby?"</p>
+
+      <h4>data pipelines with the same spirit</h4>
+      <p>at the <b>Inter-American Development Bank</b> i helped build the
+      <b>coronavirus impact dashboard</b>: during the pandemic, we turned waze's
+      traffic feeds into a daily congestion index for cities across Latin America
+      — a near-real-time measure of how much life had stopped, published openly
+      while the crisis was still unfolding. the same season, as a volunteer, i
+      worked on <b>farolcovid</b>, an open tool monitoring the risk of hospital
+      collapse in Brazilian municipalities.</p>
+
+      <h4>the principle</h4>
+      <p>open source is public policy by other means. a good library is a
+      subsidy paid to every future analyst, in every city, forever. i would
+      rather ship a boring, reliable tool that a thousand strangers quietly
+      depend on than a flashy report nobody can reproduce.</p>
+
+      <h4>artifacts</h4>
+      <ul class="artifact-list">
+        <li><a href="https://github.com/EL-BID/BabelGrid" target="_blank" rel="noopener">babelgrid</a><span class="what">one API for every grid system</span></li>
+        <li><a href="https://github.com/ipea/geobr" target="_blank" rel="noopener">geobr</a><span class="what">Brazil's official spatial data, one call away</span></li>
+        <li><a href="https://github.com/JoaoCarabetta/osmpy" target="_blank" rel="noopener">osmpy</a><span class="what">openstreetmap at any scale</span></li>
+        <li><a href="https://github.com/JoaoCarabetta/isometric" target="_blank" rel="noopener">isometric</a><span class="what">walking-distance polygons</span></li>
+        <li><a href="https://github.com/EL-BID/IDB-IDB-Invest-Coronavirus-Impact-Dashboard" target="_blank" rel="noopener">coronavirus impact dashboard</a><span class="what">waze feeds → congestion index for Latin America</span></li>
+        <li><a href="https://github.com/ImpulsoGov/farolcovid" target="_blank" rel="noopener">farolcovid</a><span class="what">hospital-collapse risk monitor</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="portal-ui">
+    <div class="portal-top">
+      <div>
+        <div class="portal-kicker">open source · geospatial · S2, H3, OSM, waze</div>
+        <h2 class="portal-title">the geometry<br>of territory</h2>
+      </div>
+      <button class="portal-close">esc / close</button>
+    </div>
+    <div class="portal-bottom">
+      <p class="portal-copy">
+        the questions cities ask — where to build, who is far from what, which
+        streets flood — are geometry problems in disguise. i build and maintain
+        open-source tools that make that geometry cheap:
+        <b>babelgrid</b>, <b>geobr</b>, <b>osmpy</b>, <b>isometric</b>, and
+        pipelines that turned waze feeds into a live congestion index for Latin
+        America. bring your cursor closer and the territory refines itself.
+      </p>
+      <div class="portal-stat">
+        <b>1 api</b>
+        for every grid system
+        <button class="idea-btn" data-idea="idea-ferramentas">[ the idea ]</button>
+        <span class="hint">move to refine the grid</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PORTAL: PESQUISA ================= -->
+<section class="portal" id="p-pesquisa" role="dialog" aria-modal="true" aria-label="research">
+  <canvas></canvas>
+
+  <div class="idea-panel" id="idea-pesquisa">
+    <button class="idea-close">close ✕</button>
+    <div class="idea-inner">
+      <h3>reduce a messy system to the few forces that matter.</h3>
+
+      <h4>the idea</h4>
+      <p>i trained as a physicist at <b>UNICAMP</b>, and physics left me one
+      permanent habit: in any complicated system — a galaxy, a bus network, a
+      procurement office — most of the variables are noise, and a handful of
+      forces explain almost everything. the craft is finding those forces,
+      modelling them honestly, and not being intimidated by the mess around
+      them. instead of a physics phd, i took that habit to
+      <b>FGV/EMAp</b>, where i did a master's in mathematical modelling — at the
+      time the only program in Brazil teaching modern applied math with its
+      hands on real policy problems.</p>
+
+      <h4>congress, in numbers</h4>
+      <p>during the master's i worked at FGV's <b>Center for Technology and
+      Society</b>, publishing data analyses in the national press — including
+      <b>Congress in Numbers</b>, a project that treated the national
+      congress itself as a dataset: votes, speeches, amendments, money. the
+      lesson: institutions become legible when you count them, and legibility
+      changes how they behave.</p>
+
+      <h4>procurement, in probabilities</h4>
+      <p>in 2019 i was a fellow at the <b>Alan Turing Institute</b>'s data
+      science for social good program (with the University of Warwick), working
+      with Paraguay's national procurement agency, the <b>DNCP</b>. the agency
+      reviews roughly 13,000 public tenders a year with about thirty officials
+      and a three-day window per tender — attention is the scarcest resource in
+      the room. we built a model that ranks incoming tenders by risk of
+      irregularity, so reviewers spend their limited hours where the taxpayer's
+      money is actually in danger. anti-corruption work, done as a
+      prioritization problem.</p>
+
+      <h4>development, in evidence</h4>
+      <p>as a consultant at the <b>Inter-American Development Bank</b>'s office
+      of strategic planning and development effectiveness, i worked on turning
+      novel data sources into evidence for policy across Latin America — most
+      visibly the waze-based coronavirus impact dashboard, and analyses of
+      pandemic-era air quality in the region's cities.</p>
+
+      <h4>papers &amp; writing</h4>
+      <ul class="artifact-list">
+        <li><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4157813" target="_blank" rel="noopener">data basis: universalizing access to high-quality data (2022)</a><span class="what">with dahis, scovino, israel &amp; oliveira</span></li>
+        <li><a href="https://www.turing.ac.uk/collaborate-turing/data-science-social-good/summer-2019" target="_blank" rel="noopener">dssg 2019 — reducing corruption in public procurement</a><span class="what">Turing Institute × DNCP Paraguay</span></li>
+        <li><a href="https://blogs.iadb.org/efectividad-desarrollo/en/author/joaocarabetta/" target="_blank" rel="noopener">idb development effectiveness blog</a><span class="what">pandemic mobility &amp; air quality series</span></li>
+        <li><a href="https://medium.com/@joaocarabetta" target="_blank" rel="noopener">medium</a><span class="what">occasional writing</span></li>
+      </ul>
+
+      <h4>the toy behind this text</h4>
+      <p>an n-body gravity simulation — the physicist's oldest reminder that
+      simple forces, honestly computed, produce behavior nobody could have
+      guessed by staring at the equations. click anywhere to drop a body; hold
+      to make it a star.</p>
+    </div>
+  </div>
+
+  <div class="portal-ui">
+    <div class="portal-top">
+      <div>
+        <div class="portal-kicker">UNICAMP physics → FGV applied math → Turing Institute → IDB</div>
+        <h2 class="portal-title">research</h2>
+      </div>
+      <button class="portal-close">esc / close</button>
+    </div>
+    <div class="portal-bottom">
+      <p class="portal-copy">
+        before the platforms, there was physics at <b>UNICAMP</b> and mathematical
+        modelling at <b>FGV/EMAp</b>. the habit stuck: reduce a messy system to the
+        few forces that matter — congress votes, risky tenders in Paraguay,
+        pandemic traffic across Latin America. this is an n-body gravity toy —
+        <b>click to drop a body</b>, hold to make it a star, and watch the orbits
+        find their own order. or not.
+      </p>
+      <div class="portal-stat">
+        <b id="body-counter">3</b>
+        bodies in the system
+        <button class="idea-btn" data-idea="idea-pesquisa">[ the idea ]</button>
+        <span class="hint">click · hold · esc to leave</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+"use strict";
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ============ portal shell ============ */
+let activePortal = null, activeLoop = null;
+const loops = {};
+
+function openPortal(id, x, y){
+  const el = document.getElementById(id);
+  el.style.setProperty("--cx", x + "px");
+  el.style.setProperty("--cy", y + "px");
+  el.classList.add("open");
+  document.body.style.overflow = "hidden";
+  activePortal = el;
+  const canvas = el.querySelector("canvas");
+  activeLoop = loops[id];
+  activeLoop && activeLoop.start(canvas);
+  el.querySelector(".portal-close").focus();
+}
+function closePortal(){
+  if(!activePortal) return;
+  activeLoop && activeLoop.stop();
+  activePortal.querySelectorAll(".idea-panel.open").forEach(p=>p.classList.remove("open"));
+  activePortal.classList.remove("open");
+  document.body.style.overflow = "";
+  activePortal = null; activeLoop = null;
+}
+document.querySelectorAll(".portal-link").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const r = btn.getBoundingClientRect();
+    openPortal(btn.dataset.portal, r.left + r.width/2, r.top + r.height/2);
+  });
+});
+document.querySelectorAll(".portal-close").forEach(b => b.addEventListener("click", closePortal));
+
+/* idea panels */
+document.querySelectorAll(".idea-btn[data-idea]").forEach(b => {
+  b.addEventListener("click", () => {
+    document.getElementById(b.dataset.idea).classList.add("open");
+  });
+});
+document.querySelectorAll(".idea-close").forEach(b => {
+  b.addEventListener("click", () => b.closest(".idea-panel").classList.remove("open"));
+});
+
+addEventListener("keydown", e => {
+  if(e.key !== "Escape") return;
+  const openPanel = document.querySelector(".idea-panel.open");
+  if(openPanel){ openPanel.classList.remove("open"); return; }
+  closePortal();
+});
+
+function fitCanvas(canvas){
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  canvas.width  = canvas.clientWidth  * dpr;
+  canvas.height = canvas.clientHeight * dpr;
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return ctx;
+}
+
+/* ============ DADOS: brazil as a dot-cloud ============ */
+const BR = [[-51.7,4.4],[-60.0,5.2],[-64.0,4.1],[-67.1,1.9],[-70.0,0.6],[-69.9,-4.2],
+[-73.6,-6.5],[-73.0,-9.4],[-70.5,-11.0],[-65.3,-11.5],[-64.3,-12.5],[-60.5,-13.8],
+[-60.2,-16.3],[-58.4,-16.3],[-58.2,-19.8],[-57.8,-22.1],[-55.7,-22.3],[-55.4,-23.9],
+[-53.8,-26.0],[-53.6,-26.9],[-56.3,-28.9],[-57.6,-30.2],[-53.4,-33.7],[-51.0,-31.8],
+[-48.5,-28.6],[-48.6,-26.2],[-46.6,-24.1],[-44.6,-23.1],[-41.9,-22.9],[-40.9,-21.3],
+[-39.7,-19.4],[-39.2,-17.7],[-39.0,-15.0],[-37.0,-11.0],[-35.0,-8.0],[-34.8,-6.9],
+[-35.5,-5.1],[-37.2,-4.7],[-39.9,-2.8],[-42.9,-2.6],[-44.3,-2.5],[-46.0,-1.0],
+[-48.5,-0.2],[-50.0,0.1],[-51.3,4.0]];
+function pointInPoly(x,y,poly){
+  let inside=false;
+  for(let i=0,j=poly.length-1;i<poly.length;j=i++){
+    const xi=poly[i][0],yi=poly[i][1],xj=poly[j][0],yj=poly[j][1];
+    if(((yi>y)!==(yj>y)) && (x < (xj-xi)*(y-yi)/(yj-yi)+xi)) inside=!inside;
+  }
+  return inside;
+}
+loops["p-dados"] = (() => {
+  let ctx, canvas, raf, dots=[], mouse={x:-9999,y:-9999}, pulses=[], count=2481203;
+  const counterEl = () => document.getElementById("dados-counter");
+  function project(lon,lat,w,h){
+    const m = Math.min(w,h)*0.10;
+    const sx=(w-2*m)/40, sy=(h-2*m)/40, s=Math.min(sx,sy);
+    const cx=w/2, cy=h/2;
+    return [cx + (lon+54)*s, cy - (lat+14)*s];
+  }
+  function build(){
+    dots=[];
+    const w=canvas.clientWidth, h=canvas.clientHeight;
+    const n = w<640? 1400 : 3200;
+    let tries=0;
+    while(dots.length<n && tries<n*40){
+      tries++;
+      const lon=-74+Math.random()*40, lat=-34+Math.random()*40;
+      if(!pointInPoly(lon,lat,BR)) continue;
+      const [x,y]=project(lon,lat,w,h);
+      dots.push({x,y,ox:x,oy:y,vx:0,vy:0,tw:Math.random()*Math.PI*2});
+    }
+  }
+  function frame(){
+    const w=canvas.clientWidth, h=canvas.clientHeight;
+    ctx.fillStyle="#070b14"; ctx.fillRect(0,0,w,h);
+    for(let i=pulses.length-1;i>=0;i--){
+      const p=pulses[i]; p.r+=4.5; p.a*=.96;
+      if(p.a<.01){pulses.splice(i,1);continue;}
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,7);
+      ctx.strokeStyle=`rgba(95,215,255,${p.a})`; ctx.lineWidth=1.2; ctx.stroke();
+    }
+    for(const d of dots){
+      const dx=d.x-mouse.x, dy=d.y-mouse.y, dist2=dx*dx+dy*dy;
+      if(dist2<8100){
+        const dist=Math.sqrt(dist2)||1, f=(90-dist)/90*1.6;
+        d.vx+=dx/dist*f; d.vy+=dy/dist*f;
+      }
+      for(const p of pulses){
+        const px=d.x-p.x, py=d.y-p.y, pd=Math.sqrt(px*px+py*py);
+        if(Math.abs(pd-p.r)<14 && pd>0){ d.vx+=px/pd*.8*p.a*8; d.vy+=py/pd*.8*p.a*8; }
+      }
+      d.vx+=(d.ox-d.x)*.012; d.vy+=(d.oy-d.y)*.012;
+      d.vx*=.9; d.vy*=.9;
+      d.x+=d.vx; d.y+=d.vy;
+      d.tw+=.04;
+      const a=.35+.3*Math.sin(d.tw);
+      const moving=Math.abs(d.vx)+Math.abs(d.vy)>.6;
+      ctx.fillStyle= moving? `rgba(95,215,255,.95)` : `rgba(120,160,220,${a})`;
+      ctx.fillRect(d.x,d.y,1.6,1.6);
+    }
+    count += 1 + (Math.random()*4|0);
+    const c=counterEl(); if(c) c.textContent = count.toLocaleString("en-US");
+    raf=requestAnimationFrame(frame);
+  }
+  function onMove(e){const r=canvas.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;}
+  function onClick(e){const r=canvas.getBoundingClientRect();pulses.push({x:e.clientX-r.left,y:e.clientY-r.top,r:2,a:.9});}
+  function onResize(){ctx=fitCanvas(canvas);build();}
+  return {
+    start(c){canvas=c;ctx=fitCanvas(c);build();
+      canvas.addEventListener("pointermove",onMove);
+      canvas.addEventListener("pointerdown",onClick);
+      addEventListener("resize",onResize);
+      if(reduced){frame();cancelAnimationFrame(raf);} else raf=requestAnimationFrame(frame);},
+    stop(){cancelAnimationFrame(raf);
+      canvas.removeEventListener("pointermove",onMove);
+      canvas.removeEventListener("pointerdown",onClick);
+      removeEventListener("resize",onResize);}
+  };
+})();
+
+/* ============ CIDADE: bus GPS night map ============ */
+loops["p-cidade"] = (() => {
+  let ctx, canvas, raf, roads=[], buses=[], rush=false;
+  function build(){
+    const w=canvas.clientWidth, h=canvas.clientHeight;
+    roads=[]; buses=[];
+    const nh = 7, nv = 9;
+    for(let i=1;i<nh;i++){const y=h*(i/nh)+ (Math.random()*40-20); roads.push({pts:[[0,y],[w,y]]});}
+    for(let i=1;i<nv;i++){const x=w*(i/nv)+ (Math.random()*40-20); roads.push({pts:[[x,0],[x,h]]});}
+    roads.push({pts:[[0,h*0.85],[w,h*0.25]], av:true});
+    roads.push({pts:[[w*0.1,0],[w*0.95,h]], av:true});
+    const n = w<640? 90:180;
+    for(let i=0;i<n;i++){
+      const r=roads[(Math.random()*roads.length)|0];
+      buses.push({r, t:Math.random(), dir:Math.random()<.5?1:-1,
+        v:.0006+Math.random()*.0012, hue:Math.random()});
+    }
+  }
+  function pos(r,t){
+    const [a,b]=r.pts;
+    return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t];
+  }
+  function frame(){
+    const w=canvas.clientWidth, h=canvas.clientHeight;
+    ctx.fillStyle="rgba(7,11,20,0.28)"; ctx.fillRect(0,0,w,h);
+    for(const r of roads){
+      ctx.beginPath(); ctx.moveTo(...r.pts[0]); ctx.lineTo(...r.pts[1]);
+      ctx.strokeStyle=r.av? "rgba(255,196,107,.14)":"rgba(120,150,200,.10)";
+      ctx.lineWidth=r.av?2.5:1; ctx.stroke();
+    }
+    const speed = rush? 2.6:1;
+    for(const b of buses){
+      b.t += b.v*b.dir*speed;
+      if(b.t>1||b.t<0){b.dir*=-1;b.t=Math.max(0,Math.min(1,b.t));}
+      const [x,y]=pos(b.r,b.t);
+      const col = b.r.av? "255,196,107" : (b.hue<.5? "95,215,255":"125,255,168");
+      ctx.fillStyle=`rgba(${col},.95)`;
+      ctx.beginPath(); ctx.arc(x,y,rush?2.2:1.8,0,7); ctx.fill();
+      if(Math.random()<(rush?.004:.0015)){
+        ctx.beginPath(); ctx.arc(x,y,7,0,7);
+        ctx.strokeStyle=`rgba(${col},.35)`; ctx.lineWidth=1; ctx.stroke();
+      }
+    }
+    const c=document.getElementById("bus-counter");
+    if(c) c.textContent = buses.length.toLocaleString();
+    raf=requestAnimationFrame(frame);
+  }
+  function onResize(){ctx=fitCanvas(canvas);build();}
+  document.getElementById("rush-btn").addEventListener("click",function(){
+    rush=!rush;
+    this.textContent = rush? "end rush hour":"rush hour";
+  });
+  return {
+    start(c){canvas=c;ctx=fitCanvas(c);build();
+      ctx.fillStyle="#070b14";ctx.fillRect(0,0,canvas.clientWidth,canvas.clientHeight);
+      addEventListener("resize",onResize);
+      if(reduced){
+        for(let k=0;k<200;k++){for(const b of buses){b.t+=b.v*b.dir;if(b.t>1||b.t<0){b.dir*=-1;}}}
+        frame();cancelAnimationFrame(raf);
+      } else raf=requestAnimationFrame(frame);},
+    stop(){cancelAnimationFrame(raf);removeEventListener("resize",onResize);}
+  };
+})();
+
+/* ============ FERRAMENTAS: multiresolution hex grid ============ */
+loops["p-ferramentas"] = (() => {
+  let ctx, canvas, raf, mouse={x:-9999,y:-9999}, t=0, cells=[];
+  const BASE = 52;
+  function hexPath(cx,cy,s){
+    ctx.beginPath();
+    for(let i=0;i<6;i++){
+      const a=Math.PI/3*i + Math.PI/6; // pointy-top
+      const x=cx+s*Math.cos(a), y=cy+s*Math.sin(a);
+      i? ctx.lineTo(x,y): ctx.moveTo(x,y);
+    }
+    ctx.closePath();
+  }
+  function eachHexCenter(size, x0,y0,x1,y1, fn){
+    const w = Math.sqrt(3)*size, hstep = size*1.5;
+    const r0=Math.floor(y0/hstep)-1, r1=Math.ceil(y1/hstep)+1;
+    for(let r=r0;r<=r1;r++){
+      const y=r*hstep;
+      const off=(r%2)? w/2:0;
+      const c0=Math.floor((x0-off)/w)-1, c1=Math.ceil((x1-off)/w)+1;
+      for(let c=c0;c<=c1;c++) fn(c*w+off, y);
+    }
+  }
+  function build(){
+    // a few softly glowing "occupied" cells that wander
+    cells=[];
+    for(let i=0;i<10;i++) cells.push({
+      x:Math.random(), y:Math.random(),
+      hue:["95,215,255","255,196,107","125,255,168"][(Math.random()*3)|0],
+      ph:Math.random()*Math.PI*2
+    });
+  }
+  function snapHex(px,py,size){
+    // approximate snap: find nearest center among neighborhood
+    const w = Math.sqrt(3)*size, hstep=size*1.5;
+    let best=null,bd=1e9;
+    const r=Math.round(py/hstep);
+    for(let rr=r-1;rr<=r+1;rr++){
+      const y=rr*hstep, off=(rr%2)? w/2:0;
+      const c=Math.round((px-off)/w);
+      for(let cc=c-1;cc<=c+1;cc++){
+        const x=cc*w+off;
+        const d=(x-px)**2+(y-py)**2;
+        if(d<bd){bd=d;best=[x,y];}
+      }
+    }
+    return best;
+  }
+  function frame(){
+    const w=canvas.clientWidth, h=canvas.clientHeight;
+    t+=.016;
+    ctx.fillStyle="#070b14"; ctx.fillRect(0,0,w,h);
+
+    // base grid
+    ctx.strokeStyle="rgba(120,150,200,.13)"; ctx.lineWidth=1;
+    eachHexCenter(BASE,0,0,w,h,(x,y)=>{hexPath(x,y,BASE);ctx.stroke();});
+
+    // wandering occupied cells at base resolution
+    for(const cl of cells){
+      cl.ph+=.004;
+      const px=(cl.x + .06*Math.sin(cl.ph))*(w), py=(cl.y + .06*Math.cos(cl.ph*1.3))*(h);
+      const s=snapHex(px,py,BASE);
+      if(!s) continue;
+      hexPath(s[0],s[1],BASE-2);
+      ctx.fillStyle=`rgba(${cl.hue},${.10+.05*Math.sin(t*2+cl.ph)})`;
+      ctx.fill();
+    }
+
+    // refinement ring 1 near mouse
+    const R1=170, R2=85;
+    if(mouse.x>-1000){
+      ctx.strokeStyle="rgba(95,215,255,.28)";
+      eachHexCenter(BASE/3, mouse.x-R1, mouse.y-R1, mouse.x+R1, mouse.y+R1,(x,y)=>{
+        const d=Math.hypot(x-mouse.x,y-mouse.y);
+        if(d<R1 && d>=R2){hexPath(x,y,BASE/3);ctx.stroke();}
+      });
+      ctx.strokeStyle="rgba(95,215,255,.55)";
+      eachHexCenter(BASE/9, mouse.x-R2, mouse.y-R2, mouse.x+R2, mouse.y+R2,(x,y)=>{
+        if(Math.hypot(x-mouse.x,y-mouse.y)<R2){hexPath(x,y,BASE/9);ctx.stroke();}
+      });
+      // resolution label rings
+      ctx.beginPath();ctx.arc(mouse.x,mouse.y,R1,0,7);
+      ctx.strokeStyle="rgba(255,255,255,.08)";ctx.stroke();
+    }
+    raf=requestAnimationFrame(frame);
+  }
+  function onMove(e){const r=canvas.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;}
+  function onLeave(){mouse.x=-9999;mouse.y=-9999;}
+  function onResize(){ctx=fitCanvas(canvas);}
+  return {
+    start(c){canvas=c;ctx=fitCanvas(c);build();
+      canvas.addEventListener("pointermove",onMove);
+      canvas.addEventListener("pointerleave",onLeave);
+      addEventListener("resize",onResize);
+      if(reduced){mouse.x=canvas.clientWidth/2;mouse.y=canvas.clientHeight/2;frame();cancelAnimationFrame(raf);}
+      else raf=requestAnimationFrame(frame);},
+    stop(){cancelAnimationFrame(raf);
+      canvas.removeEventListener("pointermove",onMove);
+      canvas.removeEventListener("pointerleave",onLeave);
+      removeEventListener("resize",onResize);}
+  };
+})();
+
+/* ============ PESQUISA: n-body toy ============ */
+loops["p-pesquisa"] = (() => {
+  let ctx, canvas, raf, bodies=[], holdT=0, holdPos=null, holdTimer=null;
+  const COLORS=["#5fd7ff","#ffc46b","#ff7d9c","#7dffa8","#c9b8ff"];
+  function build(){
+    const w=canvas.clientWidth,h=canvas.clientHeight;
+    bodies=[
+      {x:w/2,y:h/2,vx:0,vy:0,m:900,c:"#fff"},
+      {x:w/2+140,y:h/2,vx:0,vy:2.4,m:8,c:"#5fd7ff"},
+      {x:w/2-220,y:h/2,vx:0,vy:-1.9,m:14,c:"#ffc46b"},
+    ];
+  }
+  function frame(){
+    const w=canvas.clientWidth,h=canvas.clientHeight;
+    ctx.fillStyle="rgba(7,11,20,0.12)";ctx.fillRect(0,0,w,h);
+    const G=.22;
+    for(const a of bodies){
+      let ax=0,ay=0;
+      for(const b of bodies){
+        if(a===b)continue;
+        const dx=b.x-a.x,dy=b.y-a.y;
+        const d2=Math.max(dx*dx+dy*dy,140), d=Math.sqrt(d2);
+        const f=G*b.m/d2;
+        ax+=f*dx/d; ay+=f*dy/d;
+      }
+      a.vx+=ax; a.vy+=ay;
+    }
+    for(const a of bodies){
+      a.x+=a.vx; a.y+=a.vy;
+      if(a.x<-60)a.x=w+60; if(a.x>w+60)a.x=-60;
+      if(a.y<-60)a.y=h+60; if(a.y>h+60)a.y=-60;
+      const r=Math.max(1.6,Math.cbrt(a.m)*.9);
+      ctx.beginPath();ctx.arc(a.x,a.y,r,0,7);
+      ctx.fillStyle=a.c;ctx.fill();
+      if(a.m>200){
+        ctx.beginPath();ctx.arc(a.x,a.y,r*2.4,0,7);
+        ctx.fillStyle="rgba(255,255,255,.06)";ctx.fill();
+      }
+    }
+    if(holdPos){
+      const m=8+holdT*holdT*3;
+      ctx.beginPath();ctx.arc(holdPos.x,holdPos.y,Math.cbrt(m)*.9,0,7);
+      ctx.strokeStyle="rgba(255,255,255,.6)";ctx.stroke();
+    }
+    const c=document.getElementById("body-counter");
+    if(c)c.textContent=bodies.length;
+    raf=requestAnimationFrame(frame);
+  }
+  function down(e){
+    const r=canvas.getBoundingClientRect();
+    holdPos={x:e.clientX-r.left,y:e.clientY-r.top};holdT=0;
+    holdTimer=setInterval(()=>holdT=Math.min(holdT+1,14),80);
+  }
+  function up(){
+    if(!holdPos)return;
+    clearInterval(holdTimer);
+    const m=8+holdT*holdT*3;
+    bodies.push({x:holdPos.x,y:holdPos.y,
+      vx:(Math.random()-.5)*2.4, vy:(Math.random()-.5)*2.4,
+      m, c: m>150? "#fff" : COLORS[(Math.random()*COLORS.length)|0]});
+    if(bodies.length>60)bodies.splice(1,1);
+    holdPos=null;holdT=0;
+  }
+  function onResize(){ctx=fitCanvas(canvas);}
+  return {
+    start(c){canvas=c;ctx=fitCanvas(c);build();
+      ctx.fillStyle="#070b14";ctx.fillRect(0,0,canvas.clientWidth,canvas.clientHeight);
+      canvas.addEventListener("pointerdown",down);
+      addEventListener("pointerup",up);
+      addEventListener("resize",onResize);
+      if(!reduced)raf=requestAnimationFrame(frame); else {frame();cancelAnimationFrame(raf);}},
+    stop(){cancelAnimationFrame(raf);clearInterval(holdTimer);holdPos=null;
+      canvas.removeEventListener("pointerdown",down);
+      removeEventListener("pointerup",up);
+      removeEventListener("resize",onResize);}
+  };
+})();
+
+})();
+</script>
+</body>
+</html>
