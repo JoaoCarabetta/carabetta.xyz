@@ -1,6 +1,6 @@
 # carabetta.xyz
 
-Minimal personal landing page deployed to a Hetzner VPS with Caddy and HTTPS.
+Bilingual personal career timeline (EN/PT) with type and theme filters, deployed to a Hetzner VPS with Caddy and HTTPS.
 
 ## Local preview
 
