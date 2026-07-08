@@ -1,7 +1,10 @@
 carabetta.xyz, www.carabetta.xyz {
     root * /var/www/carabetta.xyz
-    file_server
     encode gzip
+
+    import transparencia-auth.caddy
+
+    file_server
 
     @www host www.carabetta.xyz
     redir @www https://carabetta.xyz{uri} permanent
