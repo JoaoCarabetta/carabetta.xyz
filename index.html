@@ -13,1046 +13,1940 @@
     --paper:#FAFAF7;
     --ink:#141414;
     --ink-soft:#6b6b66;
-    --azulejo:#2447c9;      /* portuguese-tile blue */
+    --azulejo:#2447c9;
     --night:#070b14;
     --cyan:#5fd7ff;
     --amber:#ffc46b;
     --green:#7dffa8;
     --rose:#ff7d9c;
+    --rule:#e4e4de;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%}
+  html{scroll-behavior:smooth}
   body{
     background:var(--paper);
     color:var(--ink);
     font-family:'IBM Plex Mono',monospace;
     font-weight:300;
     -webkit-font-smoothing:antialiased;
+    min-height:100%;
   }
   a{color:inherit}
+  .sr-only{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+    overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+  }
 
-  /* ---------- HOME ---------- */
+  /* top bar */
+  .topbar{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:1.1rem clamp(1.25rem,5vw,3rem);
+    position:sticky;top:0;z-index:10;
+    background:var(--paper);
+    border-bottom:1px solid transparent;
+  }
+  .topbar.scrolled{border-bottom-color:var(--rule)}
+  .topbar .brand{
+    font-size:.78rem;font-weight:500;letter-spacing:.04em;
+    text-decoration:none;
+  }
+  .lang{
+    display:flex;gap:.35rem;align-items:center;
+    font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+  }
+  .lang button{
+    background:none;border:none;cursor:pointer;
+    font:inherit;color:var(--ink-soft);padding:.2rem .35rem;
+  }
+  .lang button[aria-pressed="true"]{color:var(--ink);font-weight:500}
+  .lang button:hover,.lang button:focus-visible{color:var(--azulejo)}
+  .lang button:focus-visible{outline:2px solid var(--azulejo);outline-offset:2px}
+  .lang .sep{color:var(--rule)}
+
+  /* hero */
   #home{
-    min-height:100svh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    padding:8vh 8vw;
-    gap:3.2rem;
+    min-height:72svh;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:6vh clamp(1.25rem,8vw,5rem) 4vh;
+    gap:2.4rem;
+    max-width:52rem;
   }
   .name{
-    font-size:clamp(1.05rem,2vw,1.25rem);
-    font-weight:500;
-    letter-spacing:.02em;
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;
+    font-size:clamp(2.4rem,8vw,4.2rem);
+    line-height:.95;
+    letter-spacing:-.03em;
   }
-  .name::after{
-    content:"";
-    display:inline-block;
-    width:.55em;height:1.05em;
-    background:var(--ink);
-    margin-left:.35em;
-    vertical-align:text-bottom;
-    animation:blink 1.15s steps(1) infinite;
-  }
-  @keyframes blink{50%{opacity:0}}
   .bio{
-    max-width:38ch;
+    max-width:42ch;
     font-size:clamp(.85rem,1.6vw,.95rem);
     line-height:1.85;
     color:var(--ink-soft);
   }
   .bio b{font-weight:400;color:var(--ink)}
 
-  .portals{
-    display:flex;
-    flex-wrap:wrap;
-    gap:.6rem 2.4rem;
-    font-size:clamp(.95rem,1.9vw,1.1rem);
-  }
-  .portal-link{
-    background:none;border:none;cursor:pointer;
-    font:inherit;color:var(--ink);
-    padding:.35rem 0;
-    position:relative;
-    letter-spacing:.02em;
-    text-align:left;
-  }
-  .portal-link span{
-    white-space:nowrap;
-    border-bottom:1px solid var(--azulejo);
-    transition:color .2s,border-color .2s;
-  }
-  .portal-link span::before{content:"[ ";color:var(--ink-soft)}
-  .portal-link span::after {content:" ]";color:var(--ink-soft)}
-  .portal-link:hover span,
-  .portal-link:focus-visible span{color:var(--azulejo)}
-  .portal-link:focus-visible{outline:2px solid var(--azulejo);outline-offset:4px}
-  .portal-hint{
-    display:block;
-    font-size:.62rem;
-    color:var(--ink-soft);
-    margin-top:.15rem;
-    letter-spacing:.06em;
-    opacity:0;
-    transition:opacity .2s;
-    font-style:normal;
-  }
-  .portal-link:hover .portal-hint,
-  .portal-link:focus-visible .portal-hint{opacity:1}
-
-  footer{
+  .social{
     font-size:.68rem;
     color:var(--ink-soft);
-    display:flex;
-    flex-wrap:wrap;
+    display:flex;flex-wrap:wrap;
     gap:.4rem 1.4rem;
     letter-spacing:.04em;
   }
-  footer a{
+  .social a{
     text-decoration:none;
     border-bottom:1px dotted var(--ink-soft);
     transition:color .2s,border-color .2s;
   }
-  footer a:hover{color:var(--azulejo);border-color:var(--azulejo)}
+  .social a:hover,.social a:focus-visible{
+    color:var(--azulejo);border-color:var(--azulejo);
+  }
 
-  /* ---------- PORTAL SHELL ---------- */
-  .portal{
-    position:fixed;inset:0;
-    background:var(--night);
-    color:#e8e8e2;
-    z-index:50;
-    display:none;
-    overflow:hidden;
+  /* timeline */
+  #timeline{
+    padding:2rem clamp(1.25rem,8vw,5rem) 6rem;
+    max-width:52rem;
   }
-  .portal.open{display:block;animation:portalIn .45s cubic-bezier(.2,.9,.25,1)}
-  @keyframes portalIn{
-    from{clip-path:circle(0% at var(--cx,50%) var(--cy,50%))}
-    to{clip-path:circle(140% at var(--cx,50%) var(--cy,50%))}
+  .timeline-head{
+    display:flex;justify-content:space-between;align-items:baseline;
+    gap:1rem;flex-wrap:wrap;
+    margin-bottom:1.2rem;
+    padding-bottom:1rem;
+    border-bottom:1px solid var(--rule);
   }
-  .portal canvas{position:absolute;inset:0;width:100%;height:100%}
-  .portal-ui{
-    position:absolute;inset:0;
-    pointer-events:none;
-    display:flex;flex-direction:column;
-    justify-content:space-between;
-    padding:clamp(1.2rem,4vw,3rem);
+  .timeline-kicker{
+    font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--ink-soft);
   }
-  .portal-ui>*{pointer-events:none}
-  .portal-ui button, .portal-ui a{pointer-events:auto}
-  .portal-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
-  .portal-title{
+  .timeline-title{
     font-family:'Bricolage Grotesque',sans-serif;
     font-weight:800;
-    font-size:clamp(2.2rem,7vw,5rem);
-    line-height:.95;
+    font-size:clamp(1.6rem,4vw,2.2rem);
     letter-spacing:-.02em;
   }
-  .portal-kicker{
-    font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;
-    color:rgba(255,255,255,.45);margin-bottom:.6rem;
-  }
-  .portal-close{
-    background:none;border:1px solid rgba(255,255,255,.3);
-    color:#e8e8e2;font-family:'IBM Plex Mono',monospace;
-    font-size:.7rem;letter-spacing:.1em;
-    padding:.55rem .9rem;cursor:pointer;border-radius:2rem;
-    transition:border-color .2s,color .2s;
-    flex-shrink:0;
-  }
-  .portal-close:hover,.portal-close:focus-visible{border-color:#fff;color:#fff}
-  .portal-close:focus-visible{outline:2px solid #fff;outline-offset:3px}
-  .portal-bottom{
-    display:flex;justify-content:space-between;align-items:flex-end;
-    gap:2rem;flex-wrap:wrap;
-  }
-  .portal-copy{
-    max-width:46ch;font-size:.78rem;line-height:1.8;
-    color:rgba(255,255,255,.72);
-    pointer-events:auto;
-  }
-  .portal-copy b{color:#fff;font-weight:500}
-  .portal-copy a{color:inherit;text-decoration:none;border-bottom:1px dotted rgba(255,255,255,.5)}
-  .portal-copy a:hover{color:#fff;border-color:#fff}
-  .portal-stat{
-    text-align:right;font-size:.68rem;letter-spacing:.08em;
-    color:rgba(255,255,255,.5);line-height:2;
-    pointer-events:auto;
-    display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;
-  }
-  .portal-stat b{
-    display:block;
-    font-family:'Bricolage Grotesque',sans-serif;
-    font-weight:800;font-size:clamp(1.4rem,3.4vw,2.2rem);
-    letter-spacing:0;color:#fff;
-  }
-  .hint{
-    font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
-    color:rgba(255,255,255,.35);
-  }
-  .idea-btn{
-    background:none;border:1px solid rgba(255,255,255,.3);
-    color:#e8e8e2;font-family:'IBM Plex Mono',monospace;
-    font-size:.68rem;letter-spacing:.1em;
-    padding:.5rem .95rem;cursor:pointer;border-radius:2rem;
-    transition:border-color .2s,color .2s,background .2s;
-  }
-  .idea-btn:hover,.idea-btn:focus-visible{border-color:#fff;color:#000;background:#fff}
-  .idea-btn:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
-  /* ---------- IDEA PANEL ---------- */
-  .idea-panel{
-    position:absolute;inset:0;
-    background:rgba(4,6,12,.78);
-    backdrop-filter:blur(8px);
-    -webkit-backdrop-filter:blur(8px);
-    z-index:5;
-    display:none;
-    overflow-y:auto;
-    overscroll-behavior:contain;
+  .filters{
+    display:flex;flex-wrap:wrap;
+    gap:.45rem .55rem;
+    margin-bottom:1.6rem;
   }
-  .idea-panel.open{display:block;animation:fadeIn .3s ease}
-  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-  .idea-inner{
-    max-width:62ch;
-    margin:0 auto;
-    padding:clamp(4.5rem,10vh,7rem) clamp(1.4rem,5vw,2rem) 6rem;
-    font-size:.8rem;
-    line-height:2;
-    color:rgba(255,255,255,.78);
+  .filter-btn{
+    background:none;border:1px solid var(--rule);
+    cursor:pointer;font:inherit;
+    font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-soft);
+    padding:.28rem .55rem;
+    transition:color .15s,border-color .15s,background .15s;
   }
-  .idea-inner h3{
+  .filter-btn:hover,.filter-btn:focus-visible{
+    color:var(--azulejo);border-color:color-mix(in srgb, var(--azulejo) 45%, transparent);
+  }
+  .filter-btn:focus-visible{outline:2px solid var(--azulejo);outline-offset:2px}
+  .filter-btn[aria-pressed="true"]{
+    color:var(--azulejo);
+    border-color:color-mix(in srgb, var(--azulejo) 55%, transparent);
+    background:color-mix(in srgb, var(--azulejo) 6%, transparent);
+  }
+
+  .entry{
+    display:grid;
+    grid-template-columns:7.5rem 1fr;
+    gap:1rem 1.6rem;
+    padding:1.35rem 0;
+    border-bottom:1px solid var(--rule);
+  }
+  .entry[hidden]{display:none!important}
+  .entry:first-of-type{border-top:1px solid var(--rule)}
+  .entry-date{
+    font-size:.68rem;
+    letter-spacing:.06em;
+    color:var(--ink-soft);
+    padding-top:.35rem;
+    line-height:1.5;
+  }
+  .entry-body{min-width:0}
+  .entry-meta{
+    display:flex;flex-wrap:wrap;gap:.5rem .8rem;
+    align-items:center;margin-bottom:.45rem;
+  }
+  .type{
+    font-size:.58rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--azulejo);
+    border:1px solid color-mix(in srgb, var(--azulejo) 35%, transparent);
+    padding:.15rem .45rem;
+  }
+  .entry-title{
     font-family:'Bricolage Grotesque',sans-serif;
     font-weight:800;
-    font-size:clamp(1.5rem,4vw,2.2rem);
-    line-height:1.1;
-    color:#fff;
-    margin-bottom:2rem;
-    letter-spacing:-.01em;
+    font-size:clamp(1.05rem,2.4vw,1.35rem);
+    letter-spacing:-.015em;
+    line-height:1.2;
+    margin-bottom:.45rem;
   }
-  .idea-inner h4{
-    font-family:'IBM Plex Mono',monospace;
-    font-weight:500;
+  .entry-blurb{
+    font-size:.8rem;
+    line-height:1.85;
+    color:var(--ink-soft);
+    max-width:52ch;
+  }
+  .entry-blurb b{font-weight:400;color:var(--ink)}
+
+  .entry-links{
+    list-style:none;
+    margin-top:.85rem;
+    display:flex;flex-direction:column;gap:0;
+  }
+  .entry-links li{
+    border-top:1px dashed var(--rule);
+    padding:.45rem 0;
+  }
+  .entry-links li:last-child{border-bottom:1px dashed var(--rule)}
+  .entry-links a{
+    text-decoration:none;
+    font-size:.78rem;
+    border-bottom:1px dotted transparent;
+    transition:color .2s,border-color .2s;
+  }
+  .entry-links a:hover,.entry-links a:focus-visible{
+    color:var(--azulejo);border-bottom-color:var(--azulejo);
+  }
+  .entry-links .what{
+    display:block;
     font-size:.68rem;
-    letter-spacing:.22em;
+    color:var(--ink-soft);
+    margin-top:.15rem;
+  }
+
+  .more-btn{
+    background:none;border:none;cursor:pointer;
+    font:inherit;font-size:.72rem;
+    color:var(--ink);
+    margin-top:.75rem;
+    padding:.2rem 0;
+    letter-spacing:.02em;
+  }
+  .more-btn span{
+    border-bottom:1px solid var(--azulejo);
+  }
+  .more-btn span::before{content:"[ ";color:var(--ink-soft)}
+  .more-btn span::after{content:" ]";color:var(--ink-soft)}
+  .more-btn:hover span,.more-btn:focus-visible span{color:var(--azulejo)}
+  .more-btn:focus-visible{outline:2px solid var(--azulejo);outline-offset:3px}
+
+  .entry-detail{
+    margin-top:1.1rem;
+    padding-top:1rem;
+    border-top:1px dashed var(--rule);
+    font-size:.78rem;
+    line-height:1.95;
+    color:var(--ink-soft);
+    max-width:54ch;
+  }
+  .entry-detail[hidden]{display:none!important}
+  .entry-detail h4{
+    font-size:.62rem;
+    letter-spacing:.18em;
     text-transform:uppercase;
-    color:rgba(255,255,255,.45);
-    margin:2.6rem 0 .9rem;
+    color:var(--ink);
+    margin:1.2rem 0 .5rem;
+    font-weight:500;
   }
-  .idea-inner p{margin-bottom:1.1rem}
-  .idea-inner b{color:#fff;font-weight:500}
-  .idea-inner em{font-style:italic;color:rgba(255,255,255,.9)}
-  .idea-inner a{
-    color:#fff;text-decoration:none;
-    border-bottom:1px dotted rgba(255,255,255,.5);
+  .entry-detail h4:first-child{margin-top:0}
+  .entry-detail p{margin-bottom:.9rem}
+  .entry-detail b{font-weight:400;color:var(--ink)}
+  .entry-detail em{font-style:italic}
+
+  footer.site-foot{
+    padding:0 clamp(1.25rem,8vw,5rem) 3.5rem;
+    max-width:52rem;
+    font-size:.68rem;
+    color:var(--ink-soft);
   }
-  .idea-inner a:hover{border-bottom-style:solid}
-  .idea-close{
-    position:sticky;
-    top:1.2rem;
-    float:right;
-    margin-right:clamp(1.2rem,4vw,3rem);
-    background:rgba(7,11,20,.6);
-    border:1px solid rgba(255,255,255,.3);
-    color:#e8e8e2;font-family:'IBM Plex Mono',monospace;
-    font-size:.7rem;letter-spacing:.1em;
-    padding:.55rem .9rem;cursor:pointer;border-radius:2rem;
-    z-index:6;
-  }
-  .idea-close:hover{border-color:#fff;color:#fff}
-  .artifact-list{list-style:none;margin-bottom:1.1rem}
-  .artifact-list li{
-    padding:.55rem 0;
-    border-bottom:1px dashed rgba(255,255,255,.15);
-    display:flex;gap:1rem;flex-wrap:wrap;align-items:baseline;
-  }
-  .artifact-list li:first-child{border-top:1px dashed rgba(255,255,255,.15)}
-  .artifact-list .what{color:rgba(255,255,255,.55);font-size:.72rem}
 
   @media (max-width:640px){
-    .portal-bottom{flex-direction:column;align-items:flex-start}
-    .portal-stat{text-align:left;align-items:flex-start}
-  }
-  @media (prefers-reduced-motion:reduce){
-    .name::after{animation:none}
-    .portal.open{animation:none}
-    .idea-panel.open{animation:none}
+    .entry{
+      grid-template-columns:1fr;
+      gap:.35rem;
+    }
+    .entry-date{padding-top:0}
   }
 </style>
 </head>
 <body>
 
-<!-- ================= HOME ================= -->
-<main id="home">
-  <h1 class="name">joão carabetta</h1>
+<a class="sr-only" href="#timeline" data-i18n="skip">skip to timeline</a>
 
-  <p class="bio">
-    physicist by training.<br>
-    i build <b>public data infrastructure</b> in Brazil —<br>
-    open datasets, city platforms, and the tools between them.<br>
-    São Paulo, via Rio, Campinas &amp; London.
-  </p>
+<div class="page">
+  <header class="topbar">
+    <a class="brand" href="#home">joão carabetta</a>
+    <div class="lang" role="group" data-i18n-aria="langGroup" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <span class="sep" aria-hidden="true">|</span>
+      <button type="button" data-lang="pt" aria-pressed="false">PT</button>
+    </div>
+  </header>
 
-  <nav class="portals" aria-label="portals">
-    <button class="portal-link" data-portal="p-dados"><span>data</span><em class="portal-hint">open data for 200 million people</em></button>
-    <button class="portal-link" data-portal="p-cidade"><span>city</span><em class="portal-hint">a city that can see itself</em></button>
-    <button class="portal-link" data-portal="p-ferramentas"><span>tools</span><em class="portal-hint">the geometry of territory</em></button>
-    <button class="portal-link" data-portal="p-pesquisa"><span>research</span><em class="portal-hint">the few forces that matter</em></button>
-  </nav>
+  <main id="home">
+    <h1 class="name">joão carabetta</h1>
+    <p class="bio" data-i18n="bio"></p>
+    <nav class="social" aria-label="links">
+      <a href="https://github.com/JoaoCarabetta" target="_blank" rel="noopener">github</a>
+      <a href="https://www.linkedin.com/in/joaocarabetta" target="_blank" rel="noopener">linkedin</a>
+      <a href="https://x.com/JoaoCarabetta" target="_blank" rel="noopener">x</a>
+      <a href="https://medium.com/@joaocarabetta" target="_blank" rel="noopener">medium</a>
+      <a href="https://basedosdados.org" target="_blank" rel="noopener">Base dos Dados</a>
+      <a href="https://dados.rio" target="_blank" rel="noopener">dados.rio</a>
+    </nav>
+  </main>
 
-  <footer>
-    <a href="https://github.com/JoaoCarabetta" target="_blank" rel="noopener">github</a>
-    <a href="https://www.linkedin.com/in/joaocarabetta" target="_blank" rel="noopener">linkedin</a>
-    <a href="https://x.com/JoaoCarabetta" target="_blank" rel="noopener">x</a>
-    <a href="https://medium.com/@joaocarabetta" target="_blank" rel="noopener">medium</a>
-    <a href="https://basedosdados.org" target="_blank" rel="noopener">Base dos Dados</a>
-    <a href="mailto:hello@example.com">email</a>
+  <section id="timeline" aria-labelledby="timeline-title">
+    <div class="timeline-head">
+      <div>
+        <p class="timeline-kicker" data-i18n="timelineKicker"></p>
+        <h2 class="timeline-title" id="timeline-title" data-i18n="timelineTitle"></h2>
+      </div>
+    </div>
+    <div class="filters" id="timeline-filters" role="group" data-i18n-aria="filterGroup" aria-label="Filter by type"></div>
+    <div id="timeline-list"></div>
+  </section>
+
+  <footer class="site-foot">
+    <span data-i18n="footNote"></span>
   </footer>
-</main>
-
-<!-- ================= PORTAL: DADOS ================= -->
-<section class="portal" id="p-dados" role="dialog" aria-modal="true" aria-label="data">
-  <canvas></canvas>
-
-  <div class="idea-panel" id="idea-dados">
-    <button class="idea-close">close ✕</button>
-    <div class="idea-inner">
-      <h3>public data should be infrastructure, not paperwork.</h3>
-
-      <h4>the idea</h4>
-      <p>Brazil produces extraordinary public data — censuses, elections, budgets,
-      schools, hospitals, every formal company and every formal job. but for decades
-      it lived scattered across hundreds of portals, each with its own formats,
-      encodings, broken links and undocumented quirks. the data was <em>technically</em>
-      public and <em>practically</em> inaccessible. access was rationed by suffering:
-      only people with time and engineering skills could use it.</p>
-      <p>the idea behind <b>Base dos Dados</b> is that access to quality public data
-      should behave like infrastructure — like a road: built once, maintained
-      centrally, free at the point of use. we clean the datasets once, standardize
-      the identifiers so tables actually join with each other (a municipality is the
-      same municipality in the census, the election and the budget), document
-      everything, and put it all in one warehouse anyone can query with plain SQL.</p>
-      <p>the trick that made it economically possible: hosting the data lake on
-      BigQuery, where the <em>consumption</em> cost is paid by the user — and since
-      every user gets a free monthly quota, most people pay nothing. a small
-      nonprofit could suddenly serve an entire country without owning a single
-      server. marginal cost of a query: approximately zero.</p>
-
-      <h4>where it started</h4>
-      <p>in 2015, during a strike at UNICAMP, i co-founded <b>UNICAMP
-      Transparency</b> — a student collective that used data to answer what the strike
-      was really about and how deep the budget cuts went. coordinating fifteen
-      contributors and defending analyses in front of assemblies of five hundred
-      people taught me the founding lesson: transparency is not a document, it's a
-      capability.</p>
-
-      <h4>what exists today</h4>
-      <p>Base dos Dados became a national reference for open data in Brazil —
-      hundreds of treated datasets, client packages in python, R and stata, and
-      millions of queries served. the methodology is written up in
-      <em>Data Basis: Universalizing Access to High-Quality Data</em>
-      (dahis, carabetta, scovino, israel &amp; oliveira, 2022).</p>
-
-      <h4>artifacts</h4>
-      <ul class="artifact-list">
-        <li><a href="https://basedosdados.org" target="_blank" rel="noopener">basedosdados.org</a><span class="what">the platform</span></li>
-        <li><a href="https://github.com/basedosdados/sdk" target="_blank" rel="noopener">basedosdados/sdk</a><span class="what">data lake maintenance code &amp; access packages</span></li>
-        <li><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4157813" target="_blank" rel="noopener">the paper (ssrn, 2022)</a><span class="what">how and why we built it</span></li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="portal-ui">
-    <div class="portal-top">
-      <div>
-        <div class="portal-kicker">2015 → today · UNICAMP Transparency → Base dos Dados</div>
-        <h2 class="portal-title">open<br>data</h2>
-      </div>
-      <button class="portal-close">esc / close</button>
-    </div>
-    <div class="portal-bottom">
-      <p class="portal-copy">
-        every dot is public data waiting to be used. i co-founded
-        <a href="https://basedosdados.org" target="_blank" rel="noopener"><b>Base dos Dados</b></a>,
-        a nonprofit that cleans, standardizes and centralizes Brazil's public
-        datasets in one warehouse — free at the point of use, for a country of
-        200 million. move your cursor through the country. click to send a query.
-      </p>
-      <div class="portal-stat">
-        <b id="dados-counter">0</b>
-        queries and counting
-        <button class="idea-btn" data-idea="idea-dados">[ the idea ]</button>
-        <span class="hint">move · click · esc to leave</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= PORTAL: CIDADE ================= -->
-<section class="portal" id="p-cidade" role="dialog" aria-modal="true" aria-label="city">
-  <canvas></canvas>
-
-  <div class="idea-panel" id="idea-cidade">
-    <button class="idea-close">close ✕</button>
-    <div class="idea-inner">
-      <h3>a city that can see itself can act before problems become crises.</h3>
-
-      <h4>the idea</h4>
-      <p>governments are usually blind in real time. the data exists — buses
-      broadcast GPS, schools take attendance, clinics log visits, citizens open
-      tickets — but it arrives late, trapped in silos, in formats nobody can join.
-      so the city governs by anecdote and quarterly report. my work in Rio was
-      about closing that loop: turning the city's own exhaust of records into a
-      live, governed, queryable picture of itself.</p>
-
-      <h4>where it started: the buses</h4>
-      <p>in 2021 i joined Rio's <b>transport department</b> to lead data
-      science. the first request sounded small: Rio's buses had carried GPS since
-      2011, but the feed was barely used. we built the pipeline to capture and
-      process it — every ping, every line, every operator — so the city could
-      finally answer basic questions: which bus passes where, at what headway,
-      and whether the companies were delivering the service they were paid for.
-      one live feed, honestly captured, changed the terms of an entire public
-      service conversation.</p>
-
-      <h4>data office → the data lake</h4>
-      <p>that pipeline became the seed of the <b>Data Office</b>, the
-      city's data office, which i founded and ran. in june 2022 we launched Rio's
-      <b>municipal data lake</b>: a single governed platform centralizing the
-      operational data of the whole city government — transport, health,
-      education, citizen services. it grew past <b>4.7 billion records</b>, feeding
-      real-time dashboards managers actually use: classroom attendance, health
-      visits, tickets on the 1746 citizen hotline. google cloud later featured the
-      office among its global public-sector cases, alongside governments of the
-      uk, netherlands and finland, the us air force and nasa.</p>
-
-      <h4>running the machine: iplanrio</h4>
-      <p>from there i became the city's chief data officer, then chief executive
-      of technology, and in 2025 president of <b>iplanrio</b> — Rio's municipal
-      technology company, founded in 1979, responsible for the systems the city
-      runs on: the 1746 hotline, carioca digital, processo.rio, and the health
-      network's information systems, including opening the city's health
-      statistics through tabnet. the job of a public technology company, as i
-      see it: make the invisible plumbing so reliable that citizens never have
-      to think about it. i led iplanrio until 2026.</p>
-
-      <h4>the principle</h4>
-      <p>real-time data changes the <em>tense</em> of government. a city that
-      only sees the past can only apologize; a city that sees the present can
-      dispatch a repair crew, call a family whose kid stopped showing up to
-      school, fix the bus line this week. that shift — from reactive to
-      proactive — is worth more than any dashboard.</p>
-
-      <h4>artifacts</h4>
-      <ul class="artifact-list">
-        <li><a href="https://dados.rio" target="_blank" rel="noopener">dados.rio</a><span class="what">Rio's open data portal &amp; data office</span></li>
-        <li><a href="https://cloud.google.com/customers/intl/pt-br/escritorio-de-dados-da-cidade-do-rio-de-janeiro?hl=pt-BR" target="_blank" rel="noopener">google cloud case study</a><span class="what">the data lake story, told from outside</span></li>
-        <li><a href="https://iplanrio.prefeitura.rio" target="_blank" rel="noopener">iplanrio</a><span class="what">the municipal technology company</span></li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="portal-ui">
-    <div class="portal-top">
-      <div>
-        <div class="portal-kicker">2021 → 2026 · transport department → data office → president, iplanrio</div>
-        <h2 class="portal-title">the city<br>in real time</h2>
-      </div>
-      <button class="portal-close">esc / close</button>
-    </div>
-    <div class="portal-bottom">
-      <p class="portal-copy">
-        it started with one question: <b>where are the buses, right now?</b>
-        capturing Rio's live bus GPS feed became the seed of the
-        <b>Data Office</b> — and then a data platform for the whole city:
-        transport, health, education, citizen services, 4.7 billion records and
-        growing. i ran <b>iplanrio</b>, Rio's municipal technology company, until
-        2026. each moving light is a simulated bus on its route.
-      </p>
-      <div class="portal-stat">
-        <b id="bus-counter">0</b>
-        buses pinging their position
-        <button class="idea-btn" data-idea="idea-cidade">[ the idea ]</button>
-        <button class="idea-btn" id="rush-btn">rush hour</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= PORTAL: FERRAMENTAS ================= -->
-<section class="portal" id="p-ferramentas" role="dialog" aria-modal="true" aria-label="tools">
-  <canvas></canvas>
-
-  <div class="idea-panel" id="idea-ferramentas">
-    <button class="idea-close">close ✕</button>
-    <div class="idea-inner">
-      <h3>cities speak geometry. tools should make geometry cheap.</h3>
-
-      <h4>the idea</h4>
-      <p>almost every hard question about a territory — where to put a clinic,
-      which streets flood, who lives more than thirty minutes from a school —
-      is secretly a geometry problem. and geometry, in practice, is where
-      analyses go to die: incompatible grid systems, gigantic polygons that
-      crash your queries, boundary files scattered across government FTP
-      servers. i build small, sharp open-source tools that remove exactly those
-      frictions, so that the analyst's afternoon is spent on the question, not
-      the plumbing. what you're seeing behind this text is the core trick:
-      <b>the same territory, readable at every resolution</b>.</p>
-
-      <h4>the tools</h4>
-      <p><b>babelgrid</b> — the world has several competing ways of dicing the
-      planet into cells (google's S2, uber's H3, quadtrees…). babelgrid is one
-      python API that speaks all of them, so you can pick a grid system the way
-      you pick a unit of measure. built and published open source with the
-      Inter-American Development Bank.</p>
-      <p><b>geobr</b> — official Brazilian spatial datasets (municipalities,
-      states, census tracts, biomes…) one function call away, in R and python.
-      i maintain the python side of this IPEA project — one of the most-used
-      geospatial libraries in the country.</p>
-      <p><b>osmpy</b> — a wrapper around openstreetmap's overpass API that lets
-      you query regions of any size and shape; it includes a "katana" routine
-      that slices huge polygons into digestible pieces so big-area queries stop
-      timing out.</p>
-      <p><b>isometric</b> — walking-distance polygons from any point in a city:
-      the honest answer to "what is actually nearby?"</p>
-
-      <h4>data pipelines with the same spirit</h4>
-      <p>at the <b>Inter-American Development Bank</b> i helped build the
-      <b>coronavirus impact dashboard</b>: during the pandemic, we turned waze's
-      traffic feeds into a daily congestion index for cities across Latin America
-      — a near-real-time measure of how much life had stopped, published openly
-      while the crisis was still unfolding. the same season, as a volunteer, i
-      worked on <b>farolcovid</b>, an open tool monitoring the risk of hospital
-      collapse in Brazilian municipalities.</p>
-
-      <h4>the principle</h4>
-      <p>open source is public policy by other means. a good library is a
-      subsidy paid to every future analyst, in every city, forever. i would
-      rather ship a boring, reliable tool that a thousand strangers quietly
-      depend on than a flashy report nobody can reproduce.</p>
-
-      <h4>artifacts</h4>
-      <ul class="artifact-list">
-        <li><a href="https://github.com/EL-BID/BabelGrid" target="_blank" rel="noopener">babelgrid</a><span class="what">one API for every grid system</span></li>
-        <li><a href="https://github.com/ipea/geobr" target="_blank" rel="noopener">geobr</a><span class="what">Brazil's official spatial data, one call away</span></li>
-        <li><a href="https://github.com/JoaoCarabetta/osmpy" target="_blank" rel="noopener">osmpy</a><span class="what">openstreetmap at any scale</span></li>
-        <li><a href="https://github.com/JoaoCarabetta/isometric" target="_blank" rel="noopener">isometric</a><span class="what">walking-distance polygons</span></li>
-        <li><a href="https://github.com/EL-BID/IDB-IDB-Invest-Coronavirus-Impact-Dashboard" target="_blank" rel="noopener">coronavirus impact dashboard</a><span class="what">waze feeds → congestion index for Latin America</span></li>
-        <li><a href="https://github.com/ImpulsoGov/farolcovid" target="_blank" rel="noopener">farolcovid</a><span class="what">hospital-collapse risk monitor</span></li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="portal-ui">
-    <div class="portal-top">
-      <div>
-        <div class="portal-kicker">open source · geospatial · S2, H3, OSM, waze</div>
-        <h2 class="portal-title">the geometry<br>of territory</h2>
-      </div>
-      <button class="portal-close">esc / close</button>
-    </div>
-    <div class="portal-bottom">
-      <p class="portal-copy">
-        the questions cities ask — where to build, who is far from what, which
-        streets flood — are geometry problems in disguise. i build and maintain
-        open-source tools that make that geometry cheap:
-        <b>babelgrid</b>, <b>geobr</b>, <b>osmpy</b>, <b>isometric</b>, and
-        pipelines that turned waze feeds into a live congestion index for Latin
-        America. bring your cursor closer and the territory refines itself.
-      </p>
-      <div class="portal-stat">
-        <b>1 api</b>
-        for every grid system
-        <button class="idea-btn" data-idea="idea-ferramentas">[ the idea ]</button>
-        <span class="hint">move to refine the grid</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= PORTAL: PESQUISA ================= -->
-<section class="portal" id="p-pesquisa" role="dialog" aria-modal="true" aria-label="research">
-  <canvas></canvas>
-
-  <div class="idea-panel" id="idea-pesquisa">
-    <button class="idea-close">close ✕</button>
-    <div class="idea-inner">
-      <h3>reduce a messy system to the few forces that matter.</h3>
-
-      <h4>the idea</h4>
-      <p>i trained as a physicist at <b>UNICAMP</b>, and physics left me one
-      permanent habit: in any complicated system — a galaxy, a bus network, a
-      procurement office — most of the variables are noise, and a handful of
-      forces explain almost everything. the craft is finding those forces,
-      modelling them honestly, and not being intimidated by the mess around
-      them. instead of a physics phd, i took that habit to
-      <b>FGV/EMAp</b>, where i did a master's in mathematical modelling — at the
-      time the only program in Brazil teaching modern applied math with its
-      hands on real policy problems.</p>
-
-      <h4>congress, in numbers</h4>
-      <p>during the master's i worked at FGV's <b>Center for Technology and
-      Society</b>, publishing data analyses in the national press — including
-      <b>Congress in Numbers</b>, a project that treated the national
-      congress itself as a dataset: votes, speeches, amendments, money. the
-      lesson: institutions become legible when you count them, and legibility
-      changes how they behave.</p>
-
-      <h4>procurement, in probabilities</h4>
-      <p>in 2019 i was a fellow at the <b>Alan Turing Institute</b>'s data
-      science for social good program (with the University of Warwick), working
-      with Paraguay's national procurement agency, the <b>DNCP</b>. the agency
-      reviews roughly 13,000 public tenders a year with about thirty officials
-      and a three-day window per tender — attention is the scarcest resource in
-      the room. we built a model that ranks incoming tenders by risk of
-      irregularity, so reviewers spend their limited hours where the taxpayer's
-      money is actually in danger. anti-corruption work, done as a
-      prioritization problem.</p>
-
-      <h4>development, in evidence</h4>
-      <p>as a consultant at the <b>Inter-American Development Bank</b>'s office
-      of strategic planning and development effectiveness, i worked on turning
-      novel data sources into evidence for policy across Latin America — most
-      visibly the waze-based coronavirus impact dashboard, and analyses of
-      pandemic-era air quality in the region's cities.</p>
-
-      <h4>papers &amp; writing</h4>
-      <ul class="artifact-list">
-        <li><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4157813" target="_blank" rel="noopener">data basis: universalizing access to high-quality data (2022)</a><span class="what">with dahis, scovino, israel &amp; oliveira</span></li>
-        <li><a href="https://www.turing.ac.uk/collaborate-turing/data-science-social-good/summer-2019" target="_blank" rel="noopener">dssg 2019 — reducing corruption in public procurement</a><span class="what">Turing Institute × DNCP Paraguay</span></li>
-        <li><a href="https://blogs.iadb.org/efectividad-desarrollo/en/author/joaocarabetta/" target="_blank" rel="noopener">idb development effectiveness blog</a><span class="what">pandemic mobility &amp; air quality series</span></li>
-        <li><a href="https://medium.com/@joaocarabetta" target="_blank" rel="noopener">medium</a><span class="what">occasional writing</span></li>
-      </ul>
-
-      <h4>the toy behind this text</h4>
-      <p>an n-body gravity simulation — the physicist's oldest reminder that
-      simple forces, honestly computed, produce behavior nobody could have
-      guessed by staring at the equations. click anywhere to drop a body; hold
-      to make it a star.</p>
-    </div>
-  </div>
-
-  <div class="portal-ui">
-    <div class="portal-top">
-      <div>
-        <div class="portal-kicker">UNICAMP physics → FGV applied math → Turing Institute → IDB</div>
-        <h2 class="portal-title">research</h2>
-      </div>
-      <button class="portal-close">esc / close</button>
-    </div>
-    <div class="portal-bottom">
-      <p class="portal-copy">
-        before the platforms, there was physics at <b>UNICAMP</b> and mathematical
-        modelling at <b>FGV/EMAp</b>. the habit stuck: reduce a messy system to the
-        few forces that matter — congress votes, risky tenders in Paraguay,
-        pandemic traffic across Latin America. this is an n-body gravity toy —
-        <b>click to drop a body</b>, hold to make it a star, and watch the orbits
-        find their own order. or not.
-      </p>
-      <div class="portal-stat">
-        <b id="body-counter">3</b>
-        bodies in the system
-        <button class="idea-btn" data-idea="idea-pesquisa">[ the idea ]</button>
-        <span class="hint">click · hold · esc to leave</span>
-      </div>
-    </div>
-  </div>
-</section>
+</div>
 
 <script>
 (() => {
 "use strict";
-const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/* ============ portal shell ============ */
-let activePortal = null, activeLoop = null;
-const loops = {};
+const UI = {
+  skip: { en: "skip to timeline", pt: "ir para a linha do tempo" },
+  bio: {
+    en: "physicist by training.<br>i build <b>public data infrastructure</b> in Brazil —<br>open datasets, city platforms, and the tools between them.",
+    pt: "físico de formação.<br>construo <b>infraestrutura pública de dados</b> no Brasil —<br>bases abertas, plataformas de cidade e as ferramentas entre elas."
+  },
+  timelineKicker: { en: "2011 → today", pt: "2011 → hoje" },
+  timelineTitle: { en: "everything, in order", pt: "tudo, em ordem" },
+  footNote: {
+    en: "a chronological record of work — filter by type above.",
+    pt: "um registro cronológico do trabalho — filtre por tipo acima."
+  },
+  langGroup: { en: "Language", pt: "Idioma" },
+  filterGroup: { en: "Filter by type", pt: "Filtrar por tipo" },
+  filterAll: { en: "all", pt: "tudo" },
+  more: { en: "more", pt: "mais" },
+  less: { en: "less", pt: "menos" },
+  types: {
+    role: { en: "role", pt: "cargo" },
+    launch: { en: "launch", pt: "lançamento" },
+    paper: { en: "paper", pt: "artigo" },
+    tool: { en: "tool", pt: "ferramenta" },
+    writing: { en: "writing", pt: "texto" },
+    award: { en: "award", pt: "prêmio" },
+    talk: { en: "talk", pt: "palestra" },
+    education: { en: "education", pt: "formação" },
+    project: { en: "project", pt: "projeto" },
+    dataviz: { en: "dataviz", pt: "dataviz" }
+  }
+};
 
-function openPortal(id, x, y){
-  const el = document.getElementById(id);
-  el.style.setProperty("--cx", x + "px");
-  el.style.setProperty("--cy", y + "px");
-  el.classList.add("open");
-  document.body.style.overflow = "hidden";
-  activePortal = el;
-  const canvas = el.querySelector("canvas");
-  activeLoop = loops[id];
-  activeLoop && activeLoop.start(canvas);
-  el.querySelector(".portal-close").focus();
+const TYPE_ORDER = ["role", "launch", "project", "tool", "dataviz", "paper", "writing", "award", "talk", "education"];
+
+const TIMELINE = [
+  {
+    id: "left-iplanrio",
+    date: "2026-04",
+    sort: "2026-04-10",
+    type: "role",
+    themes: ["city"],
+    title: {
+      en: "left the presidency of iplanrio",
+      pt: "deixei a presidência da iplanrio"
+    },
+    blurb: {
+      en: "closed a five-year arc inside Rio's city government — from bus GPS to the municipal technology company.",
+      pt: "fechei um arco de cinco anos na prefeitura do Rio — do GPS dos ônibus à empresa municipal de tecnologia."
+    }
+  },
+  {
+    id: "rio-3-open",
+    date: "2026-04",
+    sort: "2026-04-02",
+    type: "launch",
+    themes: ["city"],
+    title: {
+      en: "Rio 3 Open — open municipal LLMs",
+      pt: "Rio 3 Open — LLMs municipais abertos"
+    },
+    blurb: {
+      en: "iplanrio released a family of six open-weight language models (MIT) for local inference — public infrastructure for the city and anyone building on ai.rio / Hugging Face.",
+      pt: "a iplanrio lançou uma família de seis modelos de linguagem open-weight (MIT) para inferência local — infraestrutura pública para a cidade e para quem constrói em ai.rio / Hugging Face."
+    },
+    links: [
+      { href: "https://ai.rio", label: { en: "ai.rio", pt: "ai.rio" }, what: { en: "model portal", pt: "portal dos modelos" } },
+      { href: "https://huggingface.co/prefeitura-rio", label: { en: "Hugging Face", pt: "Hugging Face" }, what: { en: "open weights", pt: "pesos abertos" } },
+      { href: "https://prefeitura.rio/cidade/prefeitura-do-rio-anuncia-projetos-de-inovacao-que-serao-testados-na-cidade/", label: { en: "prefeitura note", pt: "nota da prefeitura" }, what: { en: "launch", pt: "lançamento" } }
+    ]
+  },
+  {
+    id: "bloomberg-mayors",
+    date: "2026-02",
+    sort: "2026-02-27",
+    type: "award",
+    themes: ["city"],
+    title: {
+      en: "Bloomberg Mayors Challenge — winner",
+      pt: "Bloomberg Mayors Challenge — vencedor"
+    },
+    blurb: {
+      en: "rio among 24 global winners for iplanrio's proactive AI / digital active-outreach model against multidimensional vulnerability — US$1M to scale connecting families to health, school, and social services.",
+      pt: "o Rio entre 24 vencedores globais pelo modelo da iplanrio de IA proativa / busca ativa digital contra a vulnerabilidade multidimensional — US$1M para conectar famílias a saúde, escola e assistência."
+    },
+    links: [
+      { href: "https://prefeitura.rio/iplanrio/prefeitura-e-uma-das-vencedoras-do-premio-desafio-de-prefeitos-2025-2026-da-bloomberg-philanthropies/", label: { en: "prefeitura note", pt: "nota da prefeitura" }, what: { en: "award", pt: "prêmio" } },
+      { href: "https://iplanrio.prefeitura.rio/noticias/rio-e-reconhecido-globalmente-por-projeto-com-ia-e-reforca-papel-da-iplanrio-na-inovacao-publica/", label: { en: "iplanrio note", pt: "nota iplanrio" }, what: { en: "press", pt: "imprensa" } },
+      { href: "https://mayorschallenge.bloomberg.org", label: { en: "Mayors Challenge", pt: "Mayors Challenge" }, what: { en: "Bloomberg Philanthropies", pt: "Bloomberg Philanthropies" } }
+    ]
+  },
+  {
+    id: "compstat-rio",
+    date: "2026-02",
+    sort: "2026-02",
+    type: "project",
+    themes: ["city"],
+    title: {
+      en: "CompStat Rio — field app + datalake",
+      pt: "CompStat Rio — app de campo + datalake"
+    },
+    blurb: {
+      en: "iplanrio built the internal geodata app that feeds CompStat Rio — NYPD-style crime-factor mapping into the municipal datalake for mayor-led security reviews.",
+      pt: "a iplanrio construiu o app interno de geodados que alimenta o CompStat Rio — mapeamento de fatores de incidência no estilo NYPD no datalake municipal para as reuniões de segurança com o prefeito."
+    },
+    links: [
+      { href: "https://iplanrio.prefeitura.rio/noticias/conheca-o-app-desenvolvido-pela-iplanrio-que-viabiliza-o-compstat-rio/", label: { en: "iplanrio note", pt: "nota iplanrio" }, what: { en: "the app", pt: "o app" } },
+      { href: "https://prefeitura.rio/cidade/chefe-da-policia-de-nova-york-visita-o-compstat-rio-e-conhece-estrutura-da-civitas-e-atuacao-da-forca-municipal/", label: { en: "NYPD visit", pt: "visita da NYPD" }, what: { en: "prefeitura", pt: "prefeitura" } }
+    ]
+  },
+  {
+    id: "rio-ai-city",
+    date: "2025-11",
+    sort: "2025-11",
+    type: "project",
+    themes: ["city"],
+    title: {
+      en: "Rio AI City — partnership with X (Alphabet)",
+      pt: "Rio AI City — parceria com a X (Alphabet)"
+    },
+    blurb: {
+      en: "signed with X – The Moonshot Factory: connectivity (Taara), grid AI (Tapestry), licensing (Anori), and recycling (Materra) — iplanrio led the technical articulation.",
+      pt: "assinamos com a X – The Moonshot Factory: conectividade (Taara), IA na rede elétrica (Tapestry), licenciamento (Anori) e reciclagem (Materra) — a iplanrio articulou o lado técnico."
+    },
+    links: [
+      { href: "https://iplanrio.prefeitura.rio/noticias/rio-firma-parceria-com-a-x-the-moonshot-factory-da-alphabet-e-inicia-nova-era-de-inovacao-com-apoio-da-iplanrio/", label: { en: "iplanrio note", pt: "nota iplanrio" }, what: { en: "partnership", pt: "parceria" } },
+      { href: "https://prefeitura.rio/iplanrio/prefeitura-firma-parceria-inedita-para-impulsionar-a-inovacao-e-o-crescimento-economico/", label: { en: "prefeitura note", pt: "nota da prefeitura" }, what: { en: "announcement", pt: "anúncio" } }
+    ]
+  },
+  {
+    id: "hci-sms",
+    date: "2025-10",
+    sort: "2025-10-09",
+    type: "launch",
+    themes: ["city"],
+    title: {
+      en: "Histórico Clínico Integrado — SMS Rio",
+      pt: "Histórico Clínico Integrado — SMS Rio"
+    },
+    blurb: {
+      en: "one clinical history for ~7M patients across primary care and emergency — built on the health data lake SMS ran with iplanrio / the data office.",
+      pt: "um histórico clínico para ~7M de pacientes entre atenção primária e emergência — sobre o data lake da saúde que a SMS fez com a iplanrio / escritório de dados."
+    },
+    links: [
+      { href: "https://saude.prefeitura.rio/hci/", label: { en: "HCI (SMS)", pt: "HCI (SMS)" }, what: { en: "official page", pt: "página oficial" } },
+      { href: "https://saude.prefeitura.rio/noticias/historico-clinico-integrado-saude-mais-eficiente-e-personalizada/", label: { en: "SMS note", pt: "nota SMS" }, what: { en: "launch", pt: "lançamento" } },
+      { href: "https://oglobo.globo.com/rio/noticia/2025/10/09/secretaria-municipal-de-saude-do-rio-desenvolve-plataforma-que-reune-historico-clinico-de-7-milhoes-de-pacientes.ghtml", label: { en: "O Globo", pt: "O Globo" }, what: { en: "press", pt: "imprensa" } }
+    ]
+  },
+  {
+    id: "pequenos-cariocas",
+    date: "2025-10",
+    sort: "2025-10-12",
+    type: "project",
+    themes: ["city"],
+    title: {
+      en: "Pequenos Cariocas — data + eligibility stack",
+      pt: "Pequenos Cariocas — pilha de dados e elegibilidade"
+    },
+    blurb: {
+      en: "iplanrio integrated SMAS systems with CadÚnico, automated WhatsApp outreach, and Carioca Digital checks for the early-childhood protection network and PIC card.",
+      pt: "a iplanrio integrou sistemas da SMAS ao CadÚnico, automatizou o WhatsApp e as consultas no Carioca Digital para a rede de proteção à primeira infância e o cartão PIC."
+    },
+    links: [
+      { href: "https://iplanrio.prefeitura.rio/noticias/pequenos-cariocas-tecnologia-da-iplanrio-apoia-a-gestao-e-a-seguranca-dos-dados-no-novo-programa-da-prefeitura-do-rio/", label: { en: "iplanrio note", pt: "nota iplanrio" }, what: { en: "tech role", pt: "papel da tech" } }
+    ]
+  },
+  {
+    id: "nature-sci-data-bus",
+    date: "2025-09",
+    sort: "2025-09",
+    type: "paper",
+    themes: ["research", "city"],
+    title: {
+      en: "Nature Scientific Data — Rio bus mobility dataset",
+      pt: "Nature Scientific Data — dataset de mobilidade de ônibus do Rio"
+    },
+    blurb: {
+      en: "equal-contribution paper with Carvalho, Vancellote, Casais &amp; others — open dataset of bus GPS and environmental indicators from Rio.",
+      pt: "artigo em contribuição igual com Carvalho, Vancellote, Casais e outros — dataset aberto de GPS de ônibus e indicadores ambientais do Rio."
+    },
+    links: [
+      { href: "https://doi.org/10.1038/s41597-025-05755-6", label: { en: "Scientific Data", pt: "Scientific Data" }, what: { en: "Nature portfolio", pt: "portfólio Nature" } },
+      { href: "https://www.nature.com/articles/s41597-025-05755-6", label: { en: "article page", pt: "página do artigo" }, what: { en: "full text", pt: "texto completo" } }
+    ]
+  },
+  {
+    id: "fgv-talk-2025",
+    date: "2025-06",
+    sort: "2025-06",
+    type: "talk",
+    themes: ["city", "research"],
+    title: {
+      en: "FGV EMAp — mathematics in cities",
+      pt: "FGV EMAp — matemática nas cidades"
+    },
+    blurb: {
+      en: "talk on how Rio uses terabytes of data to solve real problems — as CTO and president of iplanrio.",
+      pt: "palestra sobre como o Rio usa terabytes de dados para resolver problemas reais — como CTO e presidente da iplanrio."
+    },
+    links: [
+      { href: "https://emap.fgv.br/eventos/matematica-nas-cidades-como-o-rio-de-janeiro-usa-terabytes-de-dados-para-resolver-problemas", label: { en: "event page", pt: "página do evento" }, what: { en: "FGV EMAp", pt: "FGV EMAp" } }
+    ]
+  },
+  {
+    id: "odia-oped",
+    date: "2025-05",
+    sort: "2025-05",
+    type: "writing",
+    themes: ["city"],
+    title: {
+      en: "op-ed in O Dia",
+      pt: "artigo de opinião no O Dia"
+    },
+    blurb: {
+      en: "on data that transform cities — and why public technology earns trust when it becomes invisible plumbing.",
+      pt: "sobre dados que transformam cidades — e por que a tecnologia pública conquista confiança quando vira infraestrutura invisível."
+    },
+    links: [
+      { href: "https://odia.ig.com.br/opiniao/2025/05/7057444-joao-carabetta-dados-que-transformam-cidades-e-ganham-o-respeito-do-mundo.html", label: { en: "O Dia", pt: "O Dia" }, what: { en: "opinion piece", pt: "opinião" } }
+    ]
+  },
+  {
+    id: "google-cloud-rio",
+    date: "2025",
+    sort: "2025-04",
+    type: "award",
+    themes: ["city"],
+    title: {
+      en: "Google Cloud global case — Escritório de Dados",
+      pt: "case global Google Cloud — Escritório de Dados"
+    },
+    blurb: {
+      en: "Rio's data office featured among Google Cloud's public-sector references for integrating 20+ secretariats and 4.7B+ records.",
+      pt: "o escritório de dados do Rio entre as referências de setor público da Google Cloud — 20+ secretarias e 4,7B+ registros."
+    },
+    links: [
+      { href: "https://cloud.google.com/customers/intl/pt-br/escritorio-de-dados-da-cidade-do-rio-de-janeiro?hl=pt-BR", label: { en: "Google Cloud case study", pt: "case Google Cloud" }, what: { en: "external telling", pt: "narrativa externa" } },
+      { href: "https://iplanrio.prefeitura.rio/noticias/prefeitura-do-rio-e-reconhecida-pela-google-cloud-por-uso-inovador-de-dados-para-politicas-publicas/", label: { en: "iplanrio note", pt: "nota iplanrio" }, what: { en: "press", pt: "imprensa" } }
+    ]
+  },
+  {
+    id: "mulher-rio",
+    date: "2025-02",
+    sort: "2025-02",
+    type: "launch",
+    themes: ["city"],
+    title: {
+      en: "Mulher.Rio",
+      pt: "Mulher.Rio"
+    },
+    blurb: {
+      en: "anonymous platform for women facing violence — Secretaria da Mulher with CIVITAS and iplanrio on the tech. later pushed via Taxi.Rio in Agosto Lilás.",
+      pt: "plataforma anônima para mulheres em situação de violência — Secretaria da Mulher com CIVITAS e iplanrio na tecnologia. depois divulgada no Taxi.Rio no Agosto Lilás."
+    },
+    links: [
+      { href: "https://www.mulher.rio", label: { en: "mulher.rio", pt: "mulher.rio" }, what: { en: "the platform", pt: "a plataforma" } },
+      { href: "https://diariodorio.com/prefeitura-do-rio-lanca-site-para-apoiar-mulheres-em-situacao-de-violencia/", label: { en: "Diário do Rio", pt: "Diário do Rio" }, what: { en: "launch coverage", pt: "cobertura do lançamento" } },
+      { href: "https://prefeitura.rio/cidade/secretaria-da-mulher-e-taxi-rio-se-unem-em-campanha-de-combate-a-violencia-contra-as-mulheres/", label: { en: "Agosto Lilás × Taxi.Rio", pt: "Agosto Lilás × Taxi.Rio" }, what: { en: "campaign", pt: "campanha" } }
+    ]
+  },
+  {
+    id: "iplanrio-president",
+    date: "2025-01",
+    sort: "2025-01",
+    type: "role",
+    themes: ["city"],
+    title: {
+      en: "CTO of Rio · president of iplanrio",
+      pt: "CTO do Rio · presidente da iplanrio"
+    },
+    blurb: {
+      en: "led Rio's municipal technology company — 1746, carioca digital, processo.rio, health systems — after years as chief data officer.",
+      pt: "liderei a empresa municipal de tecnologia do Rio — 1746, carioca digital, processo.rio, sistemas de saúde — depois de anos como chefe de dados."
+    },
+    detail: {
+      en: [
+        ["the idea", "governments are usually blind in real time. the data exists — buses broadcast GPS, schools take attendance, clinics log visits, citizens open tickets — but it arrives late, trapped in silos. my work in Rio was about closing that loop: turning the city's own exhaust of records into a live, governed, queryable picture of itself."],
+        ["where it started: the buses", "in 2021 i joined Rio's <b>transport department</b> to lead data science. buses had carried GPS since 2011, but the feed was barely used. we built the pipeline — every ping, every line, every operator — so the city could finally answer: which bus passes where, at what headway, and whether operators delivered the service they were paid for."],
+        ["data office → the data lake", "that pipeline became the seed of the <b>Data Office</b>, which i founded and ran. in june 2022 we launched Rio's <b>municipal data lake</b>: transport, health, education, citizen services. it grew past <b>4.7 billion records</b>, feeding dashboards managers actually use."],
+        ["running the machine: iplanrio", "from there i became chief data officer, then chief executive of technology, and in 2025 president of <b>iplanrio</b> — founded in 1979, responsible for the systems the city runs on. the job: make the invisible plumbing so reliable that citizens never have to think about it. i led iplanrio until 2026."],
+        ["the principle", "real-time data changes the <em>tense</em> of government. a city that only sees the past can only apologize; a city that sees the present can dispatch a repair crew, call a family whose kid stopped showing up to school, fix the bus line this week."]
+      ],
+      pt: [
+        ["a ideia", "governos costumam ser cegos em tempo real. os dados existem — ônibus emitem GPS, escolas registram presença, clínicas anotam visitas, cidadãos abrem chamados — mas chegam tarde, presos em silos. meu trabalho no Rio foi fechar esse ciclo: transformar o exaustor de registros da cidade numa imagem viva, governada e consultável de si mesma."],
+        ["onde começou: os ônibus", "em 2021 entrei na <b>secretaria de transportes</b> do Rio para liderar ciência de dados. os ônibus tinham GPS desde 2011, mas o feed quase não era usado. construímos o pipeline — cada ping, cada linha, cada operador — para a cidade finalmente responder: qual ônibus passa onde, com qual intervalo, e se as empresas entregavam o serviço pelo qual eram pagas."],
+        ["escritório de dados → datalake", "esse pipeline virou a semente do <b>Escritório de Dados</b>, que fundei e dirigi. em junho de 2022 lançamos o <b>datalake municipal</b>: transporte, saúde, educação, serviços ao cidadão. passou de <b>4,7 bilhões de registros</b>, alimentando painéis que gestores realmente usam."],
+        ["rodando a máquina: iplanrio", "dali virei chefe de dados, depois chefe executivo de tecnologia, e em 2025 presidente da <b>iplanrio</b> — fundada em 1979, responsável pelos sistemas em que a cidade roda. o ofício: tornar a tubulação invisível tão confiável que o cidadão nunca precise pensar nela. liderei a iplanrio até 2026."],
+        ["o princípio", "dados em tempo real mudam o <em>tempo verbal</em> do governo. uma cidade que só vê o passado só consegue pedir desculpas; uma que vê o presente pode despachar uma equipe, ligar para a família cujo filho sumiu da escola, consertar a linha de ônibus nesta semana."]
+      ]
+    },
+    links: [
+      { href: "https://dados.rio", label: { en: "dados.rio", pt: "dados.rio" }, what: { en: "open data & data office", pt: "dados abertos e escritório" } },
+      { href: "https://iplanrio.prefeitura.rio", label: { en: "iplanrio", pt: "iplanrio" }, what: { en: "municipal tech company", pt: "empresa municipal de TI" } }
+    ]
+  },
+  {
+    id: "govtech-2024",
+    date: "2024",
+    sort: "2024-10",
+    type: "talk",
+    themes: ["city"],
+    title: {
+      en: "Govtech 4 Impact World Congress",
+      pt: "Govtech 4 Impact World Congress"
+    },
+    blurb: {
+      en: "spoke as Rio's chief data officer on civic tech, open data, and city-scale infrastructure.",
+      pt: "falei como chefe de dados do Rio sobre civic tech, dados abertos e infraestrutura em escala de cidade."
+    },
+    links: [
+      { href: "https://g4i2024.kenes.com/speakers/", label: { en: "speakers", pt: "palestrantes" }, what: { en: "congress site", pt: "site do congresso" } }
+    ]
+  },
+  {
+    id: "unu-ebook",
+    date: "2024-05",
+    sort: "2024-05",
+    type: "paper",
+    themes: ["research", "city"],
+    title: {
+      en: "chapter — Governança de dados no setor público (UNU)",
+      pt: "capítulo — Governança de dados no setor público (UNU)"
+    },
+    blurb: {
+      en: "co-authored chapter in the UNU ebook on public-sector data governance — wrote as Rio's chief data officer and Base dos Dados co-founder.",
+      pt: "capítulo coautorado no ebook da UNU sobre governança de dados no setor público — escrevi como chefe de dados do Rio e co-fundador da Base dos Dados."
+    },
+    links: [
+      { href: "https://unu.edu/sites/default/files/2024-07/Governan%C3%A7a%20de%20dados%20no%20setor%20p%C3%BAblico_EBOOK_0.pdf", label: { en: "UNU ebook (PDF)", pt: "ebook UNU (PDF)" }, what: { en: "Portuguese", pt: "em português" } }
+    ]
+  },
+  {
+    id: "civitas",
+    date: "2024-06",
+    sort: "2024-06",
+    type: "launch",
+    themes: ["city"],
+    title: {
+      en: "CIVITAS — Rio intelligence center",
+      pt: "CIVITAS — central de inteligência do Rio"
+    },
+    blurb: {
+      en: "city intelligence hub for public safety — cameras, radars, 1746, and the municipal datalake. iplanrio / the data office fed the pipes; google later cited 6M+ plate reads/day.",
+      pt: "central de inteligência da cidade para segurança pública — câmeras, radares, 1746 e o datalake municipal. a iplanrio / escritório de dados alimentava os canos; a google depois citou 6M+ leituras de placa/dia."
+    },
+    links: [
+      { href: "https://civitas.rio/", label: { en: "civitas.rio", pt: "civitas.rio" }, what: { en: "official site", pt: "site oficial" } },
+      { href: "https://prefeitura.rio/casa-civil/prefeitura-lanca-central-de-inteligencia-vigilancia-e-tecnologia-de-apoio-a-seguranca-publica-civitas-e-anuncia-parceria-com-disque-denuncia/", label: { en: "launch note", pt: "nota de lançamento" }, what: { en: "prefeitura", pt: "prefeitura" } },
+      { href: "https://viz-staging.dados.rio/#/civitas", label: { en: "Estamos de olho!", pt: "Estamos de olho!" }, what: { en: "dataviz", pt: "dataviz" } }
+    ]
+  },
+  {
+    id: "dv-g20-em-dados",
+    date: "2024-11",
+    sort: "2024-11-05",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "G20 em Dados — especial",
+      pt: "G20 em Dados — especial"
+    },
+    blurb: {
+      en: "we published an interactive special on what hosting the G20 meant for Rio — money, people, and the city's global stage.",
+      pt: "publicamos um especial interativo sobre o que sediar o G20 significou para o Rio — dinheiro, gente e o palco global da cidade."
+    },
+    links: [
+      { href: "https://prefeitura-rio.github.io/viz_G20/", label: { en: "G20 em Dados", pt: "G20 em Dados" }, what: { en: "especial", pt: "especial" } }
+    ]
+  },
+  {
+    id: "dv-destino-rio",
+    date: "2024",
+    sort: "2024-09",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "Destino: Rio de Janeiro — megaevents",
+      pt: "Destino: Rio de Janeiro — megaeventos"
+    },
+    blurb: {
+      en: "we mapped why the city spends public money hosting the world — not just for the photo op.",
+      pt: "mapeamos por que a cidade gasta recurso público para receber o mundo — não só pela foto."
+    },
+    links: [
+      { href: "https://viz.dados.rio/#/megaeventos", label: { en: "Destino: Rio", pt: "Destino: Rio" }, what: { en: "especial", pt: "especial" } }
+    ]
+  },
+  {
+    id: "dv-estamos-de-olho",
+    date: "2024-06",
+    sort: "2024-06-15",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "Estamos de olho! — CIVITAS dataviz",
+      pt: "Estamos de olho! — dataviz da CIVITAS"
+    },
+    blurb: {
+      en: "a public storytelling piece on how the intelligence center watches the city 24/7 — cameras, radars, and the pipes behind public safety.",
+      pt: "uma narrativa pública sobre como a central de inteligência observa a cidade 24h — câmeras, radares e os canos por trás da segurança."
+    },
+    links: [
+      { href: "https://viz-staging.dados.rio/#/civitas", label: { en: "Estamos de olho!", pt: "Estamos de olho!" }, what: { en: "especial", pt: "especial" } },
+      { href: "https://www.dados.rio/especiais", label: { en: "especiais", pt: "especiais" }, what: { en: "dados.rio", pt: "dados.rio" } }
+    ]
+  },
+  {
+    id: "dv-rio-empregos",
+    date: "2024-05",
+    sort: "2024-05-20",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "O Rio nunca teve tanta gente trabalhando",
+      pt: "O Rio nunca teve tanta gente trabalhando"
+    },
+    blurb: {
+      en: "we told the jobs recovery through three cariocas who found work — and the numbers behind the rebound.",
+      pt: "contamos a recuperação do emprego por três cariocas que acharam trabalho — e os números por trás da retomada."
+    },
+    links: [
+      { href: "https://prefeitura-rio.github.io/riodeempregos/", label: { en: "especial", pt: "especial" }, what: { en: "dataviz", pt: "dataviz" } }
+    ]
+  },
+  {
+    id: "dv-legado-olimpico",
+    date: "2024-03",
+    sort: "2024-03-15",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "Olympic legacy — two especiais",
+      pt: "legado olímpico — dois especiais"
+    },
+    blurb: {
+      en: "we asked what Rio would be without the Games, then how nomadic architecture tried to avoid white elephants.",
+      pt: "perguntamos o que seria do Rio sem os Jogos, e como a arquitetura nômade tentou evitar elefantes brancos."
+    },
+    links: [
+      { href: "https://prefeitura-rio.github.io/LegadoOlimpico2/", label: { en: "without the Olympics", pt: "sem as Olimpíadas" }, what: { en: "especial", pt: "especial" } },
+      { href: "https://prefeitura-rio.github.io/LegadoOlimpico/", label: { en: "no white elephants", pt: "sem elefantes brancos" }, what: { en: "especial", pt: "especial" } }
+    ]
+  },
+  {
+    id: "dv-obras-cep",
+    date: "2024",
+    sort: "2024-04",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "obras & CEP — where the city invests",
+      pt: "obras & CEP — onde a cidade investe"
+    },
+    blurb: {
+      en: "two especiais: infrastructure prioritized for the North and West Zones, and CEP — the street-level program against violence.",
+      pt: "dois especiais: infraestrutura priorizada para Zona Norte e Oeste, e o CEP — o programa de rua contra a violência."
+    },
+    links: [
+      { href: "https://viz.dados.rio/#/obras", label: { en: "A gente prioriza…", pt: "A gente prioriza…" }, what: { en: "obras", pt: "obras" } },
+      { href: "https://viz.dados.rio/#/especial-seop/cep", label: { en: "Seu Rio, Sua Rua", pt: "Seu Rio, Sua Rua" }, what: { en: "CEP", pt: "CEP" } }
+    ]
+  },
+  {
+    id: "dv-rio-capital-mundo",
+    date: "2023-12",
+    sort: "2023-12",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "Rio Capital do Mundo",
+      pt: "Rio Capital do Mundo"
+    },
+    blurb: {
+      en: "a time-travel dataviz on the city's long bet to host the world — built as G20 season approached.",
+      pt: "uma viagem no tempo em dataviz sobre a aposta longa da cidade em receber o mundo — na temporada do G20."
+    },
+    links: [
+      { href: "https://prefeitura-rio.github.io/G20Dataviz/", label: { en: "Rio Capital do Mundo", pt: "Rio Capital do Mundo" }, what: { en: "especial", pt: "especial" } }
+    ]
+  },
+  {
+    id: "dv-inverno-quente",
+    date: "2023-10",
+    sort: "2023-10",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "Rio's second-hottest winter in 20 years",
+      pt: "segundo inverno mais quente em 20 anos"
+    },
+    blurb: {
+      en: "we charted an atypical winter — September the hottest on record in the series, with the North Zone hit hardest.",
+      pt: "mostramos um inverno atípico — setembro o mais quente da série, com a Zona Norte no pior calor."
+    },
+    links: [
+      { href: "https://www.dados.rio/post/setembro-deste-ano-foi-o-mais-quente-na-serie-historica", label: { en: "post", pt: "post" }, what: { en: "visualização", pt: "visualização" } }
+    ]
+  },
+  {
+    id: "dv-1746",
+    date: "2023-09",
+    sort: "2023-09",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "1746 — on-time closures at a high",
+      pt: "1746 — encerramentos no prazo em alta"
+    },
+    blurb: {
+      en: "we published the numbers behind the city's service center hitting its best on-time closure rate since 2021.",
+      pt: "publicamos os números da central de atendimento no melhor nível de encerramentos no prazo desde 2021."
+    },
+    links: [
+      { href: "https://www.dados.rio/post/chamadas-do-1746-alcancam-maior-nivel-de-encerramento-no-prazo-desde-2021", label: { en: "post", pt: "post" }, what: { en: "visualização", pt: "visualização" } }
+    ]
+  },
+  {
+    id: "dv-metabase",
+    date: "2023-07",
+    sort: "2023-07",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "Metabase across the prefeitura",
+      pt: "Metabase na prefeitura"
+    },
+    blurb: {
+      en: "we wrote up why we standardized on open-source Metabase — shared folders of charts so secretariats stop reinventing the same dashboard.",
+      pt: "contamos por que padronizamos no Metabase open-source — pastas compartilhadas de gráficos para as secretarias pararem de reinventar o mesmo painel."
+    },
+    links: [
+      { href: "https://www.dados.rio/post/metabase-centralizando-analises-de-dados-na-prefeitura-do-rio", label: { en: "post", pt: "post" }, what: { en: "cultura de dados", pt: "cultura de dados" } },
+      { href: "https://www.dados.rio/dashboard-home", label: { en: "dashboard repo", pt: "repositório de painéis" }, what: { en: "50+ panels", pt: "50+ painéis" } }
+    ]
+  },
+  {
+    id: "dv-brt-reconstrucao",
+    date: "2023",
+    sort: "2023-06",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "BRT Rio — construção e reconstrução",
+      pt: "BRT Rio — construção e reconstrução"
+    },
+    blurb: {
+      en: "an updated special on rebuilding the BRT — new fleet, Transbrasil, Terminal Gentileza, and the corridors' history in numbers.",
+      pt: "um especial atualizado sobre a reconstrução do BRT — frota nova, Transbrasil, Terminal Gentileza e a história dos corredores em números."
+    },
+    links: [
+      { href: "https://www.dados.rio/especiais/reconstrucao-brt", label: { en: "reconstrução BRT", pt: "reconstrução BRT" }, what: { en: "especial", pt: "especial" } }
+    ]
+  },
+  {
+    id: "dv-brt-campanhas",
+    date: "2023-03",
+    sort: "2023-03",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "BRT — o dono é você / cuide do que é nosso",
+      pt: "BRT — o dono é você / cuide do que é nosso"
+    },
+    blurb: {
+      en: "two short pieces turning open BRT data into a citizen pitch — the system is yours; take care of it.",
+      pt: "dois textos curtos transformando dados abertos do BRT em apelo ao cidadão — o sistema é seu; cuide dele."
+    },
+    links: [
+      { href: "https://www.dados.rio/post/brt-o-dono-e-voce", label: { en: "o dono é você", pt: "o dono é você" }, what: { en: "Mar 2023", pt: "mar/2023" } },
+      { href: "https://www.dados.rio/post/brt-cuide-do-que-e-nosso", label: { en: "cuide do que é nosso", pt: "cuide do que é nosso" }, what: { en: "Feb 2023", pt: "fev/2023" } }
+    ]
+  },
+  {
+    id: "dv-carnaval-dados",
+    date: "2023-02",
+    sort: "2023-02",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "Carnaval de Dados",
+      pt: "Carnaval de Dados"
+    },
+    blurb: {
+      en: "we put Carnival's economy in charts — ISS, tourists, schools, street blocs, and a R$4.5B city estimate for 2023.",
+      pt: "colocamos a economia do Carnaval em gráficos — ISS, turistas, escolas, blocos e a estimativa de R$ 4,5 bi para 2023."
+    },
+    links: [
+      { href: "https://www.dados.rio/especiais/carnaval-de-dados", label: { en: "Carnaval de Dados", pt: "Carnaval de Dados" }, what: { en: "especial", pt: "especial" } }
+    ]
+  },
+  {
+    id: "dv-posts-late-2022",
+    date: "2022",
+    sort: "2022-11",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "dados.rio visualizações — late 2022",
+      pt: "visualizações dados.rio — fim de 2022"
+    },
+    blurb: {
+      en: "a run of shorter pieces: Plano Verão works, slavery-era flows for Black Awareness Day, Galeão flights after covid, Saturday samba in the center, Rock in Rio with the city, and March rains.",
+      pt: "uma sequência de peças curtas: obras do Plano Verão, fluxos da escravidão no Dia da Consciência Negra, voos do Galeão pós-covid, samba no centro no sábado, Rock in Rio com a prefeitura e as águas de março."
+    },
+    links: [
+      { href: "https://www.dados.rio/post/obras-do-plano-verao", label: { en: "Plano Verão", pt: "Plano Verão" }, what: { en: "Nov 2022", pt: "nov/2022" } },
+      { href: "https://www.dados.rio/post/dia-da-consciencia-negra", label: { en: "Fluxo desumano", pt: "Fluxo desumano" }, what: { en: "Nov 2022", pt: "nov/2022" } },
+      { href: "https://www.dados.rio/post/apos-pandemia-galeao-nao-recupera-volume-de-voos", label: { en: "Galeão", pt: "Galeão" }, what: { en: "Nov 2022", pt: "nov/2022" } },
+      { href: "https://www.dados.rio/post/sambinha-no-centro-no-sabado", label: { en: "sambinha", pt: "sambinha" }, what: { en: "Oct 2022", pt: "out/2022" } },
+      { href: "https://www.dados.rio/post/prefeitura-e-rock-in-rio-em-numeros", label: { en: "Rock in Rio", pt: "Rock in Rio" }, what: { en: "Sep 2022", pt: "set/2022" } },
+      { href: "https://www.dados.rio/post/o-rio-das-aguas-de-marco", label: { en: "águas de março", pt: "águas de março" }, what: { en: "Aug 2022", pt: "ago/2022" } }
+    ]
+  },
+  {
+    id: "dv-album-copa",
+    date: "2022-11",
+    sort: "2022-11-15",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "Álbum da Copa do Mundo Carioca",
+      pt: "Álbum da Copa do Mundo Carioca"
+    },
+    blurb: {
+      en: "our own World Cup sticker album — carioca players across every Cup, built as a playful especial.",
+      pt: "nosso álbum da Copa — jogadores cariocas em todas as Copas, num especial brincalhão."
+    },
+    links: [
+      { href: "https://www.dados.rio/especiais/copa-do-mundo-carioca", label: { en: "álbum", pt: "álbum" }, what: { en: "especial", pt: "especial" } }
+    ]
+  },
+  {
+    id: "dv-demolicoes",
+    date: "2022",
+    sort: "2022-08",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "1,300+ irregular buildings removed",
+      pt: "mais de 1.300 construções irregulares a menos"
+    },
+    blurb: {
+      en: "a special on demolitions — losses for organized crime, green areas kept, and safer streets for residents.",
+      pt: "um especial sobre demolições — prejuízo ao crime organizado, áreas verdes preservadas e mais segurança para moradores."
+    },
+    links: [
+      { href: "https://share.dados.rio/demolicoes", label: { en: "demolições", pt: "demolições" }, what: { en: "especial", pt: "especial" } }
+    ]
+  },
+  {
+    id: "dv-combate-fome",
+    date: "2022-07",
+    sort: "2022-07-10",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "Rio against hunger — in numbers",
+      pt: "o Rio no combate à fome — em números"
+    },
+    blurb: {
+      en: "we charted community kitchens, Hortas Cariocas, and popular restaurants — the city's food-security stack in one piece.",
+      pt: "mostramos cozinhas comunitárias, Hortas Cariocas e restaurantes populares — a rede de segurança alimentar da cidade numa peça só."
+    },
+    links: [
+      { href: "https://www.dados.rio/post/o-rio-de-janeiro-no-combate-a-fome", label: { en: "post", pt: "post" }, what: { en: "visualização", pt: "visualização" } }
+    ]
+  },
+  {
+    id: "dv-bairro-sao-joao",
+    date: "2022-06",
+    sort: "2022-06-20",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "newest neighborhood & São João in Carnival city",
+      pt: "bairro mais novo & São João na cidade do Carnaval"
+    },
+    blurb: {
+      en: "two June pieces: which neighborhood is the city's newest, and how São João asks for room in a Carnival town.",
+      pt: "duas peças de junho: qual é o bairro mais novo da cidade, e como o São João pede licença na cidade do Carnaval."
+    },
+    links: [
+      { href: "https://www.dados.rio/post/voce-sabe-qual-e-o-bairro-mais-novo-da-cidade", label: { en: "bairro mais novo", pt: "bairro mais novo" }, what: { en: "Jun 2022", pt: "jun/2022" } },
+      { href: "https://www.dados.rio/post/na-cidade-do-carnaval-sao-joao-pede-licenca", label: { en: "São João", pt: "São João" }, what: { en: "Jun 2022", pt: "jun/2022" } }
+    ]
+  },
+  {
+    id: "dv-frangao",
+    date: "2022-05",
+    sort: "2022-05-20",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "how much is a frangão in your neighborhood?",
+      pt: "quanto custa um frangão no seu bairro?"
+    },
+    blurb: {
+      en: "our biggest hit that year — a Big-Mac-style chicken index across 160 neighborhoods; tens of thousands of impressions and press pickup.",
+      pt: "nosso maior sucesso daquele ano — um índice à la Big Mac do frango em 160 bairros; dezenas de milhares de impressões e eco na imprensa."
+    },
+    links: [
+      { href: "https://www.dados.rio/post/quanto-custa-um-frangao-no-seu-bairro", label: { en: "frangão", pt: "frangão" }, what: { en: "visualização", pt: "visualização" } }
+    ]
+  },
+  {
+    id: "dv-dias-frios",
+    date: "2022-05",
+    sort: "2022-05-10",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "Rio's coldest days",
+      pt: "os dias mais frios do Rio"
+    },
+    blurb: {
+      en: "we ranked the city's coldest days on record — a climate piece before the heat stories took over.",
+      pt: "ranqueamos os dias mais frios da série histórica — uma peça de clima antes das matérias de calor."
+    },
+    links: [
+      { href: "https://www.dados.rio/post/os-dias-mais-frios-da-cidade-do-rio-de-janeiro", label: { en: "post", pt: "post" }, what: { en: "visualização", pt: "visualização" } }
+    ]
+  },
+  {
+    id: "dv-posts-early-2022",
+    date: "2022-04",
+    sort: "2022-04",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "dados.rio visualizações — early 2022",
+      pt: "visualizações dados.rio — início de 2022"
+    },
+    blurb: {
+      en: "early office pieces: are samba schools elite Carnival?, a rain ranking, and inequality in immigration to Rio.",
+      pt: "peças iniciais do escritório: escola de samba é carnaval da elite?, ranking das chuvas e desigualdade da imigração no Rio."
+    },
+    links: [
+      { href: "https://www.dados.rio/post/escola-de-samba-e-carnaval-da-elite", label: { en: "escolas de samba", pt: "escolas de samba" }, what: { en: "Apr 2022", pt: "abr/2022" } },
+      { href: "https://www.dados.rio/post/ranking-das-chuvas-no-rio-de-janeiro", label: { en: "chuvas", pt: "chuvas" }, what: { en: "Apr 2022", pt: "abr/2022" } },
+      { href: "https://www.dados.rio/post/desigualdade-da-imigracao-no-rio-de-janeiro", label: { en: "imigração", pt: "imigração" }, what: { en: "Apr 2022", pt: "abr/2022" } }
+    ]
+  },
+  {
+    id: "dv-brt-passado-carnaval",
+    date: "2022",
+    sort: "2022-03",
+    type: "dataviz",
+    themes: ["city", "data"],
+    title: {
+      en: "BRT facts & Do batente ao batuque",
+      pt: "BRT em fatos & Do batente ao batuque"
+    },
+    blurb: {
+      en: "two early especiais: BRT corridors past and future in numbers, and Carnival's return for every carioca — even those who skip the samba.",
+      pt: "dois especiais iniciais: corredores do BRT passado e futuro em números, e o retorno do Carnaval para todo carioca — até quem foge do samba."
+    },
+    links: [
+      { href: "https://www.dados.rio/especiais/brt", label: { en: "BRT passado e futuro", pt: "BRT passado e futuro" }, what: { en: "especial", pt: "especial" } },
+      { href: "https://www.dados.rio/especiais/do-batente-ao-batuque", label: { en: "Do batente ao batuque", pt: "Do batente ao batuque" }, what: { en: "especial", pt: "especial" } }
+    ]
+  },
+  {
+    id: "chatbot-1746",
+    date: "2024",
+    sort: "2024-04",
+    type: "project",
+    themes: ["city"],
+    title: {
+      en: "1746 chatbot — Dialogflow / Escritório de Dados",
+      pt: "chatbot do 1746 — Dialogflow / Escritório de Dados"
+    },
+    blurb: {
+      en: "city chatbot for 1746 urban services (zeladoria) — Dialogflow with GKE webhooks from the data office, later under iplanrio. cut average reply time from 30 to 5 minutes at 30k+ chats/month; google cloud global case, may 2025.",
+      pt: "chatbot da prefeitura para zeladoria no 1746 — Dialogflow com webhooks no GKE pelo escritório de dados, depois sob a iplanrio. tempo médio de resposta de 30 para 5 minutos, com 30 mil+ conversas/mês; case global google cloud, mai/2025."
+    },
+    links: [
+      { href: "https://iplanrio.prefeitura.rio/noticias/prefeitura-do-rio-e-reconhecida-pela-google-cloud-por-uso-inovador-de-dados-para-politicas-publicas/", label: { en: "iplanrio note", pt: "nota iplanrio" }, what: { en: "Google Cloud recognition", pt: "reconhecimento Google Cloud" } },
+      { href: "https://cloud.google.com/customers/intl/pt-br/escritorio-de-dados-da-cidade-do-rio-de-janeiro?hl=pt-BR", label: { en: "Google Cloud case", pt: "case Google Cloud" }, what: { en: "Dialogflow & metrics", pt: "Dialogflow e métricas" } },
+      { href: "https://www.1746.rio/", label: { en: "1746", pt: "1746" }, what: { en: "citizen services", pt: "atendimento ao cidadão" } }
+    ]
+  },
+  {
+    id: "proj-hidro",
+    date: "2023",
+    sort: "2023-08",
+    type: "project",
+    themes: ["city", "data"],
+    title: {
+      en: "Hydrological events monitoring dashboard",
+      pt: "Dashboard integrado de monitoramento de eventos hidrológicos"
+    },
+    blurb: {
+      en: "integrated dashboard for hydrological event monitoring — listed under Projetos on dados.rio.",
+      pt: "dashboard integrado de monitoramento de eventos hidrológicos — listado em Projetos no dados.rio."
+    },
+    links: [
+      { href: "https://www.dados.rio/projetos/dashboard-integrado-de-monitoramento-de-eventos-hidrologicos", label: { en: "project", pt: "projeto" }, what: { en: "dados.rio", pt: "dados.rio" } }
+    ]
+  },
+  {
+    id: "proj-aposentadorias",
+    date: "2023",
+    sort: "2023-07-15",
+    type: "project",
+    themes: ["city", "data"],
+    title: {
+      en: "Retirements & vacancies monitoring",
+      pt: "Monitoramento de aposentadorias e vacâncias"
+    },
+    blurb: {
+      en: "dashboard tracking municipal retirements and vacancies — Projetos on dados.rio.",
+      pt: "dashboard de monitoramento de aposentadorias e vacâncias — Projetos no dados.rio."
+    },
+    links: [
+      { href: "https://www.dados.rio/projetos/dashboard-de-monitoramento-de-aposentadorias-e-vacancias", label: { en: "project", pt: "projeto" }, what: { en: "dados.rio", pt: "dados.rio" } }
+    ]
+  },
+  {
+    id: "proj-territorio-legal",
+    date: "2023",
+    sort: "2023-05",
+    type: "project",
+    themes: ["city", "data"],
+    title: {
+      en: "Território Legal platform",
+      pt: "Plataforma Território Legal"
+    },
+    blurb: {
+      en: "land-regularization data platform — Projetos on dados.rio.",
+      pt: "plataforma de dados para regularização fundiária — Projetos no dados.rio."
+    },
+    links: [
+      { href: "https://www.dados.rio/projetos/plataforma-territorio-legal", label: { en: "project", pt: "projeto" }, what: { en: "dados.rio", pt: "dados.rio" } }
+    ]
+  },
+  {
+    id: "proj-sinais-transito",
+    date: "2023",
+    sort: "2023-04",
+    type: "project",
+    themes: ["city", "data"],
+    title: {
+      en: "Traffic signal maintenance",
+      pt: "Manutenção de sinais de trânsito"
+    },
+    blurb: {
+      en: "ops data for traffic-signal maintenance across the city — Projetos on dados.rio.",
+      pt: "dados operacionais para manutenção de sinais de trânsito — Projetos no dados.rio."
+    },
+    links: [
+      { href: "https://www.dados.rio/projetos/manutencao-de-sinais-de-transito", label: { en: "project", pt: "projeto" }, what: { en: "dados.rio", pt: "dados.rio" } }
+    ]
+  },
+  {
+    id: "proj-datalake-escolas",
+    date: "2023",
+    sort: "2023-03",
+    type: "project",
+    themes: ["city", "data"],
+    title: {
+      en: "Schools datalake",
+      pt: "Datalake das escolas"
+    },
+    blurb: {
+      en: "education-sector datalake for municipal schools — Projetos on dados.rio.",
+      pt: "datalake da educação para escolas municipais — Projetos no dados.rio."
+    },
+    links: [
+      { href: "https://www.dados.rio/projetos/datalake-das-escolas", label: { en: "project", pt: "projeto" }, what: { en: "dados.rio", pt: "dados.rio" } }
+    ]
+  },
+  {
+    id: "proj-asfalto",
+    date: "2022",
+    sort: "2022-11",
+    type: "project",
+    themes: ["city", "data"],
+    title: {
+      en: "Asfalto Sempre Liso",
+      pt: "Asfalto Sempre Liso"
+    },
+    blurb: {
+      en: "pavement program data product — Projetos on dados.rio.",
+      pt: "produto de dados do programa de pavimentação — Projetos no dados.rio."
+    },
+    links: [
+      { href: "https://www.dados.rio/projetos/asfalto-sempre-liso", label: { en: "project", pt: "projeto" }, what: { en: "dados.rio", pt: "dados.rio" } }
+    ]
+  },
+  {
+    id: "proj-enchentes",
+    date: "2022",
+    sort: "2022-09",
+    type: "project",
+    themes: ["city", "data"],
+    title: {
+      en: "Flood & waterlogging prevention program",
+      pt: "Programa de prevenção de enchentes e alagamentos"
+    },
+    blurb: {
+      en: "data support for flood and waterlogging prevention — Projetos on dados.rio.",
+      pt: "apoio em dados ao programa de prevenção de enchentes e alagamentos — Projetos no dados.rio."
+    },
+    links: [
+      { href: "https://www.dados.rio/projetos/programa-de-prevencao-de-enchentes-e-alagamentos", label: { en: "project", pt: "projeto" }, what: { en: "dados.rio", pt: "dados.rio" } }
+    ]
+  },
+  {
+    id: "datalake-rio",
+    date: "2022-06",
+    sort: "2022-06",
+    type: "launch",
+    themes: ["city", "data"],
+    title: {
+      en: "Rio municipal public datalake",
+      pt: "datalake público municipal do Rio"
+    },
+    blurb: {
+      en: "launched what we called the world's first public municipal datalake — real-time, queryable, across secretariats.",
+      pt: "lançamos o que chamamos de primeiro datalake público municipal do mundo — em tempo real, consultável, entre secretarias."
+    },
+    links: [
+      { href: "https://www.dados.rio/post/o-primeiro-datalake-publico-municipal-do-mundo", label: { en: "launch post", pt: "post de lançamento" }, what: { en: "dados.rio", pt: "dados.rio" } }
+    ]
+  },
+  {
+    id: "data-basis-paper",
+    date: "2022",
+    sort: "2022-07",
+    type: "paper",
+    themes: ["data", "research"],
+    title: {
+      en: "Data Basis: universalizing access to high-quality data",
+      pt: "Data Basis: universalizando o acesso a dados de qualidade"
+    },
+    blurb: {
+      en: "with Dahis, Scovino, Israel &amp; Oliveira — how and why we built Base dos Dados: search, lake, APIs, social return.",
+      pt: "com Dahis, Scovino, Israel &amp; Oliveira — como e por que construímos a Base dos Dados: busca, lake, APIs, retorno social."
+    },
+    links: [
+      { href: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4157813", label: { en: "SSRN", pt: "SSRN" }, what: { en: "paper", pt: "artigo" } },
+      { href: "https://doi.org/10.31235/osf.io/r76yg", label: { en: "SocArXiv", pt: "SocArXiv" }, what: { en: "preprint", pt: "preprint" } },
+      { href: "https://voxdev.org/topic/methods-measurement/making-high-quality-data-accessible-and-usable", label: { en: "VoxDev summary", pt: "resumo VoxDev" }, what: { en: "methods", pt: "métodos" } }
+    ]
+  },
+  {
+    id: "escritorio-dados",
+    date: "2021-11",
+    sort: "2021-11",
+    type: "role",
+    themes: ["city"],
+    title: {
+      en: "Chief Data Officer · Escritório de Dados",
+      pt: "Chefe de Dados · Escritório de Dados"
+    },
+    blurb: {
+      en: "founded and ran Rio's Data Office under the mayor's cabinet — research, training, and open storytelling at dados.rio.",
+      pt: "fundei e dirigi o Escritório de Dados do Rio no gabinete do prefeito — pesquisa, formação e narrativas abertas em dados.rio."
+    },
+    links: [
+      { href: "https://www.dados.rio/sobre", label: { en: "about the office", pt: "sobre o escritório" }, what: { en: "dados.rio", pt: "dados.rio" } }
+    ]
+  },
+  {
+    id: "bd-awards-2021",
+    date: "2021-10",
+    sort: "2021-10",
+    type: "award",
+    themes: ["data"],
+    title: {
+      en: "Google Cloud Customer Award · Prêmio Tesouro",
+      pt: "Google Cloud Customer Award · Prêmio Tesouro"
+    },
+    blurb: {
+      en: "Base dos Dados won Google Cloud Next'21 Social Impact (only Brazilian org in the category) and 1st place at the National Treasury prize.",
+      pt: "a Base dos Dados ganhou o Google Cloud Next'21 Social Impact (única org brasileira na categoria) e 1º lugar no Prêmio Tesouro Nacional."
+    },
+    links: [
+      { href: "https://basedosdados.org/about-us", label: { en: "our story", pt: "nossa história" }, what: { en: "Base dos Dados", pt: "Base dos Dados" } }
+    ]
+  },
+  {
+    id: "smtr",
+    date: "2021-02",
+    sort: "2021-02",
+    type: "role",
+    themes: ["city"],
+    title: {
+      en: "Head of Data Science — Rio transport",
+      pt: "Head de Ciência de Dados — transportes do Rio"
+    },
+    blurb: {
+      en: "joined SMTR to capture and use the city's live bus GPS — the seed of everything that followed in municipal data.",
+      pt: "entrei na SMTR para capturar e usar o GPS ao vivo dos ônibus — a semente de tudo que veio depois em dados municipais."
+    }
+  },
+  {
+    id: "base-dos-dados",
+    date: "2020-09 →",
+    sort: "2020-09",
+    type: "launch",
+    themes: ["data"],
+    title: {
+      en: "co-founded Base dos Dados",
+      pt: "co-fundei a Base dos Dados"
+    },
+    blurb: {
+      en: "public data as infrastructure: one cleaned, joinable warehouse on BigQuery — free at the point of use for a country of 200 million.",
+      pt: "dados públicos como infraestrutura: um warehouse limpo e cruzável no BigQuery — gratuito no ponto de uso para um país de 200 milhões."
+    },
+    detail: {
+      en: [
+        ["the idea", "Brazil produces extraordinary public data — censuses, elections, budgets, schools, hospitals, every formal company and job. for decades it lived scattered across hundreds of portals. the data was <em>technically</em> public and <em>practically</em> inaccessible. the idea behind <b>Base dos Dados</b>: access should behave like a road — built once, maintained centrally, free at the point of use. we clean once, standardize identifiers so tables join, document everything, and put it in one warehouse anyone can query with SQL."],
+        ["the economic trick", "hosting on BigQuery means the <em>consumption</em> cost is paid by the user — and with a free monthly quota, most people pay nothing. a small nonprofit could serve an entire country without owning a server. marginal cost of a query: approximately zero."],
+        ["where it started", "in 2015, during a strike at UNICAMP, i co-founded <b>UNICAMP Transparency</b> — a student collective that used data to answer what the strike was really about. coordinating fifteen contributors and defending analyses in front of assemblies of five hundred taught me: transparency is not a document, it's a capability."],
+        ["what exists today", "hundreds of treated datasets, client packages in python, R and stata, millions of queries. the methodology is in <em>Data Basis: Universalizing Access to High-Quality Data</em> (2022)."]
+      ],
+      pt: [
+        ["a ideia", "o Brasil produz dados públicos extraordinários — censos, eleições, orçamentos, escolas, hospitais, cada empresa e emprego formal. por décadas ficaram espalhados em centenas de portais. os dados eram <em>tecnicamente</em> públicos e <em>praticamente</em> inacessíveis. a ideia da <b>Base dos Dados</b>: o acesso deve se comportar como uma estrada — construída uma vez, mantida no centro, gratuita no ponto de uso. limpamos uma vez, padronizamos identificadores para as tabelas cruzarem, documentamos tudo e colocamos num warehouse que qualquer um consulta com SQL."],
+        ["o truque econômico", "hospedar no BigQuery faz o custo de <em>consumo</em> ser pago pelo usuário — e com cota mensal gratuita, a maioria não paga nada. uma ONG pequena pôde servir um país inteiro sem ter um servidor. custo marginal de uma query: aproximadamente zero."],
+        ["onde começou", "em 2015, numa greve na UNICAMP, co-fundei a <b>Transparência Unicamp</b> — coletivo estudantil que usava dados para responder do que a greve realmente tratava. coordenar quinze pessoas e defender análises diante de assembleias de quinhentos me ensinou: transparência não é documento, é capacidade."],
+        ["o que existe hoje", "centenas de bases tratadas, pacotes em python, R e stata, milhões de consultas. a metodologia está em <em>Data Basis: Universalizing Access to High-Quality Data</em> (2022)."]
+      ]
+    },
+    links: [
+      { href: "https://basedosdados.org", label: { en: "basedosdados.org", pt: "basedosdados.org" }, what: { en: "the platform", pt: "a plataforma" } },
+      { href: "https://github.com/basedosdados/sdk", label: { en: "basedosdados/sdk", pt: "basedosdados/sdk" }, what: { en: "lake code & packages", pt: "código do lake e pacotes" } }
+    ]
+  },
+  {
+    id: "covid-dashboard",
+    date: "2020",
+    sort: "2020-04",
+    type: "launch",
+    themes: ["tools", "research"],
+    title: {
+      en: "IDB Coronavirus Impact Dashboard",
+      pt: "Dashboard de Impacto do Coronavírus (BID)"
+    },
+    blurb: {
+      en: "turned Waze traffic feeds into a daily congestion index for cities across Latin America — published while the crisis unfolded.",
+      pt: "transformamos feeds do Waze num índice diário de congestionamento para cidades da América Latina — publicado enquanto a crise acontecia."
+    },
+    links: [
+      { href: "https://github.com/EL-BID/IDB-IDB-Invest-Coronavirus-Impact-Dashboard", label: { en: "github", pt: "github" }, what: { en: "open source", pt: "código aberto" } },
+      { href: "https://blogs.iadb.org/efectividad-desarrollo/en/author/joaocarabetta/", label: { en: "IDB blog", pt: "blog do BID" }, what: { en: "mobility & air quality", pt: "mobilidade e qualidade do ar" } }
+    ]
+  },
+  {
+    id: "farolcovid",
+    date: "2020",
+    sort: "2020-05",
+    type: "tool",
+    themes: ["tools"],
+    title: {
+      en: "FarolCovid",
+      pt: "FarolCovid"
+    },
+    blurb: {
+      en: "volunteer work on an open monitor of hospital-collapse risk for Brazilian municipalities.",
+      pt: "trabalho voluntário num monitor aberto de risco de colapso hospitalar para municípios brasileiros."
+    },
+    links: [
+      { href: "https://github.com/ImpulsoGov/farolcovid", label: { en: "github", pt: "github" }, what: { en: "ImpulsoGov", pt: "ImpulsoGov" } }
+    ]
+  },
+  {
+    id: "babelgrid",
+    date: "2020",
+    sort: "2020-03",
+    type: "tool",
+    themes: ["tools"],
+    title: {
+      en: "BabelGrid",
+      pt: "BabelGrid"
+    },
+    blurb: {
+      en: "one Python API for competing planetary grids — S2, H3, quadtrees — built open source with the IDB.",
+      pt: "uma API Python para grades planetárias concorrentes — S2, H3, quadtrees — open source com o BID."
+    },
+    detail: {
+      en: [
+        ["the idea", "almost every hard question about a territory is secretly a geometry problem. geometry is where analyses go to die: incompatible grids, gigantic polygons, boundary files on forgotten FTP servers. i build small tools that remove those frictions."],
+        ["the tools", "<b>babelgrid</b> speaks every major grid. <b>geobr</b> puts official Brazilian spatial data one call away (i maintain the python side at IPEA). <b>osmpy</b> queries OpenStreetMap at any scale with a katana that slices huge polygons. <b>isometric</b> answers what is actually nearby with walking-distance polygons."],
+        ["the principle", "open source is public policy by other means. a good library is a subsidy paid to every future analyst, in every city, forever."]
+      ],
+      pt: [
+        ["a ideia", "quase toda pergunta difícil sobre um território é, em segredo, um problema de geometria. e a geometria é onde análises morrem: grades incompatíveis, polígonos gigantes, shapefiles em FTP esquecido. construo ferramentas pequenas que removem exatamente esses atritos."],
+        ["as ferramentas", "<b>babelgrid</b> fala todas as grades principais. <b>geobr</b> coloca dados espaciais oficiais do Brasil a uma chamada de distância (mantenho o lado python no IPEA). <b>osmpy</b> consulta o OpenStreetMap em qualquer escala com um katana que fatia polígonos enormes. <b>isometric</b> responde o que está de fato perto com polígonos de caminhada."],
+        ["o princípio", "código aberto é política pública por outros meios. uma boa biblioteca é um subsídio pago a todo analista futuro, em toda cidade, para sempre."]
+      ]
+    },
+    links: [
+      { href: "https://github.com/EL-BID/BabelGrid", label: { en: "babelgrid", pt: "babelgrid" }, what: { en: "one API, every grid", pt: "uma API, todas as grades" } },
+      { href: "https://github.com/ipeaGIT/geobr", label: { en: "geobr", pt: "geobr" }, what: { en: "Brazil spatial data", pt: "dados espaciais do Brasil" } },
+      { href: "https://github.com/JoaoCarabetta/osmpy", label: { en: "osmpy", pt: "osmpy" }, what: { en: "OSM at any scale", pt: "OSM em qualquer escala" } },
+      { href: "https://github.com/JoaoCarabetta/isometric", label: { en: "isometric", pt: "isometric" }, what: { en: "walking catchments", pt: "áreas de caminhada" } }
+    ]
+  },
+  {
+    id: "osmpy",
+    date: "2020-11",
+    sort: "2020-11",
+    type: "tool",
+    themes: ["tools"],
+    title: {
+      en: "osmpy",
+      pt: "osmpy"
+    },
+    blurb: {
+      en: "wrapper around Overpass Turbo for regions of any size and shape — including a katana that slices huge polygons.",
+      pt: "wrapper do Overpass Turbo para regiões de qualquer tamanho e forma — inclusive um katana que fatia polígonos enormes."
+    },
+    links: [
+      { href: "https://github.com/JoaoCarabetta/osmpy", label: { en: "github", pt: "github" }, what: { en: "python", pt: "python" } }
+    ]
+  },
+  {
+    id: "idb",
+    date: "2019-09 → 2021-01",
+    sort: "2019-09",
+    type: "role",
+    themes: ["research", "tools"],
+    title: {
+      en: "Data Scientist — Inter-American Development Bank",
+      pt: "Cientista de Dados — Banco Interamericano de Desenvolvimento"
+    },
+    blurb: {
+      en: "strategic planning &amp; development effectiveness — novel data sources as evidence for policy across Latin America.",
+      pt: "planejamento estratégico e efetividade do desenvolvimento — fontes novas de dados como evidência para política na América Latina."
+    },
+    detail: {
+      en: [
+        ["the habit", "i trained as a physicist at <b>UNICAMP</b>. physics left one permanent habit: in any complicated system, most variables are noise and a handful of forces explain almost everything. instead of a physics phd, i took that habit to <b>FGV/EMAp</b> for a master's in mathematical modelling."],
+        ["development, in evidence", "at the IDB i worked on turning novel data into evidence — most visibly the waze-based coronavirus impact dashboard, and analyses of pandemic-era air quality in the region's cities."]
+      ],
+      pt: [
+        ["o hábito", "me formei físico na <b>UNICAMP</b>. a física deixou um hábito permanente: em qualquer sistema complicado, a maioria das variáveis é ruído e um punhado de forças explica quase tudo. em vez de um doutorado, levei esse hábito para o mestrado em modelagem matemática na <b>FGV/EMAp</b>."],
+        ["desenvolvimento, em evidência", "no BID trabalhei em transformar dados novos em evidência — sobretudo o dashboard de impacto do coronavírus baseado em Waze, e análises de qualidade do ar na pandemia nas cidades da região."]
+      ]
+    },
+    links: [
+      { href: "https://blogs.iadb.org/efectividad-desarrollo/en/author/joaocarabetta/", label: { en: "author page", pt: "página de autor" }, what: { en: "IDB blog", pt: "blog do BID" } }
+    ]
+  },
+  {
+    id: "dssg",
+    date: "2019-06 → 2019-08",
+    sort: "2019-06",
+    type: "project",
+    themes: ["research"],
+    title: {
+      en: "DSSG fellow — Turing Institute × DNCP Paraguay",
+      pt: "fellow DSSG — Turing Institute × DNCP Paraguai"
+    },
+    blurb: {
+      en: "ML to prioritize review of ~13,000 public tenders/year — complaint capture from 30% to 78% vs first-come-first-served.",
+      pt: "ML para priorizar a revisão de ~13 mil licitações/ano — captura de denúncias de 30% para 78% vs ordem de chegada."
+    },
+    detail: {
+      en: [
+        ["procurement, in probabilities", "Paraguay's <b>DNCP</b> reviews roughly 13,000 public tenders a year with about thirty officials and a three-day window per tender — attention is the scarcest resource. we built a model that ranks incoming tenders by risk of irregularity, so reviewers spend limited hours where taxpayer money is actually in danger. anti-corruption as a prioritization problem."],
+        ["equity", "we also balanced efficiency with policy goals so the model would not simply chase high-value procurements."]
+      ],
+      pt: [
+        ["compras, em probabilidades", "a <b>DNCP</b> do Paraguai revisa cerca de 13 mil licitações por ano com cerca de trinta analistas e uma janela de três dias por edital — atenção é o recurso mais escasso. construímos um modelo que ranqueia editais pelo risco de irregularidade, para que as horas limitadas vão para onde o dinheiro do contribuinte está de fato em perigo. anticorrupção como problema de priorização."],
+        ["equidade", "também equilibramos eficiência com metas de política para o modelo não simplesmente perseguir compras de alto valor."]
+      ]
+    },
+    links: [
+      { href: "https://dssgfellowship.org/project/corruption-paraguay/", label: { en: "DSSG project", pt: "projeto DSSG" }, what: { en: "fellowship write-up", pt: "texto do fellowship" } },
+      { href: "https://github.com/alan-turing-institute/DSSG19-DNCP-PUBLIC", label: { en: "public repo", pt: "repositório público" }, what: { en: "Turing Institute", pt: "Turing Institute" } }
+    ]
+  },
+  {
+    id: "acredito",
+    date: "2019-02 → 2019-05",
+    sort: "2019-02",
+    type: "role",
+    themes: ["research"],
+    title: {
+      en: "Data Scientist — Gabinete Compartilhado Acredito",
+      pt: "Cientista de Dados — Gabinete Compartilhado Acredito"
+    },
+    blurb: {
+      en: "data support in Congress for deputies Tábata Amaral, Felipe Rigoni and senator Alessandro Vieira.",
+      pt: "apoio de dados no Congresso para os deputados Tábata Amaral, Felipe Rigoni e o senador Alessandro Vieira."
+    }
+  },
+  {
+    id: "cognitivo",
+    date: "2018-04 → 2019-06",
+    sort: "2018-04",
+    type: "role",
+    themes: ["tools"],
+    title: {
+      en: "Project Manager → Project Head — Cognitivo.ai",
+      pt: "Gerente → Head de Projetos — Cognitivo.ai"
+    },
+    blurb: {
+      en: "led data projects at a São Paulo analytics company before moving into public-interest work full time.",
+      pt: "liderei projetos de dados numa empresa de analytics em São Paulo antes de ir de vez para o interesse público."
+    }
+  },
+  {
+    id: "isometric",
+    date: "2018",
+    sort: "2018-12",
+    type: "tool",
+    themes: ["tools"],
+    title: {
+      en: "isometric",
+      pt: "isometric"
+    },
+    blurb: {
+      en: "walking-distance catchment polygons from any point in a city — the honest answer to what is nearby.",
+      pt: "polígonos de área de caminhada a partir de qualquer ponto na cidade — a resposta honesta ao que está perto."
+    },
+    links: [
+      { href: "https://github.com/JoaoCarabetta/isometric", label: { en: "github", pt: "github" }, what: { en: "notebook + osmnx", pt: "notebook + osmnx" } }
+    ]
+  },
+  {
+    id: "deckgl2plotly",
+    date: "2019-01",
+    sort: "2019-01",
+    type: "tool",
+    themes: ["tools"],
+    title: {
+      en: "deckgl2plotly",
+      pt: "deckgl2plotly"
+    },
+    blurb: {
+      en: "a deck.gl component for Plotly Dash — geospatial viz in dashboards without leaving the python stack.",
+      pt: "um componente deck.gl para Plotly Dash — viz geoespacial em dashboards sem sair do stack python."
+    },
+    links: [
+      { href: "https://github.com/JoaoCarabetta/deckgl2plotly", label: { en: "github", pt: "github" }, what: { en: "javascript", pt: "javascript" } }
+    ]
+  },
+  {
+    id: "patrimonio-parlamentar",
+    date: "2018-10",
+    sort: "2018-10",
+    type: "paper",
+    themes: ["research"],
+    title: {
+      en: "incompatible asset growth of MPs & asset-declaration reforms",
+      pt: "evolução patrimonial incompatível de parlamentares e reformas na declaração de bens"
+    },
+    blurb: {
+      en: "with Mohallem, France &amp; Scovino — FGV Direito Rio chapter on gaps in asset disclosure and reforms for parliamentary wealth control.",
+      pt: "com Mohallem, France &amp; Scovino — capítulo da FGV Direito Rio sobre lacunas na declaração de bens e reformas no controle patrimonial de parlamentares."
+    },
+    links: [
+      { href: "https://hdl.handle.net/10438/25685", label: { en: "FGV library", pt: "biblioteca FGV" }, what: { en: "handle", pt: "handle" } }
+    ]
+  },
+  {
+    id: "congresso-numeros-relatorios-2018",
+    date: "2018",
+    sort: "2018-07",
+    type: "paper",
+    themes: ["research"],
+    title: {
+      en: "Congresso em Números — 2018 bimonthly reports",
+      pt: "Congresso em Números — relatórios bimestrais 2018"
+    },
+    blurb: {
+      en: "co-authored the three Relatórios de Atividades do Congresso Nacional (feb–mar, apr–may, jun–jul) at FGV Direito Rio / CTS.",
+      pt: "coautor dos três Relatórios de Atividades do Congresso Nacional (fev–mar, abr–mai, jun–jul) na FGV Direito Rio / CTS."
+    },
+    links: [
+      { href: "https://hdl.handle.net/10438/23993", label: { en: "feb–mar 2018", pt: "fev–mar 2018" }, what: { en: "report", pt: "relatório" } },
+      { href: "https://hdl.handle.net/10438/24145", label: { en: "apr–may 2018", pt: "abr–mai 2018" }, what: { en: "report", pt: "relatório" } },
+      { href: "https://hdl.handle.net/10438/24590", label: { en: "jun–jul 2018", pt: "jun–jul 2018" }, what: { en: "report", pt: "relatório" } }
+    ]
+  },
+  {
+    id: "congresso-numeros-livro",
+    date: "2018-04",
+    sort: "2018-04",
+    type: "paper",
+    themes: ["research"],
+    title: {
+      en: "Congresso em números: legislative production 1988–2017",
+      pt: "Congresso em números: a produção legislativa do Brasil de 1988 a 2017"
+    },
+    blurb: {
+      en: "book with Cerdeira, Vasconcellos, Sganzerla, Cunha, Sales &amp; Scovino — first descriptive annual study of Chamber activity since the 1988 Constitution.",
+      pt: "livro com Cerdeira, Vasconcellos, Sganzerla, Cunha, Sales &amp; Scovino — primeiro estudo descritivo anual da atividade da Câmara desde a Constituição de 1988."
+    },
+    links: [
+      { href: "https://hdl.handle.net/10438/24019", label: { en: "FGV library", pt: "biblioteca FGV" }, what: { en: "book", pt: "livro" } }
+    ]
+  },
+  {
+    id: "congresso-numeros",
+    date: "2017 → 2019",
+    sort: "2017-08",
+    type: "project",
+    themes: ["research"],
+    title: {
+      en: "Congresso em Números — FGV CTS",
+      pt: "Congresso em Números — FGV CTS"
+    },
+    blurb: {
+      en: "treated the national congress as a dataset — votes, bills, attendance, government support — at FGV's Center for Technology and Society; the book and 2018 reports are listed separately.",
+      pt: "tratei o Congresso Nacional como um dataset — votos, proposições, presença, apoio ao governo — no Centro de Tecnologia e Sociedade da FGV; o livro e os relatórios de 2018 estão listados à parte."
+    }
+  },
+  {
+    id: "fgv-emap",
+    date: "2017 → 2018",
+    sort: "2017-02",
+    type: "education",
+    themes: ["research"],
+    title: {
+      en: "Master's — Mathematical Modeling, FGV/EMAp",
+      pt: "Mestrado — Modelagem Matemática, FGV/EMAp"
+    },
+    blurb: {
+      en: "applied math with hands on real policy problems. also started bradata — an early open repo for Brazilian public data.",
+      pt: "matemática aplicada com as mãos em problemas reais de política. também comecei o bradata — repositório aberto precoce de dados públicos brasileiros."
+    },
+    links: [
+      { href: "https://github.com/labFGV/bradata", label: { en: "bradata", pt: "bradata" }, what: { en: "labFGV", pt: "labFGV" } },
+      { href: "https://emap.fgv.br/en/news/masters-graduate-fgv-emap-leads-digital-transformation-rio-de-janeiro", label: { en: "FGV profile", pt: "perfil FGV" }, what: { en: "later career note", pt: "nota de carreira" } }
+    ]
+  },
+  {
+    id: "hackgov",
+    date: "2017",
+    sort: "2017-01",
+    type: "project",
+    themes: ["data"],
+    title: {
+      en: "HackGov — LabFGV",
+      pt: "HackGov — LabFGV"
+    },
+    blurb: {
+      en: "coordinated a transparency hackathon in Rio while on LabFGV's advisory council and project coordination.",
+      pt: "coordenei um hackathon de transparência no Rio no conselho consultivo e na coordenação de projetos do LabFGV."
+    }
+  },
+  {
+    id: "mapa-eleicoes",
+    date: "2016-10",
+    sort: "2016-10",
+    type: "writing",
+    themes: ["data"],
+    title: {
+      en: "Mapa das Eleições — Medium",
+      pt: "Mapa das Eleições — Medium"
+    },
+    blurb: {
+      en: "early dataviz essay on mayoral race competition across Brazilian cities.",
+      pt: "ensaio precoce de dataviz sobre concorrência nas eleições para prefeito nas cidades brasileiras."
+    },
+    links: [
+      { href: "https://medium.com/@joaocarabetta/concorr%C3%AAncia-das-elei%C3%A7%C3%B5es-5e7d38bd9cd", label: { en: "Medium", pt: "Medium" }, what: { en: "Mapa das Eleições", pt: "Mapa das Eleições" } }
+    ]
+  },
+  {
+    id: "transparencia-unicamp",
+    date: "2016",
+    sort: "2016-05",
+    type: "launch",
+    themes: ["data"],
+    title: {
+      en: "Transparência Unicamp",
+      pt: "Transparência Unicamp"
+    },
+    blurb: {
+      en: "co-founded a student collective that demanded university transparency and informed the campus with data and infographics.",
+      pt: "co-fundei um coletivo estudantil que cobrava transparência da universidade e informava o campus com dados e infográficos."
+    }
+  },
+  {
+    id: "labhacker",
+    date: "2016-09 → 2016-12",
+    sort: "2016-09",
+    type: "role",
+    themes: ["data"],
+    title: {
+      en: "Resident — LabHacker (São Paulo)",
+      pt: "Residente — LabHacker (São Paulo)"
+    },
+    blurb: {
+      en: "residency at the Chamber of Deputies' civic hacking lab.",
+      pt: "residência no laboratório de hackeamento cívico da Câmara dos Deputados."
+    }
+  },
+  {
+    id: "durham",
+    date: "2015",
+    sort: "2015-05",
+    type: "education",
+    themes: ["research"],
+    title: {
+      en: "Durham — energy landscapes",
+      pt: "Durham — paisagens de energia"
+    },
+    blurb: {
+      en: "with Halim Kusumaatmaja's group: a new algorithm to survey energy landscapes using the Doubly Nudged Elastic Band method.",
+      pt: "com o grupo de Halim Kusumaatmaja: um novo algoritmo para mapear paisagens de energia com o método Doubly Nudged Elastic Band."
+    }
+  },
+  {
+    id: "unicamp-physics",
+    date: "2011 → 2016",
+    sort: "2011-01",
+    type: "education",
+    themes: ["research"],
+    title: {
+      en: "Physics — UNICAMP",
+      pt: "Física — UNICAMP"
+    },
+    blurb: {
+      en: "bachelor in physics. scientific initiation with atomic force microscopy and biophysics at the Lab of Nano and Biosystems (2013–14).",
+      pt: "bacharelado em física. iniciação científica com microscopia de força atômica e biofísica no Laboratório de Nano e Biossistemas (2013–14)."
+    }
+  }
+];
+
+/* ---------- i18n ---------- */
+let lang = "en";
+try {
+  const saved = localStorage.getItem("lang");
+  if (saved === "en" || saved === "pt") lang = saved;
+  else if ((navigator.language || "").toLowerCase().startsWith("pt")) lang = "pt";
+} catch (_) {}
+
+function t(obj) {
+  if (!obj) return "";
+  return obj[lang] || obj.en || "";
 }
-function closePortal(){
-  if(!activePortal) return;
-  activeLoop && activeLoop.stop();
-  activePortal.querySelectorAll(".idea-panel.open").forEach(p=>p.classList.remove("open"));
-  activePortal.classList.remove("open");
-  document.body.style.overflow = "";
-  activePortal = null; activeLoop = null;
-}
-document.querySelectorAll(".portal-link").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const r = btn.getBoundingClientRect();
-    openPortal(btn.dataset.portal, r.left + r.width/2, r.top + r.height/2);
+
+function applyChrome() {
+  document.documentElement.lang = lang === "pt" ? "pt-BR" : "en";
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    const val = UI[key];
+    if (!val) return;
+    el.innerHTML = t(val);
   });
-});
-document.querySelectorAll(".portal-close").forEach(b => b.addEventListener("click", closePortal));
-
-/* idea panels */
-document.querySelectorAll(".idea-btn[data-idea]").forEach(b => {
-  b.addEventListener("click", () => {
-    document.getElementById(b.dataset.idea).classList.add("open");
+  document.querySelectorAll("[data-i18n-aria]").forEach(el => {
+    const key = el.getAttribute("data-i18n-aria");
+    const val = UI[key];
+    if (val) el.setAttribute("aria-label", t(val));
   });
-});
-document.querySelectorAll(".idea-close").forEach(b => {
-  b.addEventListener("click", () => b.closest(".idea-panel").classList.remove("open"));
-});
-
-addEventListener("keydown", e => {
-  if(e.key !== "Escape") return;
-  const openPanel = document.querySelector(".idea-panel.open");
-  if(openPanel){ openPanel.classList.remove("open"); return; }
-  closePortal();
-});
-
-function fitCanvas(canvas){
-  const dpr = Math.min(devicePixelRatio || 1, 2);
-  canvas.width  = canvas.clientWidth  * dpr;
-  canvas.height = canvas.clientHeight * dpr;
-  const ctx = canvas.getContext("2d");
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-  return ctx;
+  document.querySelectorAll(".lang button").forEach(btn => {
+    btn.setAttribute("aria-pressed", btn.dataset.lang === lang ? "true" : "false");
+  });
+  const desc = document.querySelector('meta[name="description"]');
+  if (desc) {
+    desc.setAttribute("content", lang === "pt"
+      ? "físico de formação. constrói infraestrutura pública de dados no Brasil."
+      : "physicist by training. builds public data infrastructure in Brazil.");
+  }
 }
 
-/* ============ DADOS: brazil as a dot-cloud ============ */
-const BR = [[-51.7,4.4],[-60.0,5.2],[-64.0,4.1],[-67.1,1.9],[-70.0,0.6],[-69.9,-4.2],
-[-73.6,-6.5],[-73.0,-9.4],[-70.5,-11.0],[-65.3,-11.5],[-64.3,-12.5],[-60.5,-13.8],
-[-60.2,-16.3],[-58.4,-16.3],[-58.2,-19.8],[-57.8,-22.1],[-55.7,-22.3],[-55.4,-23.9],
-[-53.8,-26.0],[-53.6,-26.9],[-56.3,-28.9],[-57.6,-30.2],[-53.4,-33.7],[-51.0,-31.8],
-[-48.5,-28.6],[-48.6,-26.2],[-46.6,-24.1],[-44.6,-23.1],[-41.9,-22.9],[-40.9,-21.3],
-[-39.7,-19.4],[-39.2,-17.7],[-39.0,-15.0],[-37.0,-11.0],[-35.0,-8.0],[-34.8,-6.9],
-[-35.5,-5.1],[-37.2,-4.7],[-39.9,-2.8],[-42.9,-2.6],[-44.3,-2.5],[-46.0,-1.0],
-[-48.5,-0.2],[-50.0,0.1],[-51.3,4.0]];
-function pointInPoly(x,y,poly){
-  let inside=false;
-  for(let i=0,j=poly.length-1;i<poly.length;j=i++){
-    const xi=poly[i][0],yi=poly[i][1],xj=poly[j][0],yj=poly[j][1];
-    if(((yi>y)!==(yj>y)) && (x < (xj-xi)*(y-yi)/(yj-yi)+xi)) inside=!inside;
-  }
-  return inside;
+/* ---------- timeline render ---------- */
+const listEl = document.getElementById("timeline-list");
+const filtersEl = document.getElementById("timeline-filters");
+let activeFilter = "all";
+
+function sortedEntries() {
+  return [...TIMELINE].sort((a, b) => (a.sort < b.sort ? 1 : a.sort > b.sort ? -1 : 0));
 }
-loops["p-dados"] = (() => {
-  let ctx, canvas, raf, dots=[], mouse={x:-9999,y:-9999}, pulses=[], count=2481203;
-  const counterEl = () => document.getElementById("dados-counter");
-  function project(lon,lat,w,h){
-    const m = Math.min(w,h)*0.10;
-    const sx=(w-2*m)/40, sy=(h-2*m)/40, s=Math.min(sx,sy);
-    const cx=w/2, cy=h/2;
-    return [cx + (lon+54)*s, cy - (lat+14)*s];
-  }
-  function build(){
-    dots=[];
-    const w=canvas.clientWidth, h=canvas.clientHeight;
-    const n = w<640? 1400 : 3200;
-    let tries=0;
-    while(dots.length<n && tries<n*40){
-      tries++;
-      const lon=-74+Math.random()*40, lat=-34+Math.random()*40;
-      if(!pointInPoly(lon,lat,BR)) continue;
-      const [x,y]=project(lon,lat,w,h);
-      dots.push({x,y,ox:x,oy:y,vx:0,vy:0,tw:Math.random()*Math.PI*2});
-    }
-  }
-  function frame(){
-    const w=canvas.clientWidth, h=canvas.clientHeight;
-    ctx.fillStyle="#070b14"; ctx.fillRect(0,0,w,h);
-    for(let i=pulses.length-1;i>=0;i--){
-      const p=pulses[i]; p.r+=4.5; p.a*=.96;
-      if(p.a<.01){pulses.splice(i,1);continue;}
-      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,7);
-      ctx.strokeStyle=`rgba(95,215,255,${p.a})`; ctx.lineWidth=1.2; ctx.stroke();
-    }
-    for(const d of dots){
-      const dx=d.x-mouse.x, dy=d.y-mouse.y, dist2=dx*dx+dy*dy;
-      if(dist2<8100){
-        const dist=Math.sqrt(dist2)||1, f=(90-dist)/90*1.6;
-        d.vx+=dx/dist*f; d.vy+=dy/dist*f;
-      }
-      for(const p of pulses){
-        const px=d.x-p.x, py=d.y-p.y, pd=Math.sqrt(px*px+py*py);
-        if(Math.abs(pd-p.r)<14 && pd>0){ d.vx+=px/pd*.8*p.a*8; d.vy+=py/pd*.8*p.a*8; }
-      }
-      d.vx+=(d.ox-d.x)*.012; d.vy+=(d.oy-d.y)*.012;
-      d.vx*=.9; d.vy*=.9;
-      d.x+=d.vx; d.y+=d.vy;
-      d.tw+=.04;
-      const a=.35+.3*Math.sin(d.tw);
-      const moving=Math.abs(d.vx)+Math.abs(d.vy)>.6;
-      ctx.fillStyle= moving? `rgba(95,215,255,.95)` : `rgba(120,160,220,${a})`;
-      ctx.fillRect(d.x,d.y,1.6,1.6);
-    }
-    count += 1 + (Math.random()*4|0);
-    const c=counterEl(); if(c) c.textContent = count.toLocaleString("en-US");
-    raf=requestAnimationFrame(frame);
-  }
-  function onMove(e){const r=canvas.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;}
-  function onClick(e){const r=canvas.getBoundingClientRect();pulses.push({x:e.clientX-r.left,y:e.clientY-r.top,r:2,a:.9});}
-  function onResize(){ctx=fitCanvas(canvas);build();}
-  return {
-    start(c){canvas=c;ctx=fitCanvas(c);build();
-      canvas.addEventListener("pointermove",onMove);
-      canvas.addEventListener("pointerdown",onClick);
-      addEventListener("resize",onResize);
-      if(reduced){frame();cancelAnimationFrame(raf);} else raf=requestAnimationFrame(frame);},
-    stop(){cancelAnimationFrame(raf);
-      canvas.removeEventListener("pointermove",onMove);
-      canvas.removeEventListener("pointerdown",onClick);
-      removeEventListener("resize",onResize);}
-  };
-})();
 
-/* ============ CIDADE: bus GPS night map ============ */
-loops["p-cidade"] = (() => {
-  let ctx, canvas, raf, roads=[], buses=[], rush=false;
-  function build(){
-    const w=canvas.clientWidth, h=canvas.clientHeight;
-    roads=[]; buses=[];
-    const nh = 7, nv = 9;
-    for(let i=1;i<nh;i++){const y=h*(i/nh)+ (Math.random()*40-20); roads.push({pts:[[0,y],[w,y]]});}
-    for(let i=1;i<nv;i++){const x=w*(i/nv)+ (Math.random()*40-20); roads.push({pts:[[x,0],[x,h]]});}
-    roads.push({pts:[[0,h*0.85],[w,h*0.25]], av:true});
-    roads.push({pts:[[w*0.1,0],[w*0.95,h]], av:true});
-    const n = w<640? 90:180;
-    for(let i=0;i<n;i++){
-      const r=roads[(Math.random()*roads.length)|0];
-      buses.push({r, t:Math.random(), dir:Math.random()<.5?1:-1,
-        v:.0006+Math.random()*.0012, hue:Math.random()});
-    }
+function usedTypes() {
+  const present = new Set(TIMELINE.map(e => e.type));
+  return TYPE_ORDER.filter(t => present.has(t));
+}
+
+function renderFilters() {
+  filtersEl.innerHTML = "";
+  const types = ["all", ...usedTypes()];
+  for (const type of types) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "filter-btn";
+    btn.dataset.filter = type;
+    btn.setAttribute("aria-pressed", type === activeFilter ? "true" : "false");
+    btn.textContent = type === "all" ? t(UI.filterAll) : t(UI.types[type]);
+    btn.addEventListener("click", () => setFilter(type));
+    filtersEl.appendChild(btn);
   }
-  function pos(r,t){
-    const [a,b]=r.pts;
-    return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t];
-  }
-  function frame(){
-    const w=canvas.clientWidth, h=canvas.clientHeight;
-    ctx.fillStyle="rgba(7,11,20,0.28)"; ctx.fillRect(0,0,w,h);
-    for(const r of roads){
-      ctx.beginPath(); ctx.moveTo(...r.pts[0]); ctx.lineTo(...r.pts[1]);
-      ctx.strokeStyle=r.av? "rgba(255,196,107,.14)":"rgba(120,150,200,.10)";
-      ctx.lineWidth=r.av?2.5:1; ctx.stroke();
-    }
-    const speed = rush? 2.6:1;
-    for(const b of buses){
-      b.t += b.v*b.dir*speed;
-      if(b.t>1||b.t<0){b.dir*=-1;b.t=Math.max(0,Math.min(1,b.t));}
-      const [x,y]=pos(b.r,b.t);
-      const col = b.r.av? "255,196,107" : (b.hue<.5? "95,215,255":"125,255,168");
-      ctx.fillStyle=`rgba(${col},.95)`;
-      ctx.beginPath(); ctx.arc(x,y,rush?2.2:1.8,0,7); ctx.fill();
-      if(Math.random()<(rush?.004:.0015)){
-        ctx.beginPath(); ctx.arc(x,y,7,0,7);
-        ctx.strokeStyle=`rgba(${col},.35)`; ctx.lineWidth=1; ctx.stroke();
-      }
-    }
-    const c=document.getElementById("bus-counter");
-    if(c) c.textContent = buses.length.toLocaleString();
-    raf=requestAnimationFrame(frame);
-  }
-  function onResize(){ctx=fitCanvas(canvas);build();}
-  document.getElementById("rush-btn").addEventListener("click",function(){
-    rush=!rush;
-    this.textContent = rush? "end rush hour":"rush hour";
+}
+
+function applyFilter() {
+  listEl.querySelectorAll(".entry").forEach(el => {
+    const show = activeFilter === "all" || el.dataset.type === activeFilter;
+    el.hidden = !show;
   });
-  return {
-    start(c){canvas=c;ctx=fitCanvas(c);build();
-      ctx.fillStyle="#070b14";ctx.fillRect(0,0,canvas.clientWidth,canvas.clientHeight);
-      addEventListener("resize",onResize);
-      if(reduced){
-        for(let k=0;k<200;k++){for(const b of buses){b.t+=b.v*b.dir;if(b.t>1||b.t<0){b.dir*=-1;}}}
-        frame();cancelAnimationFrame(raf);
-      } else raf=requestAnimationFrame(frame);},
-    stop(){cancelAnimationFrame(raf);removeEventListener("resize",onResize);}
-  };
-})();
+  filtersEl.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.setAttribute("aria-pressed", btn.dataset.filter === activeFilter ? "true" : "false");
+  });
+}
 
-/* ============ FERRAMENTAS: multiresolution hex grid ============ */
-loops["p-ferramentas"] = (() => {
-  let ctx, canvas, raf, mouse={x:-9999,y:-9999}, t=0, cells=[];
-  const BASE = 52;
-  function hexPath(cx,cy,s){
-    ctx.beginPath();
-    for(let i=0;i<6;i++){
-      const a=Math.PI/3*i + Math.PI/6; // pointy-top
-      const x=cx+s*Math.cos(a), y=cy+s*Math.sin(a);
-      i? ctx.lineTo(x,y): ctx.moveTo(x,y);
-    }
-    ctx.closePath();
-  }
-  function eachHexCenter(size, x0,y0,x1,y1, fn){
-    const w = Math.sqrt(3)*size, hstep = size*1.5;
-    const r0=Math.floor(y0/hstep)-1, r1=Math.ceil(y1/hstep)+1;
-    for(let r=r0;r<=r1;r++){
-      const y=r*hstep;
-      const off=(r%2)? w/2:0;
-      const c0=Math.floor((x0-off)/w)-1, c1=Math.ceil((x1-off)/w)+1;
-      for(let c=c0;c<=c1;c++) fn(c*w+off, y);
-    }
-  }
-  function build(){
-    // a few softly glowing "occupied" cells that wander
-    cells=[];
-    for(let i=0;i<10;i++) cells.push({
-      x:Math.random(), y:Math.random(),
-      hue:["95,215,255","255,196,107","125,255,168"][(Math.random()*3)|0],
-      ph:Math.random()*Math.PI*2
-    });
-  }
-  function snapHex(px,py,size){
-    // approximate snap: find nearest center among neighborhood
-    const w = Math.sqrt(3)*size, hstep=size*1.5;
-    let best=null,bd=1e9;
-    const r=Math.round(py/hstep);
-    for(let rr=r-1;rr<=r+1;rr++){
-      const y=rr*hstep, off=(rr%2)? w/2:0;
-      const c=Math.round((px-off)/w);
-      for(let cc=c-1;cc<=c+1;cc++){
-        const x=cc*w+off;
-        const d=(x-px)**2+(y-py)**2;
-        if(d<bd){bd=d;best=[x,y];}
+function setFilter(type) {
+  activeFilter = type;
+  applyFilter();
+}
+
+function renderTimeline() {
+  const entries = sortedEntries();
+  listEl.innerHTML = "";
+  for (const item of entries) {
+    const article = document.createElement("article");
+    article.className = "entry";
+    article.id = item.id;
+    article.dataset.type = item.type;
+
+    const date = document.createElement("div");
+    date.className = "entry-date";
+    date.textContent = item.date;
+    article.appendChild(date);
+
+    const body = document.createElement("div");
+    body.className = "entry-body";
+
+    const meta = document.createElement("div");
+    meta.className = "entry-meta";
+    const type = document.createElement("span");
+    type.className = "type";
+    type.textContent = t(UI.types[item.type] || { en: item.type, pt: item.type });
+    meta.appendChild(type);
+    body.appendChild(meta);
+
+    const title = document.createElement("h3");
+    title.className = "entry-title";
+    title.textContent = t(item.title);
+    body.appendChild(title);
+
+    const blurb = document.createElement("p");
+    blurb.className = "entry-blurb";
+    blurb.innerHTML = t(item.blurb);
+    body.appendChild(blurb);
+
+    if (item.links && item.links.length) {
+      const ul = document.createElement("ul");
+      ul.className = "entry-links";
+      for (const link of item.links) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = link.href;
+        a.target = link.href.startsWith("/") ? "_self" : "_blank";
+        if (!link.href.startsWith("/")) a.rel = "noopener";
+        a.textContent = t(link.label);
+        li.appendChild(a);
+        if (link.what) {
+          const what = document.createElement("span");
+          what.className = "what";
+          what.textContent = t(link.what);
+          li.appendChild(what);
+        }
+        ul.appendChild(li);
       }
-    }
-    return best;
-  }
-  function frame(){
-    const w=canvas.clientWidth, h=canvas.clientHeight;
-    t+=.016;
-    ctx.fillStyle="#070b14"; ctx.fillRect(0,0,w,h);
-
-    // base grid
-    ctx.strokeStyle="rgba(120,150,200,.13)"; ctx.lineWidth=1;
-    eachHexCenter(BASE,0,0,w,h,(x,y)=>{hexPath(x,y,BASE);ctx.stroke();});
-
-    // wandering occupied cells at base resolution
-    for(const cl of cells){
-      cl.ph+=.004;
-      const px=(cl.x + .06*Math.sin(cl.ph))*(w), py=(cl.y + .06*Math.cos(cl.ph*1.3))*(h);
-      const s=snapHex(px,py,BASE);
-      if(!s) continue;
-      hexPath(s[0],s[1],BASE-2);
-      ctx.fillStyle=`rgba(${cl.hue},${.10+.05*Math.sin(t*2+cl.ph)})`;
-      ctx.fill();
+      body.appendChild(ul);
     }
 
-    // refinement ring 1 near mouse
-    const R1=170, R2=85;
-    if(mouse.x>-1000){
-      ctx.strokeStyle="rgba(95,215,255,.28)";
-      eachHexCenter(BASE/3, mouse.x-R1, mouse.y-R1, mouse.x+R1, mouse.y+R1,(x,y)=>{
-        const d=Math.hypot(x-mouse.x,y-mouse.y);
-        if(d<R1 && d>=R2){hexPath(x,y,BASE/3);ctx.stroke();}
+    if (item.detail) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "more-btn";
+      btn.setAttribute("aria-expanded", "false");
+      const span = document.createElement("span");
+      span.textContent = t(UI.more);
+      btn.appendChild(span);
+
+      const detail = document.createElement("div");
+      detail.className = "entry-detail";
+      detail.id = `detail-${item.id}`;
+      detail.hidden = true;
+      btn.setAttribute("aria-controls", detail.id);
+
+      const sections = item.detail[lang] || item.detail.en;
+      for (const [h, p] of sections) {
+        const h4 = document.createElement("h4");
+        h4.textContent = h;
+        const para = document.createElement("p");
+        para.innerHTML = p;
+        detail.appendChild(h4);
+        detail.appendChild(para);
+      }
+
+      btn.addEventListener("click", () => {
+        const open = detail.hidden;
+        detail.hidden = !open;
+        detail.classList.toggle("open", open);
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+        span.textContent = open ? t(UI.less) : t(UI.more);
       });
-      ctx.strokeStyle="rgba(95,215,255,.55)";
-      eachHexCenter(BASE/9, mouse.x-R2, mouse.y-R2, mouse.x+R2, mouse.y+R2,(x,y)=>{
-        if(Math.hypot(x-mouse.x,y-mouse.y)<R2){hexPath(x,y,BASE/9);ctx.stroke();}
-      });
-      // resolution label rings
-      ctx.beginPath();ctx.arc(mouse.x,mouse.y,R1,0,7);
-      ctx.strokeStyle="rgba(255,255,255,.08)";ctx.stroke();
-    }
-    raf=requestAnimationFrame(frame);
-  }
-  function onMove(e){const r=canvas.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;}
-  function onLeave(){mouse.x=-9999;mouse.y=-9999;}
-  function onResize(){ctx=fitCanvas(canvas);}
-  return {
-    start(c){canvas=c;ctx=fitCanvas(c);build();
-      canvas.addEventListener("pointermove",onMove);
-      canvas.addEventListener("pointerleave",onLeave);
-      addEventListener("resize",onResize);
-      if(reduced){mouse.x=canvas.clientWidth/2;mouse.y=canvas.clientHeight/2;frame();cancelAnimationFrame(raf);}
-      else raf=requestAnimationFrame(frame);},
-    stop(){cancelAnimationFrame(raf);
-      canvas.removeEventListener("pointermove",onMove);
-      canvas.removeEventListener("pointerleave",onLeave);
-      removeEventListener("resize",onResize);}
-  };
-})();
 
-/* ============ PESQUISA: n-body toy ============ */
-loops["p-pesquisa"] = (() => {
-  let ctx, canvas, raf, bodies=[], holdT=0, holdPos=null, holdTimer=null;
-  const COLORS=["#5fd7ff","#ffc46b","#ff7d9c","#7dffa8","#c9b8ff"];
-  function build(){
-    const w=canvas.clientWidth,h=canvas.clientHeight;
-    bodies=[
-      {x:w/2,y:h/2,vx:0,vy:0,m:900,c:"#fff"},
-      {x:w/2+140,y:h/2,vx:0,vy:2.4,m:8,c:"#5fd7ff"},
-      {x:w/2-220,y:h/2,vx:0,vy:-1.9,m:14,c:"#ffc46b"},
-    ];
-  }
-  function frame(){
-    const w=canvas.clientWidth,h=canvas.clientHeight;
-    ctx.fillStyle="rgba(7,11,20,0.12)";ctx.fillRect(0,0,w,h);
-    const G=.22;
-    for(const a of bodies){
-      let ax=0,ay=0;
-      for(const b of bodies){
-        if(a===b)continue;
-        const dx=b.x-a.x,dy=b.y-a.y;
-        const d2=Math.max(dx*dx+dy*dy,140), d=Math.sqrt(d2);
-        const f=G*b.m/d2;
-        ax+=f*dx/d; ay+=f*dy/d;
-      }
-      a.vx+=ax; a.vy+=ay;
+      body.appendChild(btn);
+      body.appendChild(detail);
     }
-    for(const a of bodies){
-      a.x+=a.vx; a.y+=a.vy;
-      if(a.x<-60)a.x=w+60; if(a.x>w+60)a.x=-60;
-      if(a.y<-60)a.y=h+60; if(a.y>h+60)a.y=-60;
-      const r=Math.max(1.6,Math.cbrt(a.m)*.9);
-      ctx.beginPath();ctx.arc(a.x,a.y,r,0,7);
-      ctx.fillStyle=a.c;ctx.fill();
-      if(a.m>200){
-        ctx.beginPath();ctx.arc(a.x,a.y,r*2.4,0,7);
-        ctx.fillStyle="rgba(255,255,255,.06)";ctx.fill();
-      }
-    }
-    if(holdPos){
-      const m=8+holdT*holdT*3;
-      ctx.beginPath();ctx.arc(holdPos.x,holdPos.y,Math.cbrt(m)*.9,0,7);
-      ctx.strokeStyle="rgba(255,255,255,.6)";ctx.stroke();
-    }
-    const c=document.getElementById("body-counter");
-    if(c)c.textContent=bodies.length;
-    raf=requestAnimationFrame(frame);
-  }
-  function down(e){
-    const r=canvas.getBoundingClientRect();
-    holdPos={x:e.clientX-r.left,y:e.clientY-r.top};holdT=0;
-    holdTimer=setInterval(()=>holdT=Math.min(holdT+1,14),80);
-  }
-  function up(){
-    if(!holdPos)return;
-    clearInterval(holdTimer);
-    const m=8+holdT*holdT*3;
-    bodies.push({x:holdPos.x,y:holdPos.y,
-      vx:(Math.random()-.5)*2.4, vy:(Math.random()-.5)*2.4,
-      m, c: m>150? "#fff" : COLORS[(Math.random()*COLORS.length)|0]});
-    if(bodies.length>60)bodies.splice(1,1);
-    holdPos=null;holdT=0;
-  }
-  function onResize(){ctx=fitCanvas(canvas);}
-  return {
-    start(c){canvas=c;ctx=fitCanvas(c);build();
-      ctx.fillStyle="#070b14";ctx.fillRect(0,0,canvas.clientWidth,canvas.clientHeight);
-      canvas.addEventListener("pointerdown",down);
-      addEventListener("pointerup",up);
-      addEventListener("resize",onResize);
-      if(!reduced)raf=requestAnimationFrame(frame); else {frame();cancelAnimationFrame(raf);}},
-    stop(){cancelAnimationFrame(raf);clearInterval(holdTimer);holdPos=null;
-      canvas.removeEventListener("pointerdown",down);
-      removeEventListener("pointerup",up);
-      removeEventListener("resize",onResize);}
-  };
-})();
 
+    article.appendChild(body);
+    listEl.appendChild(article);
+  }
+  renderFilters();
+  applyFilter();
+}
+
+function setLang(next) {
+  lang = next;
+  try { localStorage.setItem("lang", lang); } catch (_) {}
+  applyChrome();
+  renderTimeline();
+}
+
+document.querySelectorAll(".lang button").forEach(btn => {
+  btn.addEventListener("click", () => setLang(btn.dataset.lang));
+});
+
+/* sticky topbar border */
+const topbar = document.querySelector(".topbar");
+addEventListener("scroll", () => {
+  topbar.classList.toggle("scrolled", scrollY > 8);
+}, { passive: true });
+
+/* boot */
+applyChrome();
+renderTimeline();
 })();
 </script>
 </body>
