@@ -21,7 +21,68 @@ CADDYFILE_PATH="${CADDYFILE_PATH:-/etc/caddy/Caddyfile}"
 NGINX_SITE_NAME="${NGINX_SITE_NAME:-carabetta.xyz}"
 NGINX_AVAILABLE="/etc/nginx/sites-available/${NGINX_SITE_NAME}"
 NGINX_ENABLED="/etc/nginx/sites-enabled/${NGINX_SITE_NAME}"
+NGINX_HTPASSWD="/etc/nginx/.htpasswd-transparencia"
+NGINX_AUTH_SNIPPET="/etc/nginx/snippets/transparencia-auth.conf"
+CADDY_AUTH_SNIPPET="/etc/caddy/transparencia-auth.caddy"
 SSH_TARGET="${SSH_USER}@${SSH_HOST}"
+TRANSPARENCIA_AUTH_USER="${TRANSPARENCIA_AUTH_USER:-transparencia}"
+
+deploy_transparencia_auth() {
+  local tmp_htpasswd tmp_caddy tmp_nginx
+  tmp_htpasswd="$(mktemp)"
+  tmp_caddy="$(mktemp)"
+  tmp_nginx="$(mktemp)"
+
+  if [[ -z "${TRANSPARENCIA_AUTH_PASSWORD:-}" ]]; then
+    echo "TRANSPARENCIA_AUTH_PASSWORD not set; /transparencia/ will be public." >&2
+    echo "# no auth configured" > "${tmp_caddy}"
+    echo "# no auth configured" > "${tmp_nginx}"
+  else
+    if ! openssl passwd -apr1 "${TRANSPARENCIA_AUTH_PASSWORD}" > "${tmp_htpasswd}.line" 2>/dev/null; then
+      echo "Failed to hash TRANSPARENCIA_AUTH_PASSWORD with openssl." >&2
+      exit 1
+    fi
+    echo "${TRANSPARENCIA_AUTH_USER}:$(cat "${tmp_htpasswd}.line")" > "${tmp_htpasswd}"
+
+    cat > "${tmp_nginx}" <<EOF
+auth_basic "Transparência";
+auth_basic_user_file ${NGINX_HTPASSWD};
+EOF
+
+    if [[ "${WEB_SERVER}" == "caddy" ]]; then
+      local caddy_hash
+      caddy_hash="$(ssh "${SSH_TARGET}" "caddy hash-password --plaintext '${TRANSPARENCIA_AUTH_PASSWORD}'" 2>/dev/null || true)"
+      if [[ -z "${caddy_hash}" ]]; then
+        caddy_hash="$(printf '%s' "${TRANSPARENCIA_AUTH_PASSWORD}" | caddy hash-password --plaintext - 2>/dev/null || true)"
+      fi
+      if [[ -z "${caddy_hash}" ]]; then
+        echo "Could not generate Caddy password hash (install caddy locally or on the server)." >&2
+        exit 1
+      fi
+
+      cat > "${tmp_caddy}" <<EOF
+@transparencia path /transparencia /transparencia/*
+basicauth @transparencia {
+    ${TRANSPARENCIA_AUTH_USER} ${caddy_hash}
+}
+EOF
+    else
+      echo "# nginx handles auth" > "${tmp_caddy}"
+    fi
+
+    echo "Password protection enabled for /transparencia/ (user: ${TRANSPARENCIA_AUTH_USER})"
+    rsync -avz "${tmp_htpasswd}" "${SSH_TARGET}:${NGINX_HTPASSWD}"
+    ssh "${SSH_TARGET}" "chmod 640 ${NGINX_HTPASSWD} && chown root:www-data ${NGINX_HTPASSWD}"
+  fi
+
+  ssh "${SSH_TARGET}" "mkdir -p /etc/nginx/snippets"
+  rsync -avz "${tmp_nginx}" "${SSH_TARGET}:${NGINX_AUTH_SNIPPET}"
+  if [[ "${WEB_SERVER}" == "caddy" ]]; then
+    ssh "${SSH_TARGET}" "mkdir -p /etc/caddy"
+    rsync -avz "${tmp_caddy}" "${SSH_TARGET}:${CADDY_AUTH_SNIPPET}"
+  fi
+  rm -f "${tmp_htpasswd}" "${tmp_htpasswd}.line" "${tmp_caddy}" "${tmp_nginx}"
+}
 
 echo "Deploying site files to ${SSH_TARGET}:${REMOTE_PATH}"
 rsync -avz --delete \
@@ -37,6 +98,8 @@ rsync -avz --delete \
   --exclude 'README.md' \
   --exclude '.gitignore' \
   "${ROOT_DIR}/" "${SSH_TARGET}:${REMOTE_PATH}/"
+
+deploy_transparencia_auth
 
 if [[ "${WEB_SERVER}" == "nginx" ]]; then
   ssh "${SSH_TARGET}" "chown -R www-data:www-data ${REMOTE_PATH}"
