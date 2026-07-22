@@ -23,7 +23,7 @@
 <meta name="twitter:image" content="https://carabetta.xyz/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,500;12..96,800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,500;12..96,800&display=swap" rel="stylesheet">
 <style>
   :root{
     --paper:#FAFAF7;
@@ -42,8 +42,8 @@
   body{
     background:var(--paper);
     color:var(--ink);
-    font-family:'IBM Plex Mono',monospace;
-    font-weight:300;
+    font-family:'IBM Plex Sans',sans-serif;
+    font-weight:400;
     -webkit-font-smoothing:antialiased;
     min-height:100%;
   }
@@ -100,7 +100,7 @@
     line-height:1.85;
     color:var(--ink-soft);
   }
-  .bio b{font-weight:400;color:var(--ink)}
+  .bio b{font-weight:600;color:var(--ink)}
 
   .social{
     font-size:.68rem;
@@ -141,10 +141,16 @@
     letter-spacing:-.02em;
   }
 
+  .timeline-toolbar{
+    display:flex;flex-wrap:wrap;
+    gap:.8rem 1.4rem;
+    align-items:center;
+    margin-bottom:1.6rem;
+  }
   .filters{
     display:flex;flex-wrap:wrap;
     gap:.45rem .55rem;
-    margin-bottom:1.6rem;
+    align-items:center;
   }
   .filter-btn{
     background:none;border:1px solid var(--rule);
@@ -207,7 +213,7 @@
     color:var(--ink-soft);
     max-width:52ch;
   }
-  .entry-blurb b{font-weight:400;color:var(--ink)}
+  .entry-blurb b{font-weight:600;color:var(--ink)}
 
   .entry-links{
     list-style:none;
@@ -271,7 +277,7 @@
   }
   .entry-detail h4:first-child{margin-top:0}
   .entry-detail p{margin-bottom:.9rem}
-  .entry-detail b{font-weight:400;color:var(--ink)}
+  .entry-detail b{font-weight:600;color:var(--ink)}
   .entry-detail em{font-style:italic}
 
   footer.site-foot{
@@ -289,6 +295,7 @@
     .entry-date{padding-top:0}
   }
 </style>
+<script defer src="https://analytics.carabetta.xyz/metrics.js" data-website-id="7ff80044-1bf0-4664-a530-5d50589dfd47"></script>
 </head>
 <body>
 
@@ -308,6 +315,7 @@
     <h1 class="name">joão carabetta</h1>
     <p class="bio" data-i18n="bio"></p>
     <nav class="social" aria-label="links">
+      <a href="/cv.html">cv</a>
       <a href="https://github.com/JoaoCarabetta" target="_blank" rel="noopener">github</a>
       <a href="https://www.linkedin.com/in/joaocarabetta" target="_blank" rel="noopener">linkedin</a>
       <a href="https://x.com/JoaoCarabetta" target="_blank" rel="noopener">x</a>
@@ -324,7 +332,9 @@
         <h2 class="timeline-title" id="timeline-title" data-i18n="timelineTitle"></h2>
       </div>
     </div>
-    <div class="filters" id="timeline-filters" role="group" data-i18n-aria="filterGroup" aria-label="Filter by type"></div>
+    <div class="timeline-toolbar">
+      <div class="filters" id="timeline-filters" role="group" data-i18n-aria="filterGroup" aria-label="Filter by type"></div>
+    </div>
     <div id="timeline-list"></div>
   </section>
 
@@ -340,8 +350,8 @@
 const UI = {
   skip: { en: "skip to timeline", pt: "ir para a linha do tempo" },
   bio: {
-    en: "physicist by training.<br>i build <b>public data infrastructure</b> in Brazil —<br>open datasets, city platforms, and the tools between them.",
-    pt: "físico de formação.<br>construo <b>infraestrutura pública de dados</b> no Brasil —<br>bases abertas, plataformas de cidade e as ferramentas entre elas."
+    en: "physicist by training.<br>i build <b>public data infrastructure</b> in Brazil<br>open datasets, city platforms, and the tools between them.",
+    pt: "físico de formação.<br>construo <b>infraestrutura pública de dados</b> no Brasil<br>bases abertas, plataformas de cidade e as ferramentas entre elas."
   },
   timelineKicker: { en: "2011 → today", pt: "2011 → hoje" },
   timelineTitle: { en: "everything, in order", pt: "tudo, em ordem" },
@@ -598,8 +608,10 @@ const TIMELINE = [
   },
   {
     id: "iplanrio-president",
-    date: "2025-01",
+    date: "2025-01 → 2026-04",
     sort: "2025-01",
+    start: "2025-01",
+    end: "2026-04",
     type: "role",
     themes: ["city"],
     title: {
@@ -1283,8 +1295,10 @@ const TIMELINE = [
   },
   {
     id: "escritorio-dados",
-    date: "2021-11",
+    date: "2021-11 → 2025-01",
     sort: "2021-11",
+    start: "2021-11",
+    end: "2025-01",
     type: "role",
     themes: ["city"],
     title: {
@@ -1319,8 +1333,10 @@ const TIMELINE = [
   },
   {
     id: "smtr",
-    date: "2021-02",
+    date: "2021-02 → 2021-11",
     sort: "2021-02",
+    start: "2021-02",
+    end: "2021-11",
     type: "role",
     themes: ["city"],
     title: {
@@ -1827,10 +1843,9 @@ function renderFilters() {
   }
 }
 
-function applyFilter() {
+function applyListFilter() {
   listEl.querySelectorAll(".entry").forEach(el => {
-    const show = activeFilter === "all" || el.dataset.type === activeFilter;
-    el.hidden = !show;
+    el.hidden = activeFilter !== "all" && el.dataset.type !== activeFilter;
   });
   filtersEl.querySelectorAll(".filter-btn").forEach(btn => {
     btn.setAttribute("aria-pressed", btn.dataset.filter === activeFilter ? "true" : "false");
@@ -1839,10 +1854,33 @@ function applyFilter() {
 
 function setFilter(type) {
   activeFilter = type;
-  applyFilter();
+  applyListFilter();
 }
 
-function renderTimeline() {
+function appendLinks(parent, item) {
+  if (!item.links || !item.links.length) return;
+  const ul = document.createElement("ul");
+  ul.className = "entry-links";
+  for (const link of item.links) {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = link.href;
+    a.target = link.href.startsWith("/") ? "_self" : "_blank";
+    if (!link.href.startsWith("/")) a.rel = "noopener";
+    a.textContent = t(link.label);
+    li.appendChild(a);
+    if (link.what) {
+      const what = document.createElement("span");
+      what.className = "what";
+      what.textContent = t(link.what);
+      li.appendChild(what);
+    }
+    ul.appendChild(li);
+  }
+  parent.appendChild(ul);
+}
+
+function renderList() {
   const entries = sortedEntries();
   listEl.innerHTML = "";
   for (const item of entries) {
@@ -1877,27 +1915,7 @@ function renderTimeline() {
     blurb.innerHTML = t(item.blurb);
     body.appendChild(blurb);
 
-    if (item.links && item.links.length) {
-      const ul = document.createElement("ul");
-      ul.className = "entry-links";
-      for (const link of item.links) {
-        const li = document.createElement("li");
-        const a = document.createElement("a");
-        a.href = link.href;
-        a.target = link.href.startsWith("/") ? "_self" : "_blank";
-        if (!link.href.startsWith("/")) a.rel = "noopener";
-        a.textContent = t(link.label);
-        li.appendChild(a);
-        if (link.what) {
-          const what = document.createElement("span");
-          what.className = "what";
-          what.textContent = t(link.what);
-          li.appendChild(what);
-        }
-        ul.appendChild(li);
-      }
-      body.appendChild(ul);
-    }
+    appendLinks(body, item);
 
     if (item.detail) {
       const btn = document.createElement("button");
@@ -1940,14 +1958,14 @@ function renderTimeline() {
     listEl.appendChild(article);
   }
   renderFilters();
-  applyFilter();
+  applyListFilter();
 }
 
 function setLang(next) {
   lang = next;
   try { localStorage.setItem("lang", lang); } catch (_) {}
   applyChrome();
-  renderTimeline();
+  renderList();
 }
 
 document.querySelectorAll(".lang button").forEach(btn => {
@@ -1962,7 +1980,7 @@ addEventListener("scroll", () => {
 
 /* boot */
 applyChrome();
-renderTimeline();
+renderList();
 })();
 </script>
 </body>
