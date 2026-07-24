@@ -402,6 +402,7 @@ const TIMELINE = [
     sort: "2026-04-02",
     type: "launch",
     themes: ["city"],
+    archived: true,
     title: {
       en: "Rio 3 Open — open municipal LLMs",
       pt: "Rio 3 Open — LLMs municipais abertos"
@@ -1874,11 +1875,13 @@ const filtersEl = document.getElementById("timeline-filters");
 let activeFilter = "all";
 
 function sortedEntries() {
-  return [...TIMELINE].sort((a, b) => (a.sort < b.sort ? 1 : a.sort > b.sort ? -1 : 0));
+  return TIMELINE
+    .filter(e => !e.archived)
+    .sort((a, b) => (a.sort < b.sort ? 1 : a.sort > b.sort ? -1 : 0));
 }
 
 function usedTypes() {
-  const present = new Set(TIMELINE.map(e => e.type));
+  const present = new Set(TIMELINE.filter(e => !e.archived).map(e => e.type));
   return TYPE_ORDER.filter(t => present.has(t));
 }
 
