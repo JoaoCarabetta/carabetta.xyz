@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>joão carabetta — CV</title>
+<meta name="description" content="Curriculum vitae — João Carabetta. Public data infrastructure, city platforms, open datasets.">
+<link rel="canonical" href="https://carabetta.xyz/cv.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://carabetta.xyz/cv.html">
+<meta property="og:title" content="joão carabetta — CV">
+<meta property="og:description" content="Curriculum vitae — public data infrastructure, city platforms, open datasets.">
+<meta property="og:image" content="https://carabetta.xyz/og.png">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="pt_BR">
+<meta property="og:site_name" content="joão carabetta">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,500;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAFAF7;
+    --ink:#141414;
+    --ink-soft:#6b6b66;
+    --azulejo:#2447c9;
+    --rule:#e4e4de;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',sans-serif;
+    font-weight:400;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.55;
+  }
+  a{color:inherit}
+  .sr-only{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+    overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+  }
+
+  .topbar{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:1.1rem clamp(1.25rem,5vw,3rem);
+    position:sticky;top:0;z-index:10;
+    background:var(--paper);
+    border-bottom:1px solid var(--rule);
+  }
+  .topbar .brand{
+    font-size:.78rem;font-weight:500;letter-spacing:.04em;
+    text-decoration:none;
+  }
+  .topbar .brand:hover,.topbar .brand:focus-visible{color:var(--azulejo)}
+  .topbar-actions{
+    display:flex;align-items:center;gap:1.2rem;
+  }
+  .print-btn{
+    background:none;border:none;cursor:pointer;
+    font:inherit;font-size:.68rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--ink-soft);padding:.2rem .35rem;
+  }
+  .print-btn:hover,.print-btn:focus-visible{color:var(--azulejo)}
+  .print-btn:focus-visible{outline:2px solid var(--azulejo);outline-offset:2px}
+  .lang{
+    display:flex;gap:.35rem;align-items:center;
+    font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+  }
+  .lang button{
+    background:none;border:none;cursor:pointer;
+    font:inherit;color:var(--ink-soft);padding:.2rem .35rem;
+  }
+  .lang button[aria-pressed="true"]{color:var(--ink);font-weight:500}
+  .lang button:hover,.lang button:focus-visible{color:var(--azulejo)}
+  .lang button:focus-visible{outline:2px solid var(--azulejo);outline-offset:2px}
+  .lang .sep{color:var(--rule)}
+
+  .cv{
+    max-width:46rem;
+    margin:0 auto;
+    padding:2.5rem clamp(1.25rem,6vw,3rem) 5rem;
+  }
+
+  .cv-header{
+    margin-bottom:2.4rem;
+    padding-bottom:1.6rem;
+    border-bottom:1px solid var(--rule);
+  }
+  .cv-name{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:800;
+    font-size:clamp(2rem,6vw,2.8rem);
+    line-height:.95;
+    letter-spacing:-.03em;
+    margin-bottom:.7rem;
+  }
+  .cv-tagline{
+    font-size:.95rem;
+    color:var(--ink-soft);
+    max-width:48ch;
+    line-height:1.7;
+    margin-bottom:1.1rem;
+  }
+  .cv-tagline b{font-weight:600;color:var(--ink)}
+  .cv-links{
+    display:flex;flex-wrap:wrap;
+    gap:.35rem 1.2rem;
+    font-size:.72rem;
+    color:var(--ink-soft);
+    letter-spacing:.03em;
+  }
+  .cv-links a{
+    text-decoration:none;
+    border-bottom:1px dotted var(--ink-soft);
+  }
+  .cv-links a:hover,.cv-links a:focus-visible{
+    color:var(--azulejo);border-color:var(--azulejo);
+  }
+
+  .section{margin-bottom:2.2rem}
+  .section-title{
+    font-size:.62rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:1rem;
+    padding-bottom:.45rem;
+    border-bottom:1px solid var(--rule);
+  }
+
+  .job{margin-bottom:1.35rem}
+  .job:last-child{margin-bottom:0}
+  .job-head{
+    display:flex;justify-content:space-between;align-items:baseline;
+    gap:.8rem 1.2rem;flex-wrap:wrap;
+    margin-bottom:.25rem;
+  }
+  .job-title{
+    font-weight:600;
+    font-size:.95rem;
+    letter-spacing:-.01em;
+  }
+  .job-dates{
+    font-size:.72rem;
+    color:var(--ink-soft);
+    letter-spacing:.02em;
+    white-space:nowrap;
+  }
+  .job-org{
+    font-size:.8rem;
+    color:var(--azulejo);
+    margin-bottom:.35rem;
+  }
+  .job-blurb{
+    font-size:.85rem;
+    color:var(--ink-soft);
+    line-height:1.65;
+    max-width:62ch;
+  }
+  .job ul{
+    margin:.45rem 0 0 1.1rem;
+    font-size:.85rem;
+    color:var(--ink-soft);
+    line-height:1.6;
+  }
+  .job li{margin-bottom:.2rem}
+  .job li::marker{color:var(--rule)}
+
+  .compact-list{list-style:none}
+  .compact-list li{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:.4rem 1rem;
+    padding:.55rem 0;
+    border-bottom:1px solid var(--rule);
+    font-size:.85rem;
+    align-items:baseline;
+  }
+  .compact-list li:last-child{border-bottom:none}
+  .compact-list .item-main{min-width:0}
+  .compact-list .item-title{font-weight:500;color:var(--ink)}
+  .compact-list .item-meta{
+    display:block;
+    font-size:.78rem;
+    color:var(--ink-soft);
+    margin-top:.15rem;
+    line-height:1.5;
+  }
+  .compact-list .item-date{
+    font-size:.72rem;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+
+  .skills{
+    display:flex;flex-wrap:wrap;
+    gap:.45rem .9rem;
+    font-size:.8rem;
+    color:var(--ink-soft);
+  }
+  .skills span{color:var(--ink)}
+
+  .site-foot{
+    max-width:46rem;
+    margin:0 auto;
+    padding:0 clamp(1.25rem,6vw,3rem) 3rem;
+    font-size:.68rem;
+    color:var(--ink-soft);
+  }
+  .site-foot a{
+    color:inherit;
+    text-decoration:none;
+    border-bottom:1px dotted var(--ink-soft);
+  }
+  .site-foot a:hover{color:var(--azulejo);border-color:var(--azulejo)}
+
+  @page{
+    size:A4;
+    margin:14mm 14mm 16mm;
+  }
+
+  @media print{
+    .topbar,.print-btn,.site-foot{display:none!important}
+    html,body{background:#fff;font-size:9.5pt;line-height:1.4}
+    .cv{max-width:none;padding:0;margin:0}
+    .cv-header{
+      margin-bottom:1rem;
+      padding-bottom:.75rem;
+    }
+    .cv-name{font-size:20pt;margin-bottom:.35rem}
+    .cv-tagline{font-size:9.5pt;margin-bottom:.5rem;line-height:1.45}
+    .cv-links{font-size:8pt;gap:.2rem .8rem}
+    .section{margin-bottom:.85rem}
+    .section-title{
+      font-size:7.5pt;
+      margin-bottom:.45rem;
+      padding-bottom:.25rem;
+    }
+    .job{
+      break-inside:avoid;
+      page-break-inside:avoid;
+      margin-bottom:.65rem;
+    }
+    .job-title{font-size:10pt}
+    .job-dates,.item-date{font-size:8pt}
+    .job-org{font-size:8.5pt;color:var(--ink);margin-bottom:.15rem}
+    .job-blurb,.job ul,.compact-list li,.skills{font-size:9pt;line-height:1.4}
+    .job ul{margin-top:.25rem}
+    .compact-list li{
+      break-inside:avoid;
+      page-break-inside:avoid;
+      padding:.3rem 0;
+    }
+    .compact-list .item-meta{font-size:8.5pt}
+    a{text-decoration:none;color:inherit}
+    .cv-links a,.compact-list a{border-bottom:none}
+  }
+
+  @media (max-width:520px){
+    .compact-list li{grid-template-columns:1fr;gap:.15rem}
+    .compact-list .item-date{order:-1}
+  }
+</style>
+<script defer src="https://analytics.carabetta.xyz/metrics.js" data-website-id="7ff80044-1bf0-4664-a530-5d50589dfd47"></script>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="/">joão carabetta</a>
+  <div class="topbar-actions">
+    <button type="button" class="print-btn" data-i18n="print" onclick="window.print()">print / PDF</button>
+    <div class="lang" role="group" data-i18n-aria="langGroup" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <span class="sep" aria-hidden="true">|</span>
+      <button type="button" data-lang="pt" aria-pressed="false">PT</button>
+    </div>
+  </div>
+</header>
+
+<main class="cv">
+  <header class="cv-header">
+    <h1 class="cv-name">joão carabetta</h1>
+    <p class="cv-tagline" data-i18n="tagline"></p>
+    <nav class="cv-links" aria-label="links">
+      <a href="https://carabetta.xyz">carabetta.xyz</a>
+      <a href="https://github.com/JoaoCarabetta" target="_blank" rel="noopener">github</a>
+      <a href="https://www.linkedin.com/in/joaocarabetta" target="_blank" rel="noopener">linkedin</a>
+      <a href="https://basedosdados.org" target="_blank" rel="noopener">Base dos Dados</a>
+      <a href="https://dados.rio" target="_blank" rel="noopener">dados.rio</a>
+    </nav>
+  </header>
+
+  <section class="section" aria-labelledby="exp-title">
+    <h2 class="section-title" id="exp-title" data-i18n="experience"></h2>
+
+    <article class="job">
+      <div class="job-head">
+        <h3 class="job-title" data-i18n="job1Title"></h3>
+        <span class="job-dates">2025-01 → 2026-04</span>
+      </div>
+      <p class="job-org" data-i18n="job1Org"></p>
+      <p class="job-blurb" data-i18n="job1Blurb"></p>
+      <ul data-i18n-list="job1Points"></ul>
+    </article>
+
+    <article class="job">
+      <div class="job-head">
+        <h3 class="job-title" data-i18n="job2Title"></h3>
+        <span class="job-dates">2021-11 → 2025-01</span>
+      </div>
+      <p class="job-org" data-i18n="job2Org"></p>
+      <p class="job-blurb" data-i18n="job2Blurb"></p>
+      <ul data-i18n-list="job2Points"></ul>
+    </article>
+
+    <article class="job">
+      <div class="job-head">
+        <h3 class="job-title" data-i18n="job3Title"></h3>
+        <span class="job-dates">2021-02 → 2021-11</span>
+      </div>
+      <p class="job-org" data-i18n="job3Org"></p>
+      <p class="job-blurb" data-i18n="job3Blurb"></p>
+    </article>
+
+    <article class="job">
+      <div class="job-head">
+        <h3 class="job-title" data-i18n="job4Title"></h3>
+        <span class="job-dates">2020-09 →</span>
+      </div>
+      <p class="job-org" data-i18n="job4Org"></p>
+      <p class="job-blurb" data-i18n="job4Blurb"></p>
+      <ul data-i18n-list="job4Points"></ul>
+    </article>
+
+    <article class="job">
+      <div class="job-head">
+        <h3 class="job-title" data-i18n="job5Title"></h3>
+        <span class="job-dates">2019-09 → 2021-01</span>
+      </div>
+      <p class="job-org" data-i18n="job5Org"></p>
+      <p class="job-blurb" data-i18n="job5Blurb"></p>
+    </article>
+
+    <article class="job">
+      <div class="job-head">
+        <h3 class="job-title" data-i18n="job6Title"></h3>
+        <span class="job-dates">2019-02 → 2019-05</span>
+      </div>
+      <p class="job-org" data-i18n="job6Org"></p>
+      <p class="job-blurb" data-i18n="job6Blurb"></p>
+    </article>
+
+    <article class="job">
+      <div class="job-head">
+        <h3 class="job-title" data-i18n="job9Title"></h3>
+        <span class="job-dates">2018-10 → 2019-02</span>
+      </div>
+      <p class="job-org" data-i18n="job9Org"></p>
+      <p class="job-blurb" data-i18n="job9Blurb"></p>
+    </article>
+
+    <article class="job">
+      <div class="job-head">
+        <h3 class="job-title" data-i18n="job7Title"></h3>
+        <span class="job-dates">2018-04 → 2019-06</span>
+      </div>
+      <p class="job-org" data-i18n="job7Org"></p>
+      <p class="job-blurb" data-i18n="job7Blurb"></p>
+      <ul data-i18n-list="job7Points"></ul>
+    </article>
+
+    <article class="job">
+      <div class="job-head">
+        <h3 class="job-title" data-i18n="job10Title"></h3>
+        <span class="job-dates">2017-02 → 2019-02</span>
+      </div>
+      <p class="job-org" data-i18n="job10Org"></p>
+      <p class="job-blurb" data-i18n="job10Blurb"></p>
+    </article>
+
+    <article class="job">
+      <div class="job-head">
+        <h3 class="job-title" data-i18n="job8Title"></h3>
+        <span class="job-dates">2016-09 → 2016-12</span>
+      </div>
+      <p class="job-org" data-i18n="job8Org"></p>
+      <p class="job-blurb" data-i18n="job8Blurb"></p>
+    </article>
+  </section>
+
+  <section class="section" aria-labelledby="edu-title">
+    <h2 class="section-title" id="edu-title" data-i18n="education"></h2>
+    <ul class="compact-list">
+      <li>
+        <div class="item-main">
+          <span class="item-title" data-i18n="edu1Title"></span>
+          <span class="item-meta" data-i18n="edu1Meta"></span>
+        </div>
+        <span class="item-date">2017 → 2018</span>
+      </li>
+      <li>
+        <div class="item-main">
+          <span class="item-title" data-i18n="edu2Title"></span>
+          <span class="item-meta" data-i18n="edu2Meta"></span>
+        </div>
+        <span class="item-date">2014-07 → 2015-09</span>
+      </li>
+      <li>
+        <div class="item-main">
+          <span class="item-title" data-i18n="edu3Title"></span>
+          <span class="item-meta" data-i18n="edu3Meta"></span>
+        </div>
+        <span class="item-date">2011 → 2016</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" aria-labelledby="awards-title">
+    <h2 class="section-title" id="awards-title" data-i18n="awards"></h2>
+    <ul class="compact-list">
+      <li>
+        <div class="item-main">
+          <span class="item-title">Bloomberg Mayors Challenge</span>
+          <span class="item-meta" data-i18n="award1Meta"></span>
+        </div>
+        <span class="item-date">2026</span>
+      </li>
+      <li>
+        <div class="item-main">
+          <span class="item-title" data-i18n="award2Title"></span>
+          <span class="item-meta" data-i18n="award2Meta"></span>
+        </div>
+        <span class="item-date">2025</span>
+      </li>
+      <li>
+        <div class="item-main">
+          <span class="item-title">Google Cloud Customer Award · Prêmio Tesouro</span>
+          <span class="item-meta" data-i18n="award3Meta"></span>
+        </div>
+        <span class="item-date">2021</span>
+      </li>
+      <li>
+        <div class="item-main">
+          <span class="item-title" data-i18n="award4Title"></span>
+          <span class="item-meta" data-i18n="award4Meta"></span>
+        </div>
+        <span class="item-date">2009 &amp; 2010</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" aria-labelledby="pub-title">
+    <h2 class="section-title" id="pub-title" data-i18n="publications"></h2>
+    <ul class="compact-list">
+      <li>
+        <div class="item-main">
+          <span class="item-title" data-i18n="pub1Title"></span>
+          <span class="item-meta" data-i18n="pub1Meta"></span>
+        </div>
+        <span class="item-date">2025</span>
+      </li>
+      <li>
+        <div class="item-main">
+          <span class="item-title" data-i18n="pub2Title"></span>
+          <span class="item-meta" data-i18n="pub2Meta"></span>
+        </div>
+        <span class="item-date">2024</span>
+      </li>
+      <li>
+        <div class="item-main">
+          <span class="item-title">Data Basis: universalizing access to high-quality data</span>
+          <span class="item-meta" data-i18n="pub3Meta"></span>
+        </div>
+        <span class="item-date">2022</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" aria-labelledby="skills-title">
+    <h2 class="section-title" id="skills-title" data-i18n="skills"></h2>
+    <p class="skills" data-i18n="skillsBody"></p>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <span data-i18n="footNote"></span>
+  <a href="/">carabetta.xyz</a>
+</footer>
+
+<script>
+(() => {
+"use strict";
+
+const UI = {
+  print: { en: "print / PDF", pt: "imprimir / PDF" },
+  langGroup: { en: "Language", pt: "Idioma" },
+  tagline: {
+    en: "physicist by training. builds <b>public data infrastructure</b> in Brazil — open datasets, city platforms, and the tools between them.",
+    pt: "físico de formação. constrói <b>infraestrutura pública de dados</b> no Brasil — bases abertas, plataformas de cidade e as ferramentas entre elas."
+  },
+  experience: { en: "experience", pt: "experiência" },
+  education: { en: "education", pt: "formação" },
+  awards: { en: "selected awards", pt: "prêmios selecionados" },
+  publications: { en: "selected publications", pt: "publicações selecionadas" },
+  skills: { en: "focus", pt: "foco" },
+  skillsBody: {
+    en: "<span>public data infrastructure</span> · city data platforms · open data · data governance · govtech · real-time systems · mathematical modeling",
+    pt: "<span>infraestrutura pública de dados</span> · plataformas de dados urbanos · dados abertos · governança de dados · govtech · sistemas em tempo real · modelagem matemática"
+  },
+  footNote: {
+    en: "full chronological record → ",
+    pt: "registro cronológico completo → "
+  },
+
+  job1Title: { en: "CTO of Rio · President of iplanrio", pt: "CTO do Rio · Presidente da iplanrio" },
+  job1Org: { en: "City of Rio de Janeiro / iplanrio", pt: "Prefeitura do Rio de Janeiro / iplanrio" },
+  job1Blurb: {
+    en: "Led the municipal technology company (founded 1979) responsible for the systems the city runs on — 1746, Carioca Digital, processo.rio, health systems.",
+    pt: "Liderei a empresa municipal de tecnologia (fundada em 1979) responsável pelos sistemas em que a cidade roda — 1746, Carioca Digital, processo.rio, sistemas de saúde."
+  },
+  job1Points: {
+    en: [
+      "Scaled proactive AI / digital outreach against multidimensional vulnerability — Bloomberg Mayors Challenge winner (US$1M).",
+      "Released Rio 3 Open: six open-weight municipal LLMs (MIT) for local inference.",
+      "Supported city-scale products including Histórico Clínico Integrado (~7M patients) and Mulher.Rio."
+    ],
+    pt: [
+      "Escalei IA proativa / busca ativa digital contra vulnerabilidade multidimensional — vencedor do Bloomberg Mayors Challenge (US$1M).",
+      "Lancei o Rio 3 Open: seis LLMs municipais open-weight (MIT) para inferência local.",
+      "Apoiei produtos em escala de cidade, incluindo Histórico Clínico Integrado (~7M pacientes) e Mulher.Rio."
+    ]
+  },
+
+  job2Title: { en: "Chief Data Officer · Escritório de Dados", pt: "Chefe de Dados · Escritório de Dados" },
+  job2Org: { en: "Mayor's Cabinet, City of Rio de Janeiro", pt: "Gabinete do Prefeito, Prefeitura do Rio de Janeiro" },
+  job2Blurb: {
+    en: "Founded and ran Rio's Data Office — research, training, and open storytelling at dados.rio.",
+    pt: "Fundei e dirigi o Escritório de Dados do Rio — pesquisa, formação e narrativas abertas em dados.rio."
+  },
+  job2Points: {
+    en: [
+      "Launched the municipal public datalake (2022): 20+ secretariats, 4.7B+ records — Google Cloud global public-sector case.",
+      "Fed CIVITAS (city intelligence hub) and operational dashboards managers actually use.",
+      "Advanced from Head of Data Science (transport) → CDO → Chief Executive of Technology → President of iplanrio."
+    ],
+    pt: [
+      "Lancei o datalake público municipal (2022): 20+ secretarias, 4,7B+ registros — case global Google Cloud de setor público.",
+      "Alimentei o CIVITAS (central de inteligência) e painéis operacionais que gestores realmente usam.",
+      "Trajetória: Head de Ciência de Dados (transportes) → CDO → Chefe Executivo de Tecnologia → Presidente da iplanrio."
+    ]
+  },
+
+  job3Title: { en: "Head of Data Science — Transport", pt: "Head de Ciência de Dados — Transportes" },
+  job3Org: { en: "SMTR, City of Rio de Janeiro", pt: "SMTR, Prefeitura do Rio de Janeiro" },
+  job3Blurb: {
+    en: "Built the live bus GPS pipeline — every ping, line, and operator — so the city could measure service delivery in real time. Seed of the municipal data program.",
+    pt: "Construí o pipeline de GPS ao vivo dos ônibus — cada ping, linha e operador — para a cidade medir a entrega do serviço em tempo real. Semente do programa municipal de dados."
+  },
+
+  job4Title: { en: "Co-founder", pt: "Co-fundador" },
+  job4Org: { en: "Base dos Dados", pt: "Base dos Dados" },
+  job4Blurb: {
+    en: "Public data as infrastructure: one cleaned, joinable warehouse on BigQuery — free at the point of use.",
+    pt: "Dados públicos como infraestrutura: um warehouse limpo e cruzável no BigQuery — gratuito no ponto de uso."
+  },
+  job4Points: {
+    en: [
+      "Google Cloud Next'21 Social Impact Award (only Brazilian org in the category) and 1st place, Prêmio Tesouro Nacional.",
+      "Standardized identifiers so Brazil's public tables join — search, lake, and APIs for researchers and journalists."
+    ],
+    pt: [
+      "Google Cloud Next'21 Social Impact Award (única org brasileira na categoria) e 1º lugar no Prêmio Tesouro Nacional.",
+      "Padronizei identificadores para tabelas públicas brasileiras cruzarem — busca, lake e APIs para pesquisadores e jornalistas."
+    ]
+  },
+
+  job5Title: { en: "Data Scientist", pt: "Cientista de Dados" },
+  job5Org: { en: "Inter-American Development Bank (IDB)", pt: "Banco Interamericano de Desenvolvimento (BID)" },
+  job5Blurb: {
+    en: "Strategic planning & development effectiveness — novel data sources as evidence for policy across Latin America. Built a continent-wide Waze pipeline for mobility, pollution, and transit-cost indexes (~40 largest cities), plus the COVID impact dashboard and urban air-quality work.",
+    pt: "Planejamento estratégico e efetividade do desenvolvimento — fontes novas de dados como evidência para política na América Latina. Construí um pipeline continental do Waze para índices de mobilidade, poluição e custo do deslocamento (~40 maiores cidades), além do dashboard de impacto da COVID e qualidade do ar urbana."
+  },
+
+  job6Title: { en: "Data Scientist", pt: "Cientista de Dados" },
+  job6Org: { en: "Gabinete Compartilhado Acredito — Brazilian Congress", pt: "Gabinete Compartilhado Acredito — Congresso Nacional" },
+  job6Blurb: {
+    en: "Data support for deputies Tábata Amaral, Felipe Rigoni and senator Alessandro Vieira — built a framework to live-capture and process political data at scale.",
+    pt: "Apoio de dados para os deputados Tábata Amaral, Felipe Rigoni e o senador Alessandro Vieira — construí um framework para capturar e processar dados políticos em tempo real."
+  },
+
+  job9Title: { en: "In-company professor", pt: "Professor in-company" },
+  job9Org: { en: "FGV — Rio de Janeiro", pt: "FGV — Rio de Janeiro" },
+  job9Blurb: {
+    en: "Taught Data Visualisation and Introduction to Data Modelling with Tableau.",
+    pt: "Dei cursos de Visualização de Dados e Introdução à Modelagem de Dados com Tableau."
+  },
+
+  job7Title: { en: "Project Manager → Project Head", pt: "Gerente → Head de Projetos" },
+  job7Org: { en: "Cognitivo.ai — Rio de Janeiro", pt: "Cognitivo.ai — Rio de Janeiro" },
+  job7Blurb: {
+    en: "Led data projects at a Rio analytics startup before moving into public-interest work full time.",
+    pt: "Liderei projetos de dados numa startup de analytics no Rio antes de ir de vez para o interesse público."
+  },
+  job7Points: {
+    en: [
+      "Owned project resources, people allocation, infrastructure, and customer satisfaction."
+    ],
+    pt: [
+      "Responsável por recursos do projeto, alocação de pessoas, infraestrutura e satisfação do cliente."
+    ]
+  },
+
+  job10Title: { en: "Data Scientist", pt: "Cientista de Dados" },
+  job10Org: { en: "CTS-FGV — Rio de Janeiro", pt: "CTS-FGV — Rio de Janeiro" },
+  job10Blurb: {
+    en: "Analytics and infrastructure for Congresso em Números and the IDB Big Data for Sustainable Development project.",
+    pt: "Analytics e infraestrutura do Congresso em Números e do projeto IDB Big Data for Sustainable Development."
+  },
+
+  job8Title: { en: "Data Analyst residency", pt: "Residência em análise de dados" },
+  job8Org: { en: "LabHacker — São Paulo", pt: "LabHacker — São Paulo" },
+  job8Blurb: {
+    en: "Data analyst residency at Pedro Markun's tech×politics organization — built Agenda Pública, an app gathering popular deliberative meetings across São Paulo.",
+    pt: "Residência em análise de dados na organização de tecnologia e política de Pedro Markun — construí o Agenda Pública, app que reúne reuniões deliberativas populares em São Paulo."
+  },
+
+  edu1Title: { en: "Master's — Mathematical Modeling, FGV/EMAp", pt: "Mestrado — Modelagem Matemática, FGV/EMAp" },
+  edu1Meta: {
+    en: "Applied math on real policy problems; started bradata, an early open repo for Brazilian public data.",
+    pt: "Matemática aplicada em problemas reais de política; comecei o bradata, repositório aberto precoce de dados públicos brasileiros."
+  },
+  edu2Title: { en: "Science Without Borders — University of Durham", pt: "Ciência sem Fronteiras — University of Durham" },
+  edu2Meta: {
+    en: "Exchange year in the UK. Halim Kusumaatmaja's group: algorithm to survey energy landscapes (Doubly Nudged Elastic Band).",
+    pt: "Ano de intercâmbio no Reino Unido. Grupo de Halim Kusumaatmaja: algoritmo para mapear paisagens de energia (Doubly Nudged Elastic Band)."
+  },
+  edu3Title: { en: "Bachelor's — Physics, UNICAMP", pt: "Bacharelado — Física, UNICAMP" },
+  edu3Meta: {
+    en: "Scientific initiation in atomic force microscopy and biophysics, Lab of Nano and Biosystems (2013–14).",
+    pt: "Iniciação científica em microscopia de força atômica e biofísica, Laboratório de Nano e Biossistemas (2013–14)."
+  },
+
+  award1Meta: {
+    en: "Rio among 24 global winners — proactive AI against multidimensional vulnerability (iplanrio).",
+    pt: "Rio entre 24 vencedores globais — IA proativa contra vulnerabilidade multidimensional (iplanrio)."
+  },
+  award2Title: { en: "Google Cloud global case — Escritório de Dados", pt: "Case global Google Cloud — Escritório de Dados" },
+  award2Meta: {
+    en: "Public-sector reference for integrating 20+ secretariats and 4.7B+ records.",
+    pt: "Referência de setor público por integrar 20+ secretarias e 4,7B+ registros."
+  },
+  award3Meta: {
+    en: "Base dos Dados — Google Cloud Next'21 Social Impact; 1st place, National Treasury prize.",
+    pt: "Base dos Dados — Google Cloud Next'21 Social Impact; 1º lugar, Prêmio Tesouro Nacional."
+  },
+  award4Title: { en: "Brazilian Olympics of Astronomy — silver medal", pt: "Olimpíada Brasileira de Astronomia — medalha de prata" },
+  award4Meta: {
+    en: "Silver medals in 2009 and 2010.",
+    pt: "Medalhas de prata em 2009 e 2010."
+  },
+
+  pub1Title: { en: "Nature Scientific Data — Rio bus mobility dataset", pt: "Nature Scientific Data — dataset de mobilidade de ônibus do Rio" },
+  pub1Meta: {
+    en: "Equal-contribution paper — open bus GPS and environmental indicators from Rio.",
+    pt: "Artigo em contribuição igual — dataset aberto de GPS de ônibus e indicadores ambientais do Rio."
+  },
+  pub2Title: { en: "Chapter — Public-sector data governance (UNU)", pt: "Capítulo — Governança de dados no setor público (UNU)" },
+  pub2Meta: {
+    en: "Co-authored as Rio's CDO and Base dos Dados co-founder.",
+    pt: "Coautorado como chefe de dados do Rio e co-fundador da Base dos Dados."
+  },
+  pub3Meta: {
+    en: "With Dahis, Scovino, Israel & Oliveira — how and why we built Base dos Dados.",
+    pt: "Com Dahis, Scovino, Israel & Oliveira — como e por que construímos a Base dos Dados."
+  }
+};
+
+let lang = "en";
+try {
+  const saved = localStorage.getItem("lang");
+  if (saved === "en" || saved === "pt") lang = saved;
+  else if ((navigator.language || "").toLowerCase().startsWith("pt")) lang = "pt";
+} catch (_) {}
+
+function t(obj) {
+  if (!obj) return "";
+  return obj[lang] || obj.en || "";
+}
+
+function applyChrome() {
+  document.documentElement.lang = lang === "pt" ? "pt-BR" : "en";
+  document.title = lang === "pt" ? "joão carabetta — currículo" : "joão carabetta — CV";
+
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    const val = UI[key];
+    if (!val) return;
+    el.innerHTML = t(val);
+  });
+
+  document.querySelectorAll("[data-i18n-list]").forEach(el => {
+    const key = el.getAttribute("data-i18n-list");
+    const val = UI[key];
+    if (!val) return;
+    const items = val[lang] || val.en || [];
+    el.innerHTML = items.map(s => `<li>${s}</li>`).join("");
+  });
+
+  document.querySelectorAll("[data-i18n-aria]").forEach(el => {
+    const key = el.getAttribute("data-i18n-aria");
+    const val = UI[key];
+    if (val) el.setAttribute("aria-label", t(val));
+  });
+
+  document.querySelectorAll(".lang button").forEach(btn => {
+    btn.setAttribute("aria-pressed", btn.dataset.lang === lang ? "true" : "false");
+  });
+
+  const desc = document.querySelector('meta[name="description"]');
+  if (desc) {
+    desc.setAttribute("content", lang === "pt"
+      ? "Currículo — João Carabetta. Infraestrutura pública de dados, plataformas de cidade, bases abertas."
+      : "Curriculum vitae — João Carabetta. Public data infrastructure, city platforms, open datasets.");
+  }
+}
+
+document.querySelectorAll(".lang button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    lang = btn.dataset.lang;
+    try { localStorage.setItem("lang", lang); } catch (_) {}
+    applyChrome();
+  });
+});
+
+applyChrome();
+})();
+</script>
+</body>
+</html>

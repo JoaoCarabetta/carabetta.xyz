@@ -1486,11 +1486,13 @@ const TIMELINE = [
     detail: {
       en: [
         ["the habit", "i trained as a physicist at <b>UNICAMP</b>. physics left one permanent habit: in any complicated system, most variables are noise and a handful of forces explain almost everything. instead of a physics phd, i took that habit to <b>FGV/EMAp</b> for a master's in mathematical modelling."],
-        ["development, in evidence", "at the IDB i worked on turning novel data into evidence — most visibly the waze-based coronavirus impact dashboard, and analyses of pandemic-era air quality in the region's cities."]
+        ["development, in evidence", "at the IDB i worked on turning novel data into evidence — most visibly the waze-based coronavirus impact dashboard, and analyses of pandemic-era air quality in the region's cities."],
+        ["continent-scale mobility", "built a pipeline to process <b>Waze</b> data across Latin America — used for traffic impact, mobility indexes, pollution estimates, and the cost of transit. developed a mobility index for roughly the 40 largest cities in the region."]
       ],
       pt: [
         ["o hábito", "me formei físico na <b>UNICAMP</b>. a física deixou um hábito permanente: em qualquer sistema complicado, a maioria das variáveis é ruído e um punhado de forças explica quase tudo. em vez de um doutorado, levei esse hábito para o mestrado em modelagem matemática na <b>FGV/EMAp</b>."],
-        ["desenvolvimento, em evidência", "no BID trabalhei em transformar dados novos em evidência — sobretudo o dashboard de impacto do coronavírus baseado em Waze, e análises de qualidade do ar na pandemia nas cidades da região."]
+        ["desenvolvimento, em evidência", "no BID trabalhei em transformar dados novos em evidência — sobretudo o dashboard de impacto do coronavírus baseado em Waze, e análises de qualidade do ar na pandemia nas cidades da região."],
+        ["mobilidade em escala continental", "construí um pipeline para processar dados do <b>Waze</b> na América Latina — usado para impacto no trânsito, índices de mobilidade, estimativas de poluição e custo do deslocamento. desenvolvi um índice de mobilidade para cerca das 40 maiores cidades da região."]
       ]
     },
     links: [
@@ -1537,8 +1539,25 @@ const TIMELINE = [
       pt: "Cientista de Dados — Gabinete Compartilhado Acredito"
     },
     blurb: {
-      en: "data support in Congress for deputies Tábata Amaral, Felipe Rigoni and senator Alessandro Vieira.",
-      pt: "apoio de dados no Congresso para os deputados Tábata Amaral, Felipe Rigoni e o senador Alessandro Vieira."
+      en: "data support in Congress for deputies Tábata Amaral, Felipe Rigoni and senator Alessandro Vieira — built a framework to live-capture and process political data at scale.",
+      pt: "apoio de dados no Congresso para os deputados Tábata Amaral, Felipe Rigoni e o senador Alessandro Vieira — construí um framework para capturar e processar dados políticos em tempo real."
+    }
+  },
+  {
+    id: "fgv-professor",
+    date: "2018-10 → 2019-02",
+    sort: "2018-10",
+    start: "2018-10",
+    end: "2019-02",
+    type: "role",
+    themes: ["research"],
+    title: {
+      en: "In-company professor — FGV",
+      pt: "Professor in-company — FGV"
+    },
+    blurb: {
+      en: "taught Data Visualisation and Introduction to Data Modelling with Tableau in Rio.",
+      pt: "dei cursos de Visualização de Dados e Introdução à Modelagem de Dados com Tableau no Rio."
     }
   },
   {
@@ -1552,8 +1571,8 @@ const TIMELINE = [
       pt: "Gerente → Head de Projetos — Cognitivo.ai"
     },
     blurb: {
-      en: "led data projects at a São Paulo analytics company before moving into public-interest work full time.",
-      pt: "liderei projetos de dados numa empresa de analytics em São Paulo antes de ir de vez para o interesse público."
+      en: "led data projects at a Rio analytics startup — owned project resources, people allocation, infrastructure, and customer satisfaction before moving into public-interest work full time.",
+      pt: "liderei projetos de dados numa startup de analytics no Rio — responsável por recursos, alocação de pessoas, infraestrutura e satisfação do cliente antes de ir de vez para o interesse público."
     }
   },
   {
@@ -1664,9 +1683,26 @@ const TIMELINE = [
     }
   },
   {
+    id: "cts-fgv",
+    date: "2017-02 → 2019-02",
+    sort: "2017-02-20",
+    start: "2017-02",
+    end: "2019-02",
+    type: "role",
+    themes: ["research"],
+    title: {
+      en: "Data Scientist — CTS-FGV",
+      pt: "Cientista de Dados — CTS-FGV"
+    },
+    blurb: {
+      en: "analytics and infrastructure for Congresso em Números and the IDB Big Data for Sustainable Development project, at FGV's Center for Technology and Society in Rio.",
+      pt: "analytics e infraestrutura do Congresso em Números e do projeto IDB Big Data for Sustainable Development, no Centro de Tecnologia e Sociedade da FGV no Rio."
+    }
+  },
+  {
     id: "fgv-emap",
     date: "2017 → 2018",
-    sort: "2017-02",
+    sort: "2017-02-15",
     type: "education",
     themes: ["research"],
     title: {
@@ -1716,6 +1752,21 @@ const TIMELINE = [
     ]
   },
   {
+    id: "labhacker",
+    date: "2016-09 → 2016-12",
+    sort: "2016-09",
+    type: "role",
+    themes: ["data"],
+    title: {
+      en: "Data Analyst residency — LabHacker (São Paulo)",
+      pt: "Residência em análise de dados — LabHacker (São Paulo)"
+    },
+    blurb: {
+      en: "data analyst residency at Pedro Markun's tech×politics organization — built Agenda Pública, an app gathering popular deliberative meetings across São Paulo.",
+      pt: "residência em análise de dados na organização de tecnologia e política de Pedro Markun — construí o Agenda Pública, app que reúne reuniões deliberativas populares em São Paulo."
+    }
+  },
+  {
     id: "transparencia-unicamp",
     date: "2016",
     sort: "2016-05",
@@ -1726,38 +1777,26 @@ const TIMELINE = [
       pt: "Transparência Unicamp"
     },
     blurb: {
-      en: "co-founded a student collective that demanded university transparency and informed the campus with data and infographics.",
-      pt: "co-fundei um coletivo estudantil que cobrava transparência da universidade e informava o campus com dados e infográficos."
-    }
-  },
-  {
-    id: "labhacker",
-    date: "2016-09 → 2016-12",
-    sort: "2016-09",
-    type: "role",
-    themes: ["data"],
-    title: {
-      en: "Resident — LabHacker (São Paulo)",
-      pt: "Residente — LabHacker (São Paulo)"
+      en: "co-founded a student collective that informed the campus during a strike, demanded university transparency, ran a budget hackathon, and crawled sites for data that was not readily available.",
+      pt: "co-fundei um coletivo estudantil que informou o campus durante uma greve, cobrou transparência da universidade, organizou um hackathon do orçamento e fez crawling de sites para dados que não estavam prontamente disponíveis."
     },
-    blurb: {
-      en: "residency at the Chamber of Deputies' civic hacking lab.",
-      pt: "residência no laboratório de hackeamento cívico da Câmara dos Deputados."
-    }
+    links: [
+      { href: "https://www.facebook.com/TransparenciaUNICAMP/", label: { en: "page", pt: "página" }, what: { en: "Transparência Unicamp", pt: "Transparência Unicamp" } }
+    ]
   },
   {
     id: "durham",
-    date: "2015",
-    sort: "2015-05",
+    date: "2014-07 → 2015-09",
+    sort: "2014-07",
     type: "education",
     themes: ["research"],
     title: {
-      en: "Durham — energy landscapes",
-      pt: "Durham — paisagens de energia"
+      en: "Science Without Borders — University of Durham",
+      pt: "Ciência sem Fronteiras — University of Durham"
     },
     blurb: {
-      en: "with Halim Kusumaatmaja's group: a new algorithm to survey energy landscapes using the Doubly Nudged Elastic Band method.",
-      pt: "com o grupo de Halim Kusumaatmaja: um novo algoritmo para mapear paisagens de energia com o método Doubly Nudged Elastic Band."
+      en: "exchange year in the UK. with Halim Kusumaatmaja's group: a new algorithm to survey energy landscapes using the Doubly Nudged Elastic Band method.",
+      pt: "ano de intercâmbio no Reino Unido. com o grupo de Halim Kusumaatmaja: um novo algoritmo para mapear paisagens de energia com o método Doubly Nudged Elastic Band."
     }
   },
   {
@@ -1773,6 +1812,21 @@ const TIMELINE = [
     blurb: {
       en: "bachelor in physics. scientific initiation with atomic force microscopy and biophysics at the Lab of Nano and Biosystems (2013–14).",
       pt: "bacharelado em física. iniciação científica com microscopia de força atômica e biofísica no Laboratório de Nano e Biossistemas (2013–14)."
+    }
+  },
+  {
+    id: "astronomy-olympics",
+    date: "2009 & 2010",
+    sort: "2010-12",
+    type: "award",
+    themes: ["research"],
+    title: {
+      en: "Brazilian Olympics of Astronomy — silver medal",
+      pt: "Olimpíada Brasileira de Astronomia — medalha de prata"
+    },
+    blurb: {
+      en: "silver medals in 2009 and 2010.",
+      pt: "medalhas de prata em 2009 e 2010."
     }
   }
 ];
