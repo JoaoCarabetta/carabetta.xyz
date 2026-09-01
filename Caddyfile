@@ -1,8 +1,15 @@
 carabetta.xyz, www.carabetta.xyz {
     root * /var/www/carabetta.xyz
-    encode gzip
+    encode gzip {
+        not path *.pbf
+    }
 
     import transparencia-auth.caddy
+
+    handle_path /dataviz/brazildots/tiles/* {
+        reverse_proxy 127.0.0.1:8088
+        rewrite * /data/censo2022{uri}
+    }
 
     file_server
 

@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Distribuição Racial no Brasil — Brazil dots</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css" rel="stylesheet">
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        .legend { background: white; padding: 10px; font-family: Arial, sans-serif; position: absolute; bottom: 60px; right: 10px; z-index: 100; border-radius: 3px; min-width: 150px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .legend h4 { margin: 0 0 10px; }
+        .legend div span { border-radius: 50%; width: 10px; height: 10px; display: inline-block; margin-right: 5px; }
+        .legend .dot-scale { font-size: 12px; color: #666; margin: 0 0 10px; border-bottom: 1px solid #eee; padding-bottom: 8px; white-space: nowrap; }
+        .zoom-level-indicator {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px;
+            position: absolute;
+            bottom: 60px;
+            left: 10px;
+            font-family: Arial, sans-serif;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+/*             
+        .mapboxgl-popup {
+            max-width: 400px;
+            font:
+                12px/20px 'Helvetica Neue',
+                Arial,
+                Helvetica,
+                sans-serif;
+        } */
+        
+
+        .mapboxgl-popup-content {
+            background-color: white;
+            padding: 5px 8px;
+            line-height: 1.4;
+            font-family: Arial, sans-serif;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+            font-size: 12px;
+        }
+
+        .mapboxgl-popup-tip {
+            visibility: hidden;
+        }
+
+
+        #g-map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .g-row {
+            padding-top: 1px;
+            padding-bottom: 1px;
+            border-bottom: 1px solid #EEE;
+        }
+
+        .g-row > div {
+            display: inline-block;
+        }
+
+        .g-popup-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .g-row-label {
+            width: 120px;
+        }
+
+        .g-row-pct {
+            width: 52px;
+            text-align: right;
+        }
+
+        .g-row-population {
+            padding-top: 5px;
+            border-bottom: none;
+            font-style: italic;
+            color: #666;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2px 5px;
+            opacity: 1;
+            transition: opacity 0.2s ease;
+        }
+
+        .legend-item.disabled {
+            opacity: 0.3;
+        }
+
+        .legend-label {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            cursor: pointer;
+        }
+
+        .solo-button {
+            visibility: hidden;
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            background: white;
+            cursor: pointer;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 5px;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+
+        .legend-item:hover .solo-button {
+            visibility: visible;
+        }
+
+        .solo-button:hover {
+            background: #f0f0f0;
+            border-color: #999;
+        }
+
+        .legend-dot {
+            transition: opacity 0.2s ease;
+        }
+
+        .header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-logo {
+            height: 40px;
+            margin-right: 20px;
+        }
+
+        .header-text {
+            flex-grow: 1;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0;
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin: 4px 0 0 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 100;
+            padding: 10px 20px;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+        }
+
+        .footer-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer a:hover {
+            color: #333;
+        }
+
+        /* Adjust zoom indicator to account for footer */
+        .zoom-level-indicator {
+            bottom: 60px;
+        }
+
+        /* Position zoom controls below header */
+        .mapboxgl-ctrl-top-right {
+            top: 70px !important; /* Header height (60px) + 10px margin */
+        }
+
+        /* Optional: style the zoom controls to match the theme */
+        .mapboxgl-ctrl-group {
+            background: rgba(255, 255, 255, 0.9) !important;
+            border: none !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        }
+
+        .mapboxgl-ctrl-group button {
+            border-bottom: 1px solid #ddd !important;
+        }
+
+        .mapboxgl-ctrl-group button:last-child {
+            border-bottom: none !important;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-text">
+            <h1 class="header-title">Distribuição Racial no Brasil</h1>
+            <p class="header-subtitle">Censo Demográfico 2022 • IBGE • Rio de Janeiro</p>
+        </div>
+    </header>
+<div id="map"></div>
+<div class="legend" id="legend">
+    <h4>Raça</h4>
+    <div class="dot-scale" id="dot-scale">1 ponto = 2.000 pessoas</div>
+    <div class="legend-item" data-race="branca">
+        <div class="legend-label">
+            <span class="legend-dot" style="background-color: #fb3640;"></span>
+            <span>Branca</span>
+        </div>
+        <button class="solo-button" title="Show only this category">S</button>
+    </div>
+    <div class="legend-item" data-race="preta">
+        <div class="legend-label">
+            <span class="legend-dot" style="background-color: #fff07c;"></span>
+            <span>Preta</span>
+        </div>
+        <button class="solo-button" title="Show only this category">S</button>
+    </div>
+    <div class="legend-item" data-race="amarela">
+        <div class="legend-label">
+            <span class="legend-dot" style="background-color: #89ffa7;"></span>
+            <span>Amarela</span>
+        </div>
+        <button class="solo-button" title="Show only this category">S</button>
+    </div>
+    <div class="legend-item" data-race="parda">
+        <div class="legend-label">
+            <span class="legend-dot" style="background-color: #3899c9;"></span>
+            <span>Parda</span>
+        </div>
+        <button class="solo-button" title="Show only this category">S</button>
+    </div>
+    <div class="legend-item" data-race="indigena">
+        <div class="legend-label">
+            <span class="legend-dot" style="background-color: #e8800c;"></span>
+            <span>Indígena</span>
+        </div>
+        <button class="solo-button" title="Show only this category">S</button>
+    </div>
+</div>
+<div class="zoom-level-indicator" id="zoom-level-indicator">Zoom level: 7</div>
+<div id="tooltip-template" style="display: none;">
+    <div class="g-popup-title"><span id="census-tract"></span></div>
+    <div class="g-row">
+        <div class="g-row-label">Preta</div>
+        <div class="g-row-pct" id="preta"></div>
+    </div>
+    <div class="g-row">
+        <div class="g-row-label">Branca</div>
+        <div class="g-row-pct" id="branca"></div>
+    </div>
+    <div class="g-row">
+        <div class="g-row-label">Amarela</div>
+        <div class="g-row-pct" id="amarela"></div>
+    </div>
+    <div class="g-row">
+        <div class="g-row-label">Parda</div>
+        <div class="g-row-pct" id="parda"></div>
+    </div>
+    <div class="g-row">
+        <div class="g-row-label">Indigena</div>
+        <div class="g-row-pct" id="indigena"></div>
+    </div>
+    <div class="g-row g-row-population">
+        <div class="g-row-label"><strong>População</strong></div>
+        <div class="g-row-pct" id="population"></div>
+    </div>
+</div>
+
+<script src="mapbox-token.js"></script>
+<script>
+    // Token lives in mapbox-token.js (gitignored; rsynced by deploy.sh).
+    mapboxgl.accessToken = window.MAPBOX_ACCESS_TOKEN;
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/dark-v10',
+        center: [-43.1729, -22.9068], // Longitude, Latitude for Rio de Janeiro, Brazil
+        zoom: 7,
+        maxZoom: 14,
+        minZoom: 7
+    });
+
+    // Cached Mapbox styles can fire `load` during the constructor. Bind first
+    // and also run if the style is already ready, otherwise the dots never attach.
+    function addDotLayer() {
+        if (!map.isStyleLoaded() || map.getSource('points')) return;
+
+        var tileUrl = window.location.origin + '/dataviz/brazildots/tiles/{z}/{x}/{y}.pbf';
+        map.addSource('points', {
+            type: 'vector',
+            tiles: [tileUrl],
+            minzoom: 7,
+            maxzoom: 14,
+            bounds: [-44.874945, -23.366211, -40.959821, -20.766126]
+        });
+
+        map.addLayer({
+            'id': 'points',
+            'type': 'circle',
+            'source': 'points',
+            'source-layer': 'points',
+            'paint': {
+                'circle-radius': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    4, 1.2,
+                    7, 1.6,
+                    13, 2.2
+                ],
+                'circle-color': [
+                    'match',
+                    ['get', 'race'],
+                    'branca', '#fb3640',
+                    'preta', '#fff07c',
+                    'amarela', '#89ffa7',
+                    'parda', '#3899c9',
+                    'indigena', '#e8800c',
+                    '#ccc'
+                ]
+            }
+        });
+
+        try {
+            map.moveLayer('settlement-label');
+        } catch (err) {
+            console.warn('settlement-label not in style', err);
+        }
+    }
+
+    map.on('error', function (e) {
+        console.error('mapbox error', e && e.error);
+    });
+    map.on('load', addDotLayer);
+    map.on('style.load', addDotLayer);
+    if (map.loaded()) addDotLayer();
+
+    map.addControl(new mapboxgl.NavigationControl({showCompass: false}), 'top-right');
+
+    function updateZoomIndicator() {
+        const zoom = map.getZoom().toFixed(0);
+        document.getElementById('zoom-level-indicator').innerText = 'Zoom level: ' + zoom;
+        
+        // Update dot scale based on zoom level
+        let scale;
+        switch(parseInt(zoom)) {
+            case 13: scale = 40; break;  // Census tract level
+            case 12: scale = 60; break;  // Census tract level
+            case 11: scale = 120; break; // Census tract level 
+            case 10: scale = 200; break; // Census tract level
+            case 9: scale = 500; break;  // Census tract level
+            case 8: scale = 1000; break; // Census tract level
+            case 7: scale = 2000; break; // City level
+            case 6: scale = 3000; break; // City level
+            case 5: scale = 6000; break; // City level
+            case 4: scale = 12000; break; // City level
+            default: scale = 1000;
+        }
+        document.getElementById('dot-scale').textContent = `1 ponto = ${scale.toLocaleString()} pessoas`;
+    }
+
+    // ------- TOOLTIP --------
+
+    const popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+        anchor: 'top',
+        offset: 20
+    });
+
+    function fillTooltip(data) {
+        // Find the template and clone it
+        const template = document.getElementById('tooltip-template').cloneNode(true);
+        template.style.display = 'block';
+        template.id = ''; // Clear the id as it's no longer needed for the clone
+
+        // Calculate proportions based on total population
+        const total = data.population ?? 0;
+        const proportions = Object.fromEntries(
+            ['Preta', 'Branca', 'Amarela', 'Parda', 'Indigena']
+            .map(race => [race, total ? (data.demographics[race] / total) * 100 : 0])
+        );
+
+        // Fill the data
+        template.querySelector('#census-tract').textContent = data.name;
+        template.querySelector('#population').textContent = total.toLocaleString();
+        template.querySelector('#preta').textContent = Math.round(proportions.Preta) + '%';
+        template.querySelector('#branca').textContent = Math.round(proportions.Branca) + '%';
+        template.querySelector('#amarela').textContent = Math.round(proportions.Amarela) + '%';
+        template.querySelector('#parda').textContent = Math.round(proportions.Parda) + '%';
+        template.querySelector('#indigena').textContent = Math.round(proportions.Indigena) + '%';
+
+        // Return the filled template
+        return template;
+    }
+
+    // Zoom label can run even before dots attach.
+    map.on('load', updateZoomIndicator);
+
+    map.on('zoom', function () {
+        updateZoomIndicator();
+    });
+
+    // Add this after map initialization
+    const legendItems = document.querySelectorAll('.legend-item');
+    const activeRaces = new Set(['branca', 'preta', 'amarela', 'parda', 'indigena']);
+
+    legendItems.forEach(item => {
+        const legendLabel = item.querySelector('.legend-label');
+        const soloButton = item.querySelector('.solo-button');
+        
+        // Main toggle click handler
+        legendLabel.addEventListener('click', () => {
+            const race = item.dataset.race;
+            item.classList.toggle('disabled');
+            
+            if (activeRaces.has(race)) {
+                activeRaces.delete(race);
+            } else {
+                activeRaces.add(race);
+            }
+            
+            updateMapFilter();
+        });
+
+        // Solo button click handler
+        soloButton.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent triggering the legend-item click
+            const race = item.dataset.race;
+            
+            // Disable all items visually
+            legendItems.forEach(legendItem => {
+                if (legendItem !== item) {
+                    legendItem.classList.add('disabled');
+                }
+            });
+            
+            // Clear the active races set and add only this race
+            activeRaces.clear();
+            activeRaces.add(race);
+            item.classList.remove('disabled');
+            
+            updateMapFilter();
+        });
+    });
+
+    function updateMapFilter() {
+        // Update the circle-opacity based on active races
+        const opacityExpression = [
+            'match',
+            ['get', 'race'],
+            [...activeRaces],
+            1,  // opacity for active races
+            0.1 // opacity for inactive races
+        ];
+
+        map.setPaintProperty('points', 'circle-opacity', opacityExpression);
+        
+        // Keep the existing filter
+        map.setFilter('points', [
+            'match',
+            ['get', 'race'],
+            [...activeRaces],
+            true,
+            false
+        ]);
+    }
+
+</script>
+<footer class="footer">
+    <div class="footer-section">
+        <span>Dados: <a href="https://www.ibge.gov.br/" target="_blank">IBGE</a></span>
+        <span>Censo Demográfico 2022</span>
+    </div>
+    <div class="footer-section">
+        <a href="/">carabetta.xyz</a>
+        <a href="https://www.escritoriodedados.com.br" target="_blank">Escritório de Dados</a>
+    </div>
+</footer>
+</body>
+</html>
