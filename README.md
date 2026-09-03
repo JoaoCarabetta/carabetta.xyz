@@ -77,7 +77,7 @@ Then set `SSH_HOST=hetzner-carabetta` in `deploy.env`.
 
 ## Dataviz
 
-`/dataviz/brazildots/` is the Census 2022 race dot map. Tiles are served by `tileserver-gl-light` in Docker (`dataviz/brazildots/docker-compose.yml`); `./deploy.sh` starts the container and nginx proxies `/dataviz/brazildots/tiles/`.
+`/dataviz/brazildots/` is **Onde o Brasil mora**, the Census 2022 race dot map (national). Tiles are served by `tileserver-gl-light` in Docker (`dataviz/brazildots/docker-compose.yml`); `./deploy.sh` starts the container and nginx proxies `/dataviz/brazildots/tiles/` and `/dataviz/brazildots/hover/`.
 
 ## Verify
 

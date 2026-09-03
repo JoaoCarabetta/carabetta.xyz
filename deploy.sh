@@ -101,7 +101,7 @@ rsync -avz --delete \
   "${ROOT_DIR}/" "${SSH_TARGET}:${REMOTE_PATH}/"
 
 echo "Starting brazildots tileserver (docker compose)"
-ssh "${SSH_TARGET}" "rm -rf ${REMOTE_PATH}/dataviz/brazildots/tiles && cd ${REMOTE_PATH}/dataviz/brazildots && docker compose up -d --remove-orphans && for i in \$(seq 1 30); do curl -sf http://127.0.0.1:8088/data/censo2022.json >/dev/null && exit 0; sleep 2; done; echo 'tileserver did not become ready' >&2; docker compose logs --tail 50; exit 1"
+ssh "${SSH_TARGET}" "rm -rf ${REMOTE_PATH}/dataviz/brazildots/tiles && cd ${REMOTE_PATH}/dataviz/brazildots && docker compose up -d --force-recreate --remove-orphans && for i in \$(seq 1 30); do curl -sf http://127.0.0.1:8088/data/censo2022.json >/dev/null && exit 0; sleep 2; done; echo 'tileserver did not become ready' >&2; docker compose logs --tail 50; exit 1"
 
 deploy_transparencia_auth
 

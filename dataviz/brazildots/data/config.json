@@ -8,6 +8,9 @@
   "data": {
     "censo2022": {
       "mbtiles": "censo2022.mbtiles"
+    },
+    "hover": {
+      "mbtiles": "hover.mbtiles"
     }
   }
 }
