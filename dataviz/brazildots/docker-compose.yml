@@ -1,4 +1,4 @@
-# Serves Census 2022 race dots as vector tiles.
+# Serves Census 2022 race, income, and death dots as vector tiles.
 # Bound to loopback only — nginx on the host proxies /dataviz/brazildots/tiles/.
 # Light image: PBF only, no server-side raster (full tileserver-gl is ~3x larger;
 # this VPS is already at ~84% disk). Host 8080 is taken by arquivo staging.
