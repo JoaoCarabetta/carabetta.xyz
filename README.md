@@ -75,8 +75,13 @@ Host hetzner-carabetta
 
 Then set `SSH_HOST=hetzner-carabetta` in `deploy.env`.
 
+## Dataviz
+
+`/dataviz/brazildots/` is **Onde o Brasil mora**, the Census 2022 race dot map (national). Tiles are served by `tileserver-gl-light` in Docker (`dataviz/brazildots/docker-compose.yml`); `./deploy.sh` starts the container and nginx proxies `/dataviz/brazildots/tiles/` and `/dataviz/brazildots/hover/`.
+
 ## Verify
 
 - https://carabetta.xyz loads the landing page
 - https://www.carabetta.xyz redirects to the apex domain
+- https://carabetta.xyz/dataviz/brazildots/ loads the map
 - TLS certificate is valid

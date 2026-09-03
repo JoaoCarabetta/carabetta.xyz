@@ -1,1 +1,5 @@
 deploy.env
+# Extracted PBF dump (optional local cache). Production serves MBTiles via Docker.
+dataviz/brazildots/tiles/
+dataviz/brazildots/data/*.mbtiles
+dataviz/brazildots/mapbox-token.js

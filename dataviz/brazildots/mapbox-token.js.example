@@ -1,0 +1,2 @@
+// Copy to mapbox-token.js (gitignored) and paste a public Mapbox token.
+window.MAPBOX_ACCESS_TOKEN = 'pk.YOUR_MAPBOX_PUBLIC_TOKEN';

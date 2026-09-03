@@ -1,0 +1,27 @@
+# Serves Census 2022 race dots as vector tiles.
+# Bound to loopback only — nginx on the host proxies /dataviz/brazildots/tiles/.
+# Light image: PBF only, no server-side raster (full tileserver-gl is ~3x larger;
+# this VPS is already at ~84% disk). Host 8080 is taken by arquivo staging.
+services:
+  tiles:
+    image: maptiler/tileserver-gl-light:latest
+    container_name: brazildots-tiles
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8088:8080"
+    volumes:
+      - ./data:/data:ro
+    command: ["-c", "/data/config.json", "-p", "8080", "-b", "0.0.0.0"]
+    # Image has Node but not wget/curl; probe the TileJSON the map depends on.
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('http').get('http://127.0.0.1:8080/data/censo2022.json',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
