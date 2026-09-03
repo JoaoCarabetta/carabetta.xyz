@@ -1,6 +1,6 @@
 # Onde o Brasil mora
 
-National dot-density map of race, household income, and age at death in Brazil (Censo 2022 / IBGE). Live at `/dataviz/brazildots/`.
+National dot-density map of race and household income in Brazil (Censo 2022 / IBGE). Óbitos tiles are on the tileserver but not in the UI switcher. Live at `/dataviz/brazildots/`.
 
 Tiles come from `tileserver-gl-light` in Docker (`docker-compose.yml`), reading `data/censo2022.mbtiles`, `censo2022_income.mbtiles`, `censo2022_deaths.mbtiles`, and `data/hover.mbtiles`. Nginx proxies `/dataviz/brazildots/tiles/`, `/tiles-income/`, `/tiles-deaths/`, and `/hover/` to `127.0.0.1:8088`. Host port 8080 is already used by another container on this VPS.
 
