@@ -6,6 +6,10 @@ carabetta.xyz, www.carabetta.xyz {
 
 	import transparencia-auth.caddy
 
+	# Old map slug → /dotsbr, keeping the rest of the path.
+	@old_dots path_regexp olddots ^/dataviz/brazildots(.*)$
+	redir @old_dots /dotsbr{re.olddots.1} permanent
+
 	file_server
 
     @www host www.carabetta.xyz

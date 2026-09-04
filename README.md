@@ -57,6 +57,10 @@ That script checks DNS, requests the Let's Encrypt certificate, deploys the HTTP
 
 ## Deploy
 
+`main` is production. A push to `main` runs `.github/workflows/deploy.yml` (rsync + nginx reload). `workflow_dispatch` deploys on demand. Do not point this workflow at the old `master` branch — it diverged and would ship stale HTML.
+
+Local equivalent:
+
 ```bash
 cp deploy.env.example deploy.env
 # edit deploy.env with SSH_HOST, SSH_USER, REMOTE_PATH
@@ -77,11 +81,14 @@ Then set `SSH_HOST=hetzner-carabetta` in `deploy.env`.
 
 ## Dataviz
 
-`/dataviz/brazildots/` is **Onde o Brasil mora**, the Census 2022 dot map (raça and renda; óbitos tiles exist but are not in the switcher). Tiles are served by `tileserver-gl-light` in Docker (`dataviz/brazildots/docker-compose.yml`); `./deploy.sh` starts the container and nginx proxies `/dataviz/brazildots/tiles/`, `/tiles-income/`, `/tiles-deaths/`, and `/hover/`.
+`/dotsbr/` is **dotsbr**, the Census 2022 dot map (raça and renda; óbitos tiles exist but are not in the switcher). Tiles are static PMTiles at `/dotsbr/data/tiles/*.pmtiles` (HTTP Range, no gzip). The old slug `/dataviz/brazildots/` 301s here.
+
+Push to `main` deploys production via `.github/workflows/deploy.yml` (same as `./deploy.sh`). CI does not upload the ~700MB archives; run `./deploy.sh` once from a machine that has `../dotmap/data/tiles/*.pmtiles` when the tiles themselves change.
 
 ## Verify
 
 - https://carabetta.xyz loads the landing page
 - https://www.carabetta.xyz redirects to the apex domain
-- https://carabetta.xyz/dataviz/brazildots/ loads the map
+- https://carabetta.xyz/dotsbr/ loads the map
+- https://carabetta.xyz/dataviz/brazildots/ redirects to `/dotsbr/`
 - TLS certificate is valid

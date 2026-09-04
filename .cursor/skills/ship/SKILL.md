@@ -9,7 +9,7 @@ Primary skill lives at `~/.cursor/skills/ship/SKILL.md` — follow that workflow
 
 ## This repo
 
-Push alone is **not** enough. After main/master is updated:
+Push to `master` or `main` deploys production via GitHub Actions. A local `./deploy.sh` is still needed for the first PMTiles upload (or when the archives change):
 
 ```bash
 # Requires deploy.env (from deploy.env.example): SSH_HOST, SSH_USER, REMOTE_PATH

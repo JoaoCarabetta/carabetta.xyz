@@ -1,5 +1,11 @@
 deploy.env
 # Extracted PBF dump (optional local cache). Production serves static PMTiles.
+dotsbr/tiles/
+dotsbr/data/*.mbtiles
+dotsbr/data/*.pmtiles
+dotsbr/data/tiles/
+dotsbr/mapbox-token.js
+# Old slug — keep ignoring leftovers until the next clean clone.
 dataviz/brazildots/tiles/
 dataviz/brazildots/data/*.mbtiles
 dataviz/brazildots/data/*.pmtiles
