@@ -114,6 +114,8 @@ mkdir -p "\${new}"
 EOF
 
 echo "Deploying site files to ${SSH_TARGET}:${REMOTE_PATH}"
+# --delete would wipe the live map HTML/share card that CI uploads from the
+# dotsbr repo (this tree still carries a stale dotsbr/index.html).
 rsync -avz --delete -e "$(rsync_ssh)" \
   --exclude '.git/' \
   --exclude '.github/' \
@@ -130,6 +132,13 @@ rsync -avz --delete -e "$(rsync_ssh)" \
   --exclude 'dotsbr/tiles/' \
   --exclude 'dotsbr/data/*.mbtiles' \
   --exclude 'dotsbr/data/tiles/' \
+  --exclude 'dotsbr/index.html' \
+  --exclude 'dotsbr/og.html' \
+  --exclude 'dotsbr/og.jpg' \
+  --exclude 'dotsbr/card.jpg' \
+  --exclude 'dotsbr/favicon.svg' \
+  --exclude 'dotsbr/favicon.ico' \
+  --exclude 'dotsbr/apple-touch-icon.png' \
   --exclude 'dataviz/brazildots/tiles/' \
   --exclude 'dataviz/brazildots/data/*.mbtiles' \
   --exclude 'dataviz/brazildots/data/tiles/' \
