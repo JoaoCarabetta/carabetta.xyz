@@ -81,7 +81,7 @@ Then set `SSH_HOST=hetzner-carabetta` in `deploy.env`.
 
 ## Dataviz
 
-`/dotsbr/` is **dotsbr**, the Census 2022 dot map (raça and renda; óbitos tiles exist but are not in the switcher). Tiles are static PMTiles at `/dotsbr/data/tiles/*.pmtiles` (HTTP Range, no gzip). The old slug `/dataviz/brazildots/` 301s here.
+`/dotsbr/` is **dotsbr**, the Census 2022 dot map (raça and renda; óbitos tiles exist but are not in the switcher). Tiles are static PMTiles at `/dotsbr/data/tiles/*.pmtiles` (HTTP Range, no gzip). The old slug `/dataviz/brazildots/` 301s here. WhatsApp/Facebook crawlers hitting `/dotsbr/` get `og.html` (tiny Open Graph document) instead of the 120KB map page — see `nginx.carabetta.xyz.conf`.
 
 Push to `main` deploys production via `.github/workflows/deploy.yml` (same as `./deploy.sh`). CI does not upload the ~700MB archives; run `./deploy.sh` once from a machine that has `../dotmap/data/tiles/*.pmtiles` when the tiles themselves change.
 
