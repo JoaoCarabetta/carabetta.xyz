@@ -98,10 +98,24 @@ rsync -avz --delete \
   --exclude 'README.md' \
   --exclude '.gitignore' \
   --exclude 'dataviz/brazildots/tiles/' \
+  --exclude 'dataviz/brazildots/data/*.mbtiles' \
+  --exclude 'dataviz/brazildots/data/tiles/' \
   "${ROOT_DIR}/" "${SSH_TARGET}:${REMOTE_PATH}/"
 
-echo "Starting brazildots tileserver (docker compose)"
-ssh "${SSH_TARGET}" "rm -rf ${REMOTE_PATH}/dataviz/brazildots/tiles && cd ${REMOTE_PATH}/dataviz/brazildots && docker compose up -d --force-recreate --remove-orphans && for i in \$(seq 1 30); do curl -sf http://127.0.0.1:8088/data/censo2022.json >/dev/null && exit 0; sleep 2; done; echo 'tileserver did not become ready' >&2; docker compose logs --tail 50; exit 1"
+# Archives are gitignored (~700MB). Sync from the sibling dotmap repo unless
+# DOTMAP_TILES points elsewhere. --exclude above keeps --delete from wiping them.
+DOTMAP_TILES="${DOTMAP_TILES:-${ROOT_DIR}/../dotmap/data/tiles}"
+echo "Syncing PMTiles from ${DOTMAP_TILES}"
+ssh "${SSH_TARGET}" "mkdir -p ${REMOTE_PATH}/dataviz/brazildots/data/tiles"
+rsync -avz --progress \
+  "${DOTMAP_TILES}/censo2022.pmtiles" \
+  "${DOTMAP_TILES}/censo2022_income.pmtiles" \
+  "${DOTMAP_TILES}/censo2022_deaths.pmtiles" \
+  "${DOTMAP_TILES}/hover.pmtiles" \
+  "${SSH_TARGET}:${REMOTE_PATH}/dataviz/brazildots/data/tiles/"
+
+echo "Stopping leftover brazildots tileserver (dots are static PMTiles now)"
+ssh "${SSH_TARGET}" "cd ${REMOTE_PATH}/dataviz/brazildots && docker compose down --remove-orphans || true"
 
 deploy_transparencia_auth
 

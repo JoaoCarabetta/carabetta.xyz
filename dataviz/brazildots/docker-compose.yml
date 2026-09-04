@@ -1,3 +1,5 @@
+# Unused leftover: production now serves static PMTiles from data/tiles/.
+# Kept so `docker compose down` in deploy.sh can stop an old container.
 # Serves Census 2022 race, income, and death dots as vector tiles.
 # Bound to loopback only — nginx on the host proxies /dataviz/brazildots/tiles/.
 # Light image: PBF only, no server-side raster (full tileserver-gl is ~3x larger;
