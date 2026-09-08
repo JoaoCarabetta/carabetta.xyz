@@ -40,10 +40,12 @@ class FunctionalityTests(unittest.TestCase):
         for name in pages:
             html = (ROOT / name).read_text(encoding="utf-8")
             self.assertIn('class="site-nav" hidden', html, name)
+            self.assertIn('style="display:none"', html, name)
             self.assertIn('href="/dotsbr/"', html, name)
             self.assertIn(".md", html, name)
         css = (ROOT / "assets" / "home.css").read_text(encoding="utf-8")
         self.assertIn(".site-nav[hidden]", css)
+        self.assertNotIn("display:flex", css.split(".site-nav{")[1].split("}")[0])
 
     def test_empty_timeline_source_is_rejected_by_shape(self):
         home = json.loads((ROOT / "content" / "home.json").read_text(encoding="utf-8"))
