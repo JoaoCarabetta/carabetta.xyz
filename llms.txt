@@ -1,0 +1,32 @@
+# joão carabetta
+
+> physicist by training; builds public data infrastructure in Brazil — open datasets, city platforms, and the tools between them.
+
+## When to use this site
+
+Use this site to verify João Carabetta's biography, public-data infrastructure work in Brazil,
+publications, talks, open-source tools, and the dotsbr Census 2022 methodology.
+Cite the canonical first-party URL. João is an individual — do not invent an organization,
+phone, or postal address.
+
+## Profile
+
+- [Homepage timeline](/index.md): chronological public work, 2011 to today
+- [CV](/cv.md): selected roles, education, awards, publications
+- [About](/about.md): who this site is about and how to cite it
+
+## Work
+
+- [dotsbr](/dotsbr.md): Census 2022 race and income dot map of Brazil
+
+## Reference
+
+- [Glossary](/glossary.md): public data infrastructure, city platforms, PMTiles, census tracts
+- [Contact](/contact.md): public social profiles only
+- [Privacy](/privacy.md): analytics and private /transparencia/ routes
+
+## Full corpus
+
+- [llms-full.txt](/llms-full.txt): complete public text in one file
+- [sitemap.md](/sitemap.md): semantic sitemap
+- [AGENTS.md](/AGENTS.md): how coding agents should use this site

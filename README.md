@@ -4,11 +4,20 @@ Bilingual personal career timeline (EN/PT) with type and theme filters, deployed
 
 ## Local preview
 
-Open `index.html` in a browser, or serve the directory locally:
+Regenerate agent files after editing `content/`, then serve the directory:
 
 ```bash
+python3 scripts/generate_agent_files.py
+python3 scripts/generate_agent_files.py --check
+python3 -m unittest tests/test_agent_files.py
 python3 -m http.server 8080
 ```
+
+Open `index.html` in a browser, or visit `http://localhost:8080/`.
+
+## Agent / LLM files
+
+Public pages are prerendered in HTML. Discovery files live at `/llms.txt`, `/llms-full.txt`, `/sitemap.xml`, `/sitemap.md`, `/robots.txt`, `/AGENTS.md`, and `/feed.xml`. Each public page has a `.md` mirror and `Accept: text/markdown` negotiation on nginx. The `.site-nav` (home / cv / dotsbr / about / glossary / contact / privacy / markdown) stays in the HTML for agents but is `hidden` on the visual page — humans use the brand, social links, and footer. `/transparencia/` stays private and is disallowed.
 
 ## One-time VPS setup
 
@@ -81,14 +90,16 @@ Then set `SSH_HOST=hetzner-carabetta` in `deploy.env`.
 
 ## Dataviz
 
-`/dotsbr/` is **dotsbr**, the Census 2022 dot map (raça and renda; óbitos tiles exist but are not in the switcher). Tiles are static PMTiles at `/dotsbr/data/tiles/*.pmtiles` (HTTP Range, no gzip). The old slug `/dataviz/brazildots/` 301s here. WhatsApp/Facebook crawlers hitting `/dotsbr/` get `og.html` (tiny Open Graph document) instead of the 120KB map page — see `nginx.carabetta.xyz.conf`.
+`/dotsbr/` is **dotsbr**, the Census 2022 dot map (raça and renda; óbitos tiles exist but are not in the switcher). Tiles are static PMTiles at `/dotsbr/data/tiles/*.pmtiles` (HTTP Range, no gzip). The CSP must allow MapLibre 4.7 blob workers (`worker-src 'self' blob:`); without that the map canvas stays blank. The old slug `/dataviz/brazildots/` 301s here. WhatsApp/Facebook crawlers hitting `/dotsbr/` get `og.html` (tiny Open Graph document) instead of the 120KB map page — see `nginx.carabetta.xyz.conf`.
 
 Push to `main` deploys production via `.github/workflows/deploy.yml` (same as `./deploy.sh`). CI does not upload the ~700MB archives; run `./deploy.sh` once from a machine that has `../dotmap/data/tiles/*.pmtiles` when the tiles themselves change.
 
 ## Verify
 
-- https://carabetta.xyz loads the landing page
+- https://carabetta.xyz loads the landing page with a visible timeline without JavaScript
 - https://www.carabetta.xyz redirects to the apex domain
 - https://carabetta.xyz/dotsbr/ loads the map
 - https://carabetta.xyz/dataviz/brazildots/ redirects to `/dotsbr/`
+- https://carabetta.xyz/llms.txt and `/index.md` return 200
+- `curl -H 'Accept: text/markdown' https://carabetta.xyz/` returns markdown
 - TLS certificate is valid

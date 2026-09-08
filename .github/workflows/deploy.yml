@@ -25,6 +25,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check agent files
+        run: python3 scripts/generate_agent_files.py --check && python3 -m unittest tests/test_agent_files.py
+
       - name: Start SSH agent
         uses: webfactory/ssh-agent@v0.9.1
         with:
@@ -59,3 +62,18 @@ jobs:
           cat /tmp/old.hdr
           test "$redir" = "301"
           grep -qi 'location: .*/dotsbr' /tmp/old.hdr
+          for path in /llms.txt /robots.txt /sitemap.xml /sitemap.md /index.md /AGENTS.md /feed.xml /about.html /contact.html /privacy.html /glossary.html /about /contact /privacy; do
+            code="$(curl -sI -o /tmp/agent.hdr -w '%{http_code}' "https://carabetta.xyz${path}")"
+            echo "GET ${path} → ${code}"
+            test "$code" = "200"
+          done
+          md_type="$(curl -sI -H 'Accept: text/markdown' https://carabetta.xyz/ | tr -d '\r' | awk -F': ' 'tolower($1)==\"content-type\"{print $2}')"
+          echo "Accept markdown → ${md_type}"
+          echo "${md_type}" | grep -qi 'text/markdown\|text/plain'
+          vary="$(curl -sI -H 'Accept: text/markdown' https://carabetta.xyz/ | tr -d '\r' | awk -F': ' 'tolower($1)==\"vary\"{print $2}')"
+          echo "Vary → ${vary}"
+          echo "${vary}" | grep -qi accept
+          missing="$(curl -sI -o /tmp/missing.hdr -w '%{http_code}' https://carabetta.xyz/this-path-does-not-exist)"
+          test "${missing}" = "404"
+          priv="$(curl -sI -o /tmp/priv.hdr -w '%{http_code}' https://carabetta.xyz/transparencia/)"
+          test "${priv}" = "401"

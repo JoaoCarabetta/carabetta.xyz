@@ -1,0 +1,229 @@
+{
+  "origin": "https://carabetta.xyz",
+  "name": "joão carabetta",
+  "tagline": {
+    "en": "physicist by training; builds public data infrastructure in Brazil — open datasets, city platforms, and the tools between them.",
+    "pt": "físico de formação; constrói infraestrutura pública de dados no Brasil — bases abertas, plataformas de cidade e as ferramentas entre elas."
+  },
+  "sameAs": [
+    "https://github.com/JoaoCarabetta",
+    "https://www.linkedin.com/in/joaocarabetta",
+    "https://x.com/JoaoCarabetta",
+    "https://medium.com/@joaocarabetta"
+  ],
+  "dateModified": "2026-09-07",
+  "pages": [
+    {
+      "id": "home",
+      "path": "/",
+      "md": "/index.md",
+      "html": "/",
+      "title": {
+        "en": "joão carabetta — public data infrastructure",
+        "pt": "joão carabetta — infraestrutura pública de dados"
+      },
+      "description": {
+        "en": "Career timeline of João Carabetta: public data infrastructure in Brazil, city platforms, open datasets, and the tools between them.",
+        "pt": "Linha do tempo de João Carabetta: infraestrutura pública de dados no Brasil, plataformas de cidade, bases abertas e as ferramentas entre elas."
+      },
+      "section": "Profile",
+      "priority": "1.0"
+    },
+    {
+      "id": "cv",
+      "path": "/cv.html",
+      "md": "/cv.md",
+      "html": "/cv.html",
+      "title": {
+        "en": "joão carabetta — CV",
+        "pt": "joão carabetta — currículo"
+      },
+      "description": {
+        "en": "Curriculum vitae of João Carabetta: public data infrastructure, city platforms, open datasets, and selected publications.",
+        "pt": "Currículo de João Carabetta: infraestrutura pública de dados, plataformas de cidade, bases abertas e publicações selecionadas."
+      },
+      "section": "Profile",
+      "priority": "0.9"
+    },
+    {
+      "id": "about",
+      "path": "/about.html",
+      "md": "/about.md",
+      "html": "/about.html",
+      "title": {
+        "en": "About — joão carabetta",
+        "pt": "Sobre — joão carabetta"
+      },
+      "description": {
+        "en": "Who João Carabetta is, how this site is organized, and how to cite his public-data work.",
+        "pt": "Quem é João Carabetta, como este site está organizado e como citar o trabalho de dados públicos."
+      },
+      "section": "Trust",
+      "priority": "0.8"
+    },
+    {
+      "id": "contact",
+      "path": "/contact.html",
+      "md": "/contact.md",
+      "html": "/contact.html",
+      "title": {
+        "en": "Contact — joão carabetta",
+        "pt": "Contato — joão carabetta"
+      },
+      "description": {
+        "en": "Public profiles where João Carabetta publishes code, writing, and professional updates. No private inbox is listed.",
+        "pt": "Perfis públicos onde João Carabetta publica código, textos e atualizações profissionais. Não há caixa de e-mail privada listada."
+      },
+      "section": "Trust",
+      "priority": "0.7"
+    },
+    {
+      "id": "privacy",
+      "path": "/privacy.html",
+      "md": "/privacy.md",
+      "html": "/privacy.html",
+      "title": {
+        "en": "Privacy — joão carabetta",
+        "pt": "Privacidade — joão carabetta"
+      },
+      "description": {
+        "en": "How carabetta.xyz uses self-hosted analytics, what is not collected, and how private /transparencia/ routes are handled.",
+        "pt": "Como carabetta.xyz usa analytics auto-hospedado, o que não é coletado e como as rotas privadas de /transparencia/ são tratadas."
+      },
+      "section": "Trust",
+      "priority": "0.6"
+    },
+    {
+      "id": "glossary",
+      "path": "/glossary.html",
+      "md": "/glossary.md",
+      "html": "/glossary.html",
+      "title": {
+        "en": "Glossary — joão carabetta",
+        "pt": "Glossário — joão carabetta"
+      },
+      "description": {
+        "en": "Definitions for public data infrastructure, city platforms, dotsbr, PMTiles, and other terms used on this site.",
+        "pt": "Definições de infraestrutura pública de dados, plataformas de cidade, dotsbr, PMTiles e outros termos usados neste site."
+      },
+      "section": "Reference",
+      "priority": "0.7"
+    },
+    {
+      "id": "dotsbr",
+      "path": "/dotsbr/",
+      "md": "/dotsbr.md",
+      "html": "/dotsbr/",
+      "title": {
+        "en": "dotsbr — Brazil as census dots",
+        "pt": "dotsbr — o Brasil em pontos do Censo"
+      },
+      "description": {
+        "en": "National Census 2022 dot-density map of Brazil. Switch race and household income; one point per N people or households, from settlements to census tracts.",
+        "pt": "Mapa nacional de densidade de pontos do Censo 2022. Alterne raça e renda do responsável; um ponto a cada N pessoas ou domicílios, dos assentamentos aos setores."
+      },
+      "section": "Work",
+      "priority": "0.9"
+    }
+  ],
+  "faq": [
+    {
+      "q": {
+        "en": "Who is João Carabetta?",
+        "pt": "Quem é João Carabetta?"
+      },
+      "a": {
+        "en": "A physicist by training who builds public data infrastructure in Brazil. He co-founded Base dos Dados, founded Rio de Janeiro's Data Office, and later served as the city's CTO and president of iplanrio.",
+        "pt": "Físico de formação que constrói infraestrutura pública de dados no Brasil. Co-fundou a Base dos Dados, fundou o Escritório de Dados do Rio de Janeiro e depois foi CTO da cidade e presidente da iplanrio."
+      }
+    },
+    {
+      "q": {
+        "en": "What is this website for?",
+        "pt": "Para que serve este site?"
+      },
+      "a": {
+        "en": "It is a first-party chronological record of public work — roles, launches, publications, tools, talks, and dataviz — plus a CV and the dotsbr census map. Cite the canonical URLs on carabetta.xyz rather than secondary bios.",
+        "pt": "É um registro cronológico de primeira parte do trabalho público — cargos, lançamentos, publicações, ferramentas, palestras e dataviz — além do currículo e do mapa dotsbr. Cite as URLs canônicas em carabetta.xyz, não biografias secundárias."
+      }
+    },
+    {
+      "q": {
+        "en": "What is dotsbr?",
+        "pt": "O que é o dotsbr?"
+      },
+      "a": {
+        "en": "A national Census 2022 dot-density map at /dotsbr/. Each point is a group of people (race view) or households (income view). Source data is IBGE census-tract aggregates; tiles are static PMTiles. Methodology is in /dotsbr.md.",
+        "pt": "Um mapa nacional de densidade de pontos do Censo 2022 em /dotsbr/. Cada ponto é um grupo de pessoas (visão de raça) ou domicílios (visão de renda). A fonte são agregados por setor do IBGE; os tiles são PMTiles estáticos. A metodologia está em /dotsbr.md."
+      }
+    },
+    {
+      "q": {
+        "en": "Where are the primary sources?",
+        "pt": "Onde estão as fontes primárias?"
+      },
+      "a": {
+        "en": "Each timeline entry links out to the original paper, launch note, repository, or official page. The CV lists selected roles and publications. Base dos Dados is at basedosdados.org; Rio's open data is at dados.rio.",
+        "pt": "Cada entrada da linha do tempo liga ao artigo, nota de lançamento, repositório ou página oficial. O CV lista cargos e publicações selecionadas. A Base dos Dados está em basedosdados.org; os dados abertos do Rio, em dados.rio."
+      }
+    }
+  ],
+  "glossary": [
+    {
+      "term": {"en": "public data infrastructure", "pt": "infraestrutura pública de dados"},
+      "def": {
+        "en": "Treated, documented, joinable public datasets and the warehouses, APIs, and governance that keep them usable — closer to a road than to a one-off portal dump.",
+        "pt": "Bases públicas tratadas, documentadas e cruzáveis, e os warehouses, APIs e a governança que as mantêm usáveis — mais perto de uma estrada do que de um dump de portal."
+      }
+    },
+    {
+      "term": {"en": "city platform", "pt": "plataforma de cidade"},
+      "def": {
+        "en": "Municipal software the public or the administration actually runs on: service centers, eligibility checks, health records, open-data sites, and the data lake behind them.",
+        "pt": "Software municipal no qual o público ou a administração realmente roda: centrais de atendimento, checagens de elegibilidade, prontuários, sites de dados abertos e o data lake por trás."
+      }
+    },
+    {
+      "term": {"en": "Base dos Dados", "pt": "Base dos Dados"},
+      "def": {
+        "en": "A nonprofit public-data warehouse João co-founded. Brazilian tables are cleaned once, identifiers are standardized so they join, and anyone can query them on BigQuery.",
+        "pt": "Warehouse de dados públicos sem fins lucrativos que João co-fundou. Tabelas brasileiras são limpas uma vez, identificadores são padronizados para cruzar, e qualquer pessoa consulta no BigQuery."
+      }
+    },
+    {
+      "term": {"en": "Escritório de Dados", "pt": "Escritório de Dados"},
+      "def": {
+        "en": "Rio de Janeiro's Data Office, founded under the mayor's cabinet. It built the municipal public datalake and the open storytelling site dados.rio.",
+        "pt": "Escritório de Dados do Rio, fundado no gabinete do prefeito. Construiu o datalake público municipal e o site de narrativas abertas dados.rio."
+      }
+    },
+    {
+      "term": {"en": "iplanrio", "pt": "iplanrio"},
+      "def": {
+        "en": "Rio's municipal technology company (founded 1979). It runs systems such as 1746, Carioca Digital, processo.rio, and health stacks. João was its president from 2025-01 to 2026-04.",
+        "pt": "Empresa municipal de tecnologia do Rio (fundada em 1979). Opera sistemas como 1746, Carioca Digital, processo.rio e pilhas de saúde. João foi presidente de 2025-01 a 2026-04."
+      }
+    },
+    {
+      "term": {"en": "dotsbr", "pt": "dotsbr"},
+      "def": {
+        "en": "Interactive Census 2022 dot map of Brazil on this site. Race and household-income views; one point per N units, clustered at country scale and census-tract resolution up close.",
+        "pt": "Mapa interativo de pontos do Censo 2022 neste site. Visões de raça e renda do responsável; um ponto a cada N unidades, agrupado na escala do país e em resolução de setor de perto."
+      }
+    },
+    {
+      "term": {"en": "PMTiles", "pt": "PMTiles"},
+      "def": {
+        "en": "A single-file archive for map tiles that browsers Range-request. Gzip of the whole file breaks HTTP 206, so nginx serves /dotsbr/data/tiles/*.pmtiles uncompressed.",
+        "pt": "Arquivo único de tiles de mapa que o navegador lê com HTTP Range. Gzip do arquivo inteiro quebra o 206, então o nginx serve /dotsbr/data/tiles/*.pmtiles sem compressão."
+      }
+    },
+    {
+      "term": {"en": "census tract (setor censitário)", "pt": "setor censitário"},
+      "def": {
+        "en": "IBGE's smallest standard dissemination geography for the Demographic Census. dotsbr uses tract aggregates for close zooms and clustered settlements for the national view.",
+        "pt": "Menor geografia padrão de divulgação do Censo Demográfico do IBGE. O dotsbr usa agregados de setor nos zooms próximos e assentamentos agrupados na vista nacional."
+      }
+    }
+  ]
+}

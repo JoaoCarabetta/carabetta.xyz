@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glossary — joão carabetta</title>
+<meta name="description" content="Definitions for public data infrastructure, city platforms, dotsbr, PMTiles, and other terms used on this site.">
+<link rel="canonical" href="https://carabetta.xyz/glossary.html">
+<link rel="alternate" type="text/markdown" href="https://carabetta.xyz/glossary.md">
+<link rel="alternate" type="application/rss+xml" title="joão carabetta — public work" href="https://carabetta.xyz/feed.xml">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://carabetta.xyz/glossary.html">
+<meta property="og:title" content="Glossary — joão carabetta">
+<meta property="og:description" content="Definitions for public data infrastructure, city platforms, dotsbr, PMTiles, and other terms used on this site.">
+<meta property="og:image" content="https://carabetta.xyz/og.png">
+<meta property="og:image:alt" content="joão carabetta — public data infrastructure in Brazil">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="joão carabetta">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Glossary — joão carabetta">
+<meta name="twitter:description" content="Definitions for public data infrastructure, city platforms, dotsbr, PMTiles, and other terms used on this site.">
+<meta name="twitter:image" content="https://carabetta.xyz/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,500;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/home.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "DefinedTermSet",
+  "headline": "Glossary \u2014 jo\u00e3o carabetta",
+  "name": "Glossary \u2014 jo\u00e3o carabetta",
+  "description": "Definitions for public data infrastructure, city platforms, dotsbr, PMTiles, and other terms used on this site.",
+  "url": "https://carabetta.xyz/glossary.html",
+  "dateModified": "2026-09-07",
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://carabetta.xyz/" },
+          { "@type": "ListItem", "position": 2, "name": "Glossary", "item": "https://carabetta.xyz/glossary.html" }
+    ]
+  }
+}
+</script>
+<script defer src="https://analytics.carabetta.xyz/metrics.js" data-website-id="7ff80044-1bf0-4664-a530-5d50589dfd47"></script>
+</head>
+<body>
+<a class="sr-only" href="#main-content">skip to main content</a>
+<header class="topbar">
+  <a class="brand" href="/">joão carabetta</a>
+</header>
+<!-- Crawlable page index for agents; hidden from the visual page. -->
+<nav class="site-nav" hidden>
+  <a href="/">home</a> <a href="/cv.html">cv</a> <a href="/dotsbr/">dotsbr</a> <a href="/about.html">about</a> <a href="/glossary.html" aria-current="page">glossary</a> <a href="/contact.html">contact</a> <a href="/privacy.html">privacy</a> <a href="/glossary.md">markdown</a>
+</nav>
+<main class="prose-page" id="main-content">
+<h1>Glossary</h1>
+<p>Terms used on carabetta.xyz. Portuguese equivalents sit under each English heading.</p>
+<h2>public data infrastructure</h2>
+<span class='term-pt'>infraestrutura pública de dados</span>
+<p>Treated, documented, joinable public datasets and the warehouses, APIs, and governance that keep them usable — closer to a road than to a one-off portal dump.</p>
+<h2>city platform</h2>
+<span class='term-pt'>plataforma de cidade</span>
+<p>Municipal software the public or the administration actually runs on: service centers, eligibility checks, health records, open-data sites, and the data lake behind them.</p>
+<h2>Base dos Dados</h2>
+<span class='term-pt'>Base dos Dados</span>
+<p>A nonprofit public-data warehouse João co-founded. Brazilian tables are cleaned once, identifiers are standardized so they join, and anyone can query them on BigQuery.</p>
+<h2>Escritório de Dados</h2>
+<span class='term-pt'>Escritório de Dados</span>
+<p>Rio de Janeiro&#x27;s Data Office, founded under the mayor&#x27;s cabinet. It built the municipal public datalake and the open storytelling site dados.rio.</p>
+<h2>iplanrio</h2>
+<span class='term-pt'>iplanrio</span>
+<p>Rio&#x27;s municipal technology company (founded 1979). It runs systems such as 1746, Carioca Digital, processo.rio, and health stacks. João was its president from 2025-01 to 2026-04.</p>
+<h2>dotsbr</h2>
+<span class='term-pt'>dotsbr</span>
+<p>Interactive Census 2022 dot map of Brazil on this site. Race and household-income views; one point per N units, clustered at country scale and census-tract resolution up close.</p>
+<h2>PMTiles</h2>
+<span class='term-pt'>PMTiles</span>
+<p>A single-file archive for map tiles that browsers Range-request. Gzip of the whole file breaks HTTP 206, so nginx serves /dotsbr/data/tiles/*.pmtiles uncompressed.</p>
+<h2>census tract (setor censitário)</h2>
+<span class='term-pt'>setor censitário</span>
+<p>IBGE&#x27;s smallest standard dissemination geography for the Demographic Census. dotsbr uses tract aggregates for close zooms and clustered settlements for the national view.</p>
+</main>
+<footer class="site-foot">
+  <a href="/">carabetta.xyz</a>
+  · <a href="/llms.txt">llms.txt</a>
+  · <a href="/sitemap.md">sitemap</a>
+</footer>
+</body>
+</html>

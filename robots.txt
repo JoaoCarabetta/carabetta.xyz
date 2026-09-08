@@ -1,0 +1,41 @@
+User-agent: *
+Allow: /
+Disallow: /transparencia/
+Disallow: /dotsbr/data/tiles/
+
+User-agent: GPTBot
+Allow: /
+Disallow: /transparencia/
+Disallow: /dotsbr/data/tiles/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /transparencia/
+Disallow: /dotsbr/data/tiles/
+
+User-agent: Claude-User
+Allow: /
+Disallow: /transparencia/
+Disallow: /dotsbr/data/tiles/
+
+User-agent: CCBot
+Allow: /
+Disallow: /transparencia/
+Disallow: /dotsbr/data/tiles/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /transparencia/
+Disallow: /dotsbr/data/tiles/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /transparencia/
+Disallow: /dotsbr/data/tiles/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /transparencia/
+Disallow: /dotsbr/data/tiles/
+
+Sitemap: https://carabetta.xyz/sitemap.xml

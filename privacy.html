@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy — joão carabetta</title>
+<meta name="description" content="How carabetta.xyz uses self-hosted analytics, what is not collected, and how private /transparencia/ routes are handled.">
+<link rel="canonical" href="https://carabetta.xyz/privacy.html">
+<link rel="alternate" type="text/markdown" href="https://carabetta.xyz/privacy.md">
+<link rel="alternate" type="application/rss+xml" title="joão carabetta — public work" href="https://carabetta.xyz/feed.xml">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://carabetta.xyz/privacy.html">
+<meta property="og:title" content="Privacy — joão carabetta">
+<meta property="og:description" content="How carabetta.xyz uses self-hosted analytics, what is not collected, and how private /transparencia/ routes are handled.">
+<meta property="og:image" content="https://carabetta.xyz/og.png">
+<meta property="og:image:alt" content="joão carabetta — public data infrastructure in Brazil">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="joão carabetta">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Privacy — joão carabetta">
+<meta name="twitter:description" content="How carabetta.xyz uses self-hosted analytics, what is not collected, and how private /transparencia/ routes are handled.">
+<meta name="twitter:image" content="https://carabetta.xyz/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,500;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/home.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "headline": "Privacy \u2014 jo\u00e3o carabetta",
+  "name": "Privacy \u2014 jo\u00e3o carabetta",
+  "description": "How carabetta.xyz uses self-hosted analytics, what is not collected, and how private /transparencia/ routes are handled.",
+  "url": "https://carabetta.xyz/privacy.html",
+  "dateModified": "2026-09-07",
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://carabetta.xyz/" },
+          { "@type": "ListItem", "position": 2, "name": "Privacy", "item": "https://carabetta.xyz/privacy.html" }
+    ]
+  }
+}
+</script>
+<script defer src="https://analytics.carabetta.xyz/metrics.js" data-website-id="7ff80044-1bf0-4664-a530-5d50589dfd47"></script>
+</head>
+<body>
+<a class="sr-only" href="#main-content">skip to main content</a>
+<header class="topbar">
+  <a class="brand" href="/">joão carabetta</a>
+</header>
+<!-- Crawlable page index for agents; hidden from the visual page. -->
+<nav class="site-nav" hidden>
+  <a href="/">home</a> <a href="/cv.html">cv</a> <a href="/dotsbr/">dotsbr</a> <a href="/about.html">about</a> <a href="/glossary.html">glossary</a> <a href="/contact.html">contact</a> <a href="/privacy.html" aria-current="page">privacy</a> <a href="/privacy.md">markdown</a>
+</nav>
+<main class="prose-page" id="main-content">
+<h1>Privacy</h1>
+<p>This page describes what carabetta.xyz actually does with data. It is a personal static site, not a product with accounts, logins, or a customer database. If a scanner or agent needs a privacy statement, this is the first-party source. It does not invent processors or retention periods that the site does not use.</p>
+<h2>What this site collects</h2>
+<p>Public pages load a first-party analytics script from <code>https://analytics.carabetta.xyz/metrics.js</code> (self-hosted Umami). It records page views so João can see which public URLs are read. It is not Google Analytics, not an ad network, and not a cross-site tracker. Localhost sessions on dotsbr skip the script. The analytics host is on the same organizational domain as this site.</p>
+<h2>What this site does not collect</h2>
+<p>There is no account system, no advertising pixels, no sale of personal data, and no public contact form. The site does not ask for a name, email, payment card, or phone number. Contact is limited to already-public social profiles. Server logs on the VPS may record standard request metadata (time, path, user-agent) as part of running nginx; those logs are operational, not a marketing list.</p>
+<h2>Private routes</h2>
+<p><code>/transparencia/</code> is an HTTP Basic Auth area for unpublished research drafts. It is disallowed in robots.txt and is not listed in sitemaps or llms.txt. Do not treat it as public content, do not cite it, and do not ask crawlers to index it. Failed auth returns 401.</p>
+<h2>Map tiles</h2>
+<p>dotsbr Range-requests static PMTiles that hold Census aggregates, not individual records. The map may call Mapbox geocoding when a visitor searches for a place. That request is made by the visitor's browser to Mapbox, not stored as a profile on this site. Tile files are excluded from AI sitemaps because they are large binaries, not prose.</p>
+<h2>Language preference</h2>
+<p>The EN/PT toggle stores <code>lang</code> in <code>localStorage</code> on the visitor's device only. Clearing site data removes it. The preference is not sent to analytics as an identifier.</p>
+</main>
+<footer class="site-foot">
+  <a href="/">carabetta.xyz</a>
+  · <a href="/llms.txt">llms.txt</a>
+  · <a href="/sitemap.md">sitemap</a>
+</footer>
+</body>
+</html>

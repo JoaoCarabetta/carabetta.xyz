@@ -119,6 +119,10 @@ echo "Deploying site files to ${SSH_TARGET}:${REMOTE_PATH}"
 rsync -avz --delete -e "$(rsync_ssh)" \
   --exclude '.git/' \
   --exclude '.github/' \
+  --exclude '.cursor/' \
+  --exclude 'tests/__pycache__/' \
+  --exclude '**/__pycache__/' \
+  --exclude 'dotsbr/mapbox-token.js' \
   --exclude 'deploy.env' \
   --exclude 'deploy.env.example' \
   --exclude 'deploy.sh' \

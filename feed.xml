@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>joão carabetta — public work</title>
+    <link>https://carabetta.xyz/</link>
+    <description>physicist by training; builds public data infrastructure in Brazil — open datasets, city platforms, and the tools between them.</description>
+    <language>en</language>
+    <item>
+      <title>Onde o Brasil mora — race and income, Census 2022</title>
+      <link>https://carabetta.xyz/dotsbr/</link>
+      <guid isPermaLink="false">dv-brazildots</guid>
+      <pubDate>2026-09</pubDate>
+      <description>a national dot-density map from the 2022 census — switch race and household income; one point per N units, on settlements at country scale and census tracts up close.</description>
+    </item>
+    <item>
+      <title>Bloomberg Mayors Challenge — winner</title>
+      <link>https://prefeitura.rio/iplanrio/prefeitura-e-uma-das-vencedoras-do-premio-desafio-de-prefeitos-2025-2026-da-bloomberg-philanthropies/</link>
+      <guid isPermaLink="false">bloomberg-mayors</guid>
+      <pubDate>2026-02</pubDate>
+      <description>rio among 24 global winners for iplanrio&#x27;s proactive AI / digital active-outreach model against multidimensional vulnerability — US$1M to scale connecting families to health, school, and social services.</description>
+    </item>
+    <item>
+      <title>CompStat Rio — field app + datalake</title>
+      <link>https://iplanrio.prefeitura.rio/noticias/conheca-o-app-desenvolvido-pela-iplanrio-que-viabiliza-o-compstat-rio/</link>
+      <guid isPermaLink="false">compstat-rio</guid>
+      <pubDate>2026-02</pubDate>
+      <description>iplanrio built the internal geodata app that feeds CompStat Rio — NYPD-style crime-factor mapping into the municipal datalake for mayor-led security reviews.</description>
+    </item>
+    <item>
+      <title>Rio AI City — partnership with X (Alphabet)</title>
+      <link>https://iplanrio.prefeitura.rio/noticias/rio-firma-parceria-com-a-x-the-moonshot-factory-da-alphabet-e-inicia-nova-era-de-inovacao-com-apoio-da-iplanrio/</link>
+      <guid isPermaLink="false">rio-ai-city</guid>
+      <pubDate>2025-11</pubDate>
+      <description>signed with X – The Moonshot Factory: connectivity (Taara), grid AI (Tapestry), licensing (Anori), and recycling (Materra) — iplanrio led the technical articulation.</description>
+    </item>
+    <item>
+      <title>Pequenos Cariocas — data + eligibility stack</title>
+      <link>https://iplanrio.prefeitura.rio/noticias/pequenos-cariocas-tecnologia-da-iplanrio-apoia-a-gestao-e-a-seguranca-dos-dados-no-novo-programa-da-prefeitura-do-rio/</link>
+      <guid isPermaLink="false">pequenos-cariocas</guid>
+      <pubDate>2025-10</pubDate>
+      <description>iplanrio integrated SMAS systems with CadÚnico, automated WhatsApp outreach, and Carioca Digital checks for the early-childhood protection network and PIC card.</description>
+    </item>
+    <item>
+      <title>Histórico Clínico Integrado — SMS Rio</title>
+      <link>https://saude.prefeitura.rio/hci/</link>
+      <guid isPermaLink="false">hci-sms</guid>
+      <pubDate>2025-10</pubDate>
+      <description>one clinical history for ~7M patients across primary care and emergency — built on the health data lake SMS ran with iplanrio / the data office.</description>
+    </item>
+    <item>
+      <title>Nature Scientific Data — Rio bus mobility dataset</title>
+      <link>https://doi.org/10.1038/s41597-025-05755-6</link>
+      <guid isPermaLink="false">nature-sci-data-bus</guid>
+      <pubDate>2025-09</pubDate>
+      <description>equal-contribution paper with Carvalho, Vancellote, Casais &amp; others — open dataset of bus GPS and environmental indicators from Rio.</description>
+    </item>
+    <item>
+      <title>FGV EMAp — mathematics in cities</title>
+      <link>https://emap.fgv.br/eventos/matematica-nas-cidades-como-o-rio-de-janeiro-usa-terabytes-de-dados-para-resolver-problemas</link>
+      <guid isPermaLink="false">fgv-talk-2025</guid>
+      <pubDate>2025-06</pubDate>
+      <description>talk on how Rio uses terabytes of data to solve real problems — as CTO and president of iplanrio.</description>
+    </item>
+    <item>
+      <title>op-ed in O Dia</title>
+      <link>https://odia.ig.com.br/opiniao/2025/05/7057444-joao-carabetta-dados-que-transformam-cidades-e-ganham-o-respeito-do-mundo.html</link>
+      <guid isPermaLink="false">odia-oped</guid>
+      <pubDate>2025-05</pubDate>
+      <description>on data that transform cities — and why public technology earns trust when it becomes invisible plumbing.</description>
+    </item>
+    <item>
+      <title>Google Cloud global case — Escritório de Dados</title>
+      <link>https://cloud.google.com/customers/intl/pt-br/escritorio-de-dados-da-cidade-do-rio-de-janeiro?hl=pt-BR</link>
+      <guid isPermaLink="false">google-cloud-rio</guid>
+      <pubDate>2025</pubDate>
+      <description>Rio&#x27;s data office featured among Google Cloud&#x27;s public-sector references for integrating 20+ secretariats and 4.7B+ records.</description>
+    </item>
+    <item>
+      <title>Mulher.Rio</title>
+      <link>https://www.mulher.rio</link>
+      <guid isPermaLink="false">mulher-rio</guid>
+      <pubDate>2025-02</pubDate>
+      <description>anonymous platform for women facing violence — Secretaria da Mulher with CIVITAS and iplanrio on the tech. later pushed via Taxi.Rio in Agosto Lilás.</description>
+    </item>
+    <item>
+      <title>CTO of Rio · president of iplanrio</title>
+      <link>https://dados.rio</link>
+      <guid isPermaLink="false">iplanrio-president</guid>
+      <pubDate>2025-01 → 2026-04</pubDate>
+      <description>led Rio&#x27;s municipal technology company — 1746, carioca digital, processo.rio, health systems — after years as chief data officer.</description>
+    </item>
+    <item>
+      <title>G20 em Dados — especial</title>
+      <link>https://prefeitura-rio.github.io/viz_G20/</link>
+      <guid isPermaLink="false">dv-g20-em-dados</guid>
+      <pubDate>2024-11</pubDate>
+      <description>we published an interactive special on what hosting the G20 meant for Rio — money, people, and the city&#x27;s global stage.</description>
+    </item>
+    <item>
+      <title>Govtech 4 Impact World Congress</title>
+      <link>https://g4i2024.kenes.com/speakers/</link>
+      <guid isPermaLink="false">govtech-2024</guid>
+      <pubDate>2024</pubDate>
+      <description>spoke as Rio&#x27;s chief data officer on civic tech, open data, and city-scale infrastructure.</description>
+    </item>
+    <item>
+      <title>Destino: Rio de Janeiro — megaevents</title>
+      <link>https://viz.dados.rio/#/megaeventos</link>
+      <guid isPermaLink="false">dv-destino-rio</guid>
+      <pubDate>2024</pubDate>
+      <description>we mapped why the city spends public money hosting the world — not just for the photo op.</description>
+    </item>
+    <item>
+      <title>Estamos de olho! — CIVITAS dataviz</title>
+      <link>https://viz-staging.dados.rio/#/civitas</link>
+      <guid isPermaLink="false">dv-estamos-de-olho</guid>
+      <pubDate>2024-06</pubDate>
+      <description>a public storytelling piece on how the intelligence center watches the city 24/7 — cameras, radars, and the pipes behind public safety.</description>
+    </item>
+    <item>
+      <title>CIVITAS — Rio intelligence center</title>
+      <link>https://civitas.rio/</link>
+      <guid isPermaLink="false">civitas</guid>
+      <pubDate>2024-06</pubDate>
+      <description>city intelligence hub for public safety — cameras, radars, 1746, and the municipal datalake. iplanrio / the data office fed the pipes; google later cited 6M+ plate reads/day.</description>
+    </item>
+    <item>
+      <title>O Rio nunca teve tanta gente trabalhando</title>
+      <link>https://prefeitura-rio.github.io/riodeempregos/</link>
+      <guid isPermaLink="false">dv-rio-empregos</guid>
+      <pubDate>2024-05</pubDate>
+      <description>we told the jobs recovery through three cariocas who found work — and the numbers behind the rebound.</description>
+    </item>
+    <item>
+      <title>chapter — Governança de dados no setor público (UNU)</title>
+      <link>https://unu.edu/sites/default/files/2024-07/Governan%C3%A7a%20de%20dados%20no%20setor%20p%C3%BAblico_EBOOK_0.pdf</link>
+      <guid isPermaLink="false">unu-ebook</guid>
+      <pubDate>2024-05</pubDate>
+      <description>co-authored chapter in the UNU ebook on public-sector data governance — wrote as Rio&#x27;s chief data officer and Base dos Dados co-founder.</description>
+    </item>
+    <item>
+      <title>obras &amp; CEP — where the city invests</title>
+      <link>https://viz.dados.rio/#/obras</link>
+      <guid isPermaLink="false">dv-obras-cep</guid>
+      <pubDate>2024</pubDate>
+      <description>two especiais: infrastructure prioritized for the North and West Zones, and CEP — the street-level program against violence.</description>
+    </item>
+  </channel>
+</rss>
