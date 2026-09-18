@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sonhos — joão carabetta</title>
+<meta name="description" content="Menções da palavra sonho nos últimos 30 dias, em notícias e no Reddit, classificadas entre sonho de dormir, aspiração, doce e outros usos.">
+<link rel="canonical" href="https://carabetta.xyz/sonhos/">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://carabetta.xyz/sonhos/">
+<meta property="og:title" content="sonhos — joão carabetta">
+<meta property="og:description" content="Menções da palavra sonho nos últimos 30 dias, classificadas por sentido.">
+<meta property="og:image" content="https://carabetta.xyz/og.png">
+<meta property="og:site_name" content="joão carabetta">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,500;12..96,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/home.css?v=20260908">
+<style>
+  main.sonhos { max-width: 880px; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
+  main.sonhos h1 { font-family: "Bricolage Grotesque", sans-serif; font-weight: 500; font-size: 2.4rem; letter-spacing: -0.03em; margin: 0.4rem 0 0.4rem; }
+  .lede { color: var(--ink-soft); max-width: 42rem; margin-bottom: 1.1rem; }
+  .counts, .filters { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 0.85rem; }
+  .counts span, button.chip {
+    border: 1px solid var(--rule); background: #fff; border-radius: 999px;
+    padding: 0.28rem 0.7rem; font: inherit; font-size: 0.82rem; color: var(--ink);
+  }
+  button.chip { cursor: pointer; }
+  button.chip.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  input[type=search] {
+    flex: 1 1 180px; border: 1px solid var(--rule); border-radius: 8px;
+    padding: 0.45rem 0.7rem; font: inherit; background: #fff;
+  }
+  article.mention {
+    border-top: 1px solid var(--rule); padding: 0.9rem 0 1rem;
+  }
+  .meta { display: flex; flex-wrap: wrap; gap: 0.45rem 0.7rem; align-items: center; font-size: 0.75rem; color: var(--ink-soft); margin-bottom: 0.35rem; }
+  .pill { color: #fff; border-radius: 999px; padding: 0.05rem 0.45rem; font-weight: 500; }
+  .pill.aspiration { background: #b45309; }
+  .pill.sleep_dream { background: var(--azulejo); }
+  .pill.pastry { background: #be185d; }
+  .pill.other, .pill.ambiguous { background: #57534e; }
+  .text { white-space: pre-wrap; word-break: break-word; font-size: 0.95rem; }
+  a.who { color: var(--azulejo); text-decoration: none; }
+  a.who:hover { text-decoration: underline; }
+  #more { margin: 1rem auto 0; display: block; }
+  .status { color: var(--ink-soft); padding: 1.5rem 0; }
+</style>
+<script defer src="https://analytics.carabetta.xyz/metrics.js" data-website-id="7ff80044-1bf0-4664-a530-5d50589dfd47"></script>
+</head>
+<body>
+<a class="sr-only" href="#main-content">pular para o conteúdo</a>
+<header class="topbar">
+  <a class="brand" href="/">joão carabetta</a>
+</header>
+<main class="sonhos" id="main-content">
+  <h1>sonhos</h1>
+  <p class="lede">Menções da palavra <em>sonho</em> e variações nos últimos 30 dias, em notícias em português (GDELT) e no Reddit. Cada uma está classificada como sonho de dormir, aspiração, o doce de padaria, ou outro uso.</p>
+  <div class="counts" id="counts"></div>
+  <div class="filters">
+    <input id="q" type="search" placeholder="Buscar no texto…" aria-label="Buscar no texto">
+    <button class="chip on" data-source="">todas</button>
+    <button class="chip" data-source="gdelt">GDELT</button>
+    <button class="chip" data-source="reddit">Reddit</button>
+    <button class="chip on" data-label="">todos os sentidos</button>
+    <button class="chip" data-label="aspiration">aspiração</button>
+    <button class="chip" data-label="sleep_dream">sonho (dormir)</button>
+    <button class="chip" data-label="pastry">doce</button>
+    <button class="chip" data-label="other">outro</button>
+  </div>
+  <p id="status" class="status">Carregando…</p>
+  <div id="list"></div>
+  <button id="more" class="chip" hidden>mostrar mais</button>
+</main>
+<footer class="site-foot">
+  <a href="/">carabetta.xyz</a>
+  · <a href="/sonhos/">sonhos</a>
+</footer>
+<script>
+const LABELS = { sleep_dream: "sonho (dormir)", aspiration: "aspiração", pastry: "doce", other: "outro", ambiguous: "ambíguo" };
+const PAGE = 40;
+let rows = [], source = "", label = "", shown = PAGE;
+function esc(s) { return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+function fmtDate(iso) { if (!iso) return ""; return new Date(iso).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }); }
+function filtered() {
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  return rows.filter(r => (!source || r.source === source) && (!label || r.label === label) && (!q || (r.text || "").toLowerCase().includes(q) || (r.author || "").toLowerCase().includes(q)));
+}
+function renderCounts() {
+  const by = {};
+  for (const r of rows) by[r.label || "—"] = (by[r.label || "—"] || 0) + 1;
+  const bits = [`<span>${rows.length} menções</span>`];
+  for (const [k, name] of Object.entries(LABELS)) if (by[k]) bits.push(`<span>${name}: ${by[k]}</span>`);
+  document.getElementById("counts").innerHTML = bits.join("");
+}
+function render() {
+  const items = filtered();
+  const slice = items.slice(0, shown);
+  const list = document.getElementById("list");
+  const status = document.getElementById("status");
+  if (!items.length) { list.innerHTML = ""; status.hidden = false; status.textContent = "Nenhuma menção com esses filtros."; }
+  else {
+    status.hidden = true;
+    list.innerHTML = slice.map(r => {
+      const lab = LABELS[r.label] ? r.label : "other";
+      const conf = r.confidence == null ? "" : ` · ${(r.confidence * 100).toFixed(0)}%`;
+      const who = esc(r.author || r.source);
+      const link = r.url ? `<a class="who" href="${esc(r.url)}" target="_blank" rel="noopener">${who}</a>` : who;
+      return `<article class="mention"><div class="meta"><span class="pill ${esc(lab)}">${esc(LABELS[r.label] || r.label || "—")}</span><span>${esc(r.source)}</span><span>${link}</span><span>${esc(fmtDate(r.published_at))}</span><span>${esc(r.variant || "")}${r.via ? " · " + esc(r.via) : ""}${conf}</span></div><div class="text"></div></article>`;
+    }).join("");
+    list.querySelectorAll(".text").forEach((el, i) => { el.textContent = slice[i].text || ""; });
+  }
+  const more = document.getElementById("more");
+  more.hidden = shown >= items.length;
+  more.textContent = `mostrar mais (${Math.max(0, items.length - shown)} restantes)`;
+}
+document.getElementById("q").addEventListener("input", () => { shown = PAGE; render(); });
+document.querySelectorAll("button[data-source]").forEach(b => b.addEventListener("click", () => {
+  source = b.dataset.source;
+  document.querySelectorAll("button[data-source]").forEach(x => x.classList.toggle("on", x === b));
+  shown = PAGE; render();
+}));
+document.querySelectorAll("button[data-label]").forEach(b => b.addEventListener("click", () => {
+  label = b.dataset.label;
+  document.querySelectorAll("button[data-label]").forEach(x => x.classList.toggle("on", x === b));
+  shown = PAGE; render();
+}));
+document.getElementById("more").addEventListener("click", () => { shown += PAGE; render(); });
+fetch("mentions.json").then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); }).then(data => { rows = data; renderCounts(); render(); }).catch(err => { document.getElementById("status").textContent = "Não consegui carregar os dados: " + err.message; });
+</script>
+</body>
+</html>
