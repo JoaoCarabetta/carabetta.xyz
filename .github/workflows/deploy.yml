@@ -2,6 +2,8 @@
 # The `master` branch on this repo is an older diverged line — do not
 # auto-deploy it or it would overwrite prod with stale HTML.
 # PMTiles stay on the VPS (~700MB, gitignored); this job never uploads them.
+# Prefixes in publishers.json are owned by other repos and are neither
+# uploaded nor deleted here. Those repos call publish-path.yml.
 name: Deploy production
 
 on:

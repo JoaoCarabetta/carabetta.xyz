@@ -66,7 +66,9 @@ That script checks DNS, requests the Let's Encrypt certificate, deploys the HTTP
 
 ## Deploy
 
-`main` is production. A push to `main` runs `.github/workflows/deploy.yml` (rsync + nginx reload). `workflow_dispatch` deploys on demand. Do not point this workflow at the old `master` branch — it diverged and would ship stale HTML.
+`main` is production for this repository. A push to `main` runs `.github/workflows/deploy.yml`, which rsyncs the site and reloads nginx. `workflow_dispatch` deploys on demand. Do not point that workflow at the old `master` branch — it diverged and would ship stale HTML.
+
+Paths listed in `publishers.json` are owned by other repositories. This deploy neither uploads nor deletes them, so a full-site sync cannot wipe a map, a viewer, or any later project that publishes here. Each entry is one top-level directory (`dotsbr`, not `dotsbr/data`).
 
 Local equivalent:
 
@@ -88,11 +90,49 @@ Host hetzner-carabetta
 
 Then set `SSH_HOST=hetzner-carabetta` in `deploy.env`.
 
+### Publishing from another repository
+
+Register the prefix in `publishers.json` first (this repo has to merge that before the publisher workflow can succeed). Give the other repository the same Actions secrets this one uses: `VPS_HOST`, `VPS_USER`, and `VPS_SSH_KEY`. Then add:
+
+```yaml
+name: Deploy to carabetta.xyz
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  deploy:
+    uses: JoaoCarabetta/carabetta.xyz/.github/workflows/publish-path.yml@main
+    with:
+      path: dotsbr
+      source: .
+      include: |
+        index.html
+        og.html
+        og.jpg
+        card.jpg
+        favicon.svg
+        favicon.ico
+        apple-touch-icon.png
+      smoke: |
+        /dotsbr/og.html
+        /dotsbr/card.jpg
+    secrets:
+      VPS_HOST: ${{ secrets.VPS_HOST }}
+      VPS_USER: ${{ secrets.VPS_USER }}
+      VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+```
+
+`include` uploads only those files and leaves everything else (including PMTiles) alone. Omit `include` to sync the whole `source` directory; `preserve` patterns in the registry are excluded from `--delete`. The calling repository must be the `repo` on that registry entry. Private repositories use this `workflow_call`; this repo only checks out public repositories. You can also publish any registered path from **Actions → Publish a path → Run workflow**, including a public `owner/repo` plus ref, using the secrets already stored here.
+
+Only one repository should own a prefix. Do not register `transparencia`, `assets`, or other site-owned trees.
+
 ## Dataviz
 
-`/dotsbr/` is **dotsbr**, the Census 2022 dot map (raça and renda; óbitos tiles exist but are not in the switcher). Tiles are static PMTiles at `/dotsbr/data/tiles/*.pmtiles` (HTTP Range, no gzip). The CSP must allow MapLibre 4.7 blob workers (`worker-src 'self' blob:`); without that the map canvas stays blank. The old slug `/dataviz/brazildots/` 301s here. WhatsApp/Facebook crawlers hitting `/dotsbr/` get `og.html` (tiny Open Graph document) instead of the 120KB map page — see `nginx.carabetta.xyz.conf`.
+`/dotsbr/` is **dotsbr**, the Census 2022 dot map (raça and renda; óbitos tiles exist but are not in the switcher). The page itself is published by [JoaoCarabetta/dotsbr](https://github.com/JoaoCarabetta/dotsbr); this repo keeps the methodology page and does not overwrite `/dotsbr/` on deploy. Tiles are static PMTiles at `/dotsbr/data/tiles/*.pmtiles` (HTTP Range, no gzip). The CSP must allow MapLibre 4.7 blob workers (`worker-src 'self' blob:`); without that the map canvas stays blank. The old slug `/dataviz/brazildots/` 301s here. WhatsApp/Facebook crawlers hitting `/dotsbr/` get `og.html` (tiny Open Graph document) instead of the 120KB map page — see `nginx.carabetta.xyz.conf`.
 
-Push to `main` deploys production via `.github/workflows/deploy.yml` (same as `./deploy.sh`). CI does not upload the ~700MB archives; run `./deploy.sh` once from a machine that has `../dotmap/data/tiles/*.pmtiles` when the tiles themselves change.
+Push to `main` deploys this repository via `.github/workflows/deploy.yml`. CI does not upload the ~700MB archives. Run `./deploy.sh` once from a machine that has `../dotmap/data/tiles/*.pmtiles` when the tiles themselves change. To publish the map HTML, run **Publish a path** in this repo (repository `JoaoCarabetta/dotsbr`, path `dotsbr`) or the workflow in that repository.
 
 ## Verify
 

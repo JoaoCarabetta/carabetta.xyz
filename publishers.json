@@ -1,0 +1,18 @@
+{
+  "site": "https://carabetta.xyz",
+  "owner_repo": "JoaoCarabetta/carabetta.xyz",
+  "remote_root": "/var/www/carabetta.xyz",
+  "notes": "Each entry is one top-level URL prefix owned by another repository. The site deploy excludes these prefixes from upload and from rsync --delete. A publisher may deploy only its own path; this repository may deploy any registered path. When you add a prefix, stop shipping that directory from this repo or the live files will freeze on the last publisher upload.",
+  "publishers": [
+    {
+      "path": "dotsbr",
+      "repo": "JoaoCarabetta/dotsbr",
+      "description": "Census 2022 dot map. Page, share card, and favicons come from that repo. PMTiles stay on the VPS.",
+      "preserve": [
+        "data/tiles/",
+        "data/*.pmtiles",
+        "data/*.mbtiles"
+      ]
+    }
+  ]
+}

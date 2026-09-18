@@ -1,0 +1,153 @@
+# Publish one registered prefix onto https://carabetta.xyz.
+#
+# Other repositories call this workflow (they need the same VPS secrets).
+# workflow_dispatch on this repo can also publish a public repository,
+# using the secrets already stored here.
+name: Publish a path
+
+on:
+  workflow_call:
+    inputs:
+      path:
+        description: Registered top-level URL prefix, such as dotsbr
+        required: true
+        type: string
+      source:
+        description: Directory to publish, relative to the publisher repository root
+        required: false
+        type: string
+        default: "."
+      include:
+        description: >-
+          Newline-separated files relative to source. When set, only these
+          files are uploaded. When empty, the directory is synced and
+          publishers.json preserve rules are not deleted.
+        required: false
+        type: string
+        default: ""
+      skip_smoke:
+        description: Skip the HTTPS check
+        required: false
+        type: boolean
+        default: false
+      smoke:
+        description: Extra absolute site paths to HEAD, one per line
+        required: false
+        type: string
+        default: ""
+      repository:
+        description: Ignored. workflow_call always publishes the calling repository.
+        required: false
+        type: string
+        default: ""
+      ref:
+        description: Ignored. workflow_call always publishes the calling SHA.
+        required: false
+        type: string
+        default: ""
+    secrets:
+      VPS_HOST:
+        required: true
+      VPS_USER:
+        required: true
+      VPS_SSH_KEY:
+        required: true
+  workflow_dispatch:
+    inputs:
+      path:
+        description: Registered top-level URL prefix
+        required: true
+        type: string
+      repository:
+        description: Public owner/repo to publish. Empty means this repository.
+        required: false
+        type: string
+        default: ""
+      ref:
+        description: Git ref when repository is set
+        required: false
+        type: string
+        default: main
+      source:
+        description: Directory to publish
+        required: false
+        type: string
+        default: "."
+      include:
+        description: Newline-separated files. Empty syncs the whole directory.
+        required: false
+        type: string
+        default: ""
+      skip_smoke:
+        description: Skip the HTTPS check
+        required: false
+        type: boolean
+        default: false
+      smoke:
+        description: Extra absolute site paths to HEAD, one per line
+        required: false
+        type: string
+        default: ""
+
+concurrency:
+  group: carabetta-publish-${{ inputs.path }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish /${{ inputs.path }}/
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://carabetta.xyz/${{ inputs.path }}/
+    steps:
+      - name: Checkout publisher
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event_name == 'workflow_dispatch' && inputs.repository != '' && inputs.repository || github.repository }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.repository != '' && inputs.ref || github.sha }}
+          persist-credentials: false
+
+      - name: Publish path
+        uses: JoaoCarabetta/carabetta.xyz/.github/actions/publish-path@main
+        with:
+          path: ${{ inputs.path }}
+          source: ${{ inputs.source }}
+          include: ${{ inputs.include }}
+          ssh-host: ${{ secrets.VPS_HOST }}
+          ssh-user: ${{ secrets.VPS_USER }}
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+      - name: Smoke-check production
+        if: ${{ inputs.skip_smoke == false }}
+        env:
+          PREFIX: ${{ inputs.path }}
+          EXTRA: ${{ inputs.smoke }}
+        run: |
+          set -euo pipefail
+          check() {
+            local path="$1"
+            case "${path}" in
+              /*) ;;
+              *) echo "smoke path must start with /: ${path}" >&2; exit 1 ;;
+            esac
+            case "${path}" in
+              *..*) echo "refusing smoke path ${path}" >&2; exit 1 ;;
+            esac
+            local code
+            code="$(curl -sI -o /tmp/publish.hdr -w '%{http_code}' "https://carabetta.xyz${path}")"
+            echo "GET ${path} → ${code}"
+            cat /tmp/publish.hdr
+            test "${code}" = "200"
+          }
+          check "/${PREFIX}/"
+          if [[ -n "${EXTRA}" ]]; then
+            while IFS= read -r path; do
+              path="${path//$'\r'/}"
+              [[ -z "${path}" ]] && continue
+              check "${path}"
+            done <<< "${EXTRA}"
+          fi

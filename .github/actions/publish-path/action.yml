@@ -1,0 +1,68 @@
+name: Publish a path to carabetta.xyz
+description: >-
+  Rsync a directory or an explicit file list to one registered top-level path
+  on carabetta.xyz. Does not change nginx. The path must be listed in
+  publishers.json, and the calling repository must be that path's repo or
+  JoaoCarabetta/carabetta.xyz.
+
+inputs:
+  path:
+    description: Registered URL prefix, for example dotsbr
+    required: true
+  source:
+    description: Directory to publish, relative to the workspace
+    required: false
+    default: "."
+  include:
+    description: >-
+      Newline- or comma-separated files relative to source. When set, only
+      these files are uploaded and nothing else under the prefix is deleted.
+    required: false
+    default: ""
+  ssh-host:
+    description: VPS hostname or IP
+    required: true
+  ssh-user:
+    description: SSH user
+    required: true
+  ssh-private-key:
+    description: SSH private key
+    required: true
+  remote-root:
+    description: Web root on the VPS. Defaults to publishers.json remote_root.
+    required: false
+    default: ""
+  web-server:
+    description: nginx chowns the prefix to www-data; anything else skips chown
+    required: false
+    default: nginx
+
+runs:
+  using: composite
+  steps:
+    - name: Start SSH agent
+      uses: webfactory/ssh-agent@v0.9.1
+      with:
+        ssh-private-key: ${{ inputs.ssh-private-key }}
+
+    - name: Trust VPS host key
+      shell: bash
+      env:
+        SSH_HOST: ${{ inputs.ssh-host }}
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
+
+    - name: Publish
+      shell: bash
+      env:
+        SSH_HOST: ${{ inputs.ssh-host }}
+        SSH_USER: ${{ inputs.ssh-user }}
+        REMOTE_PATH: ${{ inputs.remote-root }}
+        WEB_SERVER: ${{ inputs.web-server }}
+        PUBLISH_PATH: ${{ inputs.path }}
+        PUBLISH_SOURCE: ${{ inputs.source }}
+        PUBLISH_INCLUDE: ${{ inputs.include }}
+        ACTION_REPOSITORY: ${{ github.action_repository }}
+        ACTION_REF: ${{ github.action_ref }}
+      run: bash "${GITHUB_ACTION_PATH}/publish.sh"
