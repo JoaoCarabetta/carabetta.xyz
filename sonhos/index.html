@@ -45,7 +45,9 @@
   a.who { color: var(--azulejo); text-decoration: none; }
   a.who:hover { text-decoration: underline; }
   #more { margin: 1rem auto 0; display: block; }
-  .status { color: var(--ink-soft); padding: 1.5rem 0; }
+  .status { color: var(--ink-soft); margin: 0 0 0.8rem; }
+  .status.error { color: #9f1239; }
+  #empty { color: var(--ink-soft); }
 </style>
 <script defer src="https://analytics.carabetta.xyz/metrics.js" data-website-id="7ff80044-1bf0-4664-a530-5d50589dfd47"></script>
 </head>
@@ -68,8 +70,10 @@
     <button class="chip" data-label="sleep_dream">sonho (dormir)</button>
     <button class="chip" data-label="pastry">doce</button>
     <button class="chip" data-label="other">outro</button>
+    <button class="chip" id="report" type="button">relato completo</button>
   </div>
-  <p id="status" class="status">Carregando…</p>
+  <p id="status" class="status" role="status">Carregando…</p>
+  <p id="empty" hidden></p>
   <div id="list"></div>
   <button id="more" class="chip" hidden>mostrar mais</button>
 </main>
@@ -80,40 +84,76 @@
 <script>
 const LABELS = { sleep_dream: "sonho (dormir)", aspiration: "aspiração", pastry: "doce", other: "outro", ambiguous: "ambíguo" };
 const PAGE = 40;
-let rows = [], source = "", label = "", shown = PAGE;
+const FETCH_MS = 20000;
+let rows = [], source = "", label = "", fullReport = false, shown = PAGE;
+
 function esc(s) { return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
 function fmtDate(iso) { if (!iso) return ""; return new Date(iso).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }); }
+function setStatus(msg, isError) {
+  const el = document.getElementById("status");
+  el.classList.toggle("error", !!isError);
+  if (!msg) { el.hidden = true; el.textContent = ""; return; }
+  el.hidden = false;
+  el.textContent = msg;
+}
 function filtered() {
   const q = document.getElementById("q").value.trim().toLowerCase();
-  return rows.filter(r => (!source || r.source === source) && (!label || r.label === label) && (!q || (r.text || "").toLowerCase().includes(q) || (r.author || "").toLowerCase().includes(q)));
+  return rows.filter(r =>
+    (!source || r.source === source) &&
+    (!label || r.label === label) &&
+    (!fullReport || r.is_full_dream_report === true) &&
+    (!q || (r.text || "").toLowerCase().includes(q) || (r.author || "").toLowerCase().includes(q))
+  );
 }
 function renderCounts() {
   const by = {};
-  for (const r of rows) by[r.label || "—"] = (by[r.label || "—"] || 0) + 1;
+  let reports = 0;
+  for (const r of rows) {
+    by[r.label || "—"] = (by[r.label || "—"] || 0) + 1;
+    if (r.is_full_dream_report === true) reports += 1;
+  }
   const bits = [`<span>${rows.length} menções</span>`];
   for (const [k, name] of Object.entries(LABELS)) if (by[k]) bits.push(`<span>${name}: ${by[k]}</span>`);
+  if (rows.some(r => Object.prototype.hasOwnProperty.call(r, "is_full_dream_report"))) {
+    bits.push(`<span>relato completo: ${reports}</span>`);
+  }
   document.getElementById("counts").innerHTML = bits.join("");
 }
 function render() {
   const items = filtered();
   const slice = items.slice(0, shown);
   const list = document.getElementById("list");
-  const status = document.getElementById("status");
-  if (!items.length) { list.innerHTML = ""; status.hidden = false; status.textContent = "Nenhuma menção com esses filtros."; }
-  else {
-    status.hidden = true;
+  const empty = document.getElementById("empty");
+  if (!items.length) {
+    list.innerHTML = "";
+    empty.hidden = rows.length === 0;
+    empty.textContent = rows.length ? "Nenhuma menção com esses filtros." : "";
+  } else {
+    empty.hidden = true;
     list.innerHTML = slice.map(r => {
       const lab = LABELS[r.label] ? r.label : "other";
       const conf = r.confidence == null ? "" : ` · ${(r.confidence * 100).toFixed(0)}%`;
       const who = esc(r.author || r.source);
       const link = r.url ? `<a class="who" href="${esc(r.url)}" target="_blank" rel="noopener">${who}</a>` : who;
-      return `<article class="mention"><div class="meta"><span class="pill ${esc(lab)}">${esc(LABELS[r.label] || r.label || "—")}</span><span>${esc(r.source)}</span><span>${link}</span><span>${esc(fmtDate(r.published_at))}</span><span>${esc(r.variant || "")}${r.via ? " · " + esc(r.via) : ""}${conf}</span></div><div class="text"></div></article>`;
+      const report = r.is_full_dream_report === true ? " · relato completo" : "";
+      return `<article class="mention"><div class="meta"><span class="pill ${esc(lab)}">${esc(LABELS[r.label] || r.label || "—")}</span><span>${esc(r.source)}</span><span>${link}</span><span>${esc(fmtDate(r.published_at))}</span><span>${esc(r.variant || "")}${r.via ? " · " + esc(r.via) : ""}${report}${conf}</span></div><div class="text"></div></article>`;
     }).join("");
     list.querySelectorAll(".text").forEach((el, i) => { el.textContent = slice[i].text || ""; });
   }
   const more = document.getElementById("more");
   more.hidden = shown >= items.length;
   more.textContent = `mostrar mais (${Math.max(0, items.length - shown)} restantes)`;
+}
+function fetchJson(url) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), FETCH_MS);
+  return fetch(url, { signal: ctrl.signal }).then(r => {
+    if (!r.ok) throw new Error("HTTP " + r.status + " em " + url);
+    return r.json();
+  }).catch(err => {
+    if (err.name === "AbortError") throw new Error("a resposta de " + url + " demorou demais");
+    throw err;
+  }).finally(() => clearTimeout(timer));
 }
 document.getElementById("q").addEventListener("input", () => { shown = PAGE; render(); });
 document.querySelectorAll("button[data-source]").forEach(b => b.addEventListener("click", () => {
@@ -126,8 +166,43 @@ document.querySelectorAll("button[data-label]").forEach(b => b.addEventListener(
   document.querySelectorAll("button[data-label]").forEach(x => x.classList.toggle("on", x === b));
   shown = PAGE; render();
 }));
+document.getElementById("report").addEventListener("click", () => {
+  fullReport = !fullReport;
+  document.getElementById("report").classList.toggle("on", fullReport);
+  shown = PAGE; render();
+});
 document.getElementById("more").addEventListener("click", () => { shown += PAGE; render(); });
-fetch("mentions.json").then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); }).then(data => { rows = data; renderCounts(); render(); }).catch(err => { document.getElementById("status").textContent = "Não consegui carregar os dados: " + err.message; });
+
+fetchJson("mentions-manifest.json").then(manifest => {
+  const chunks = manifest && manifest.chunks;
+  if (!Array.isArray(chunks) || !chunks.length) throw new Error("manifesto sem arquivos");
+  const total = manifest.total || "";
+  return fetchJson(chunks[0]).then(first => {
+    if (!Array.isArray(first)) throw new Error("dados inválidos em " + chunks[0]);
+    rows = first;
+    renderCounts();
+    render();
+    if (chunks.length === 1) { setStatus(""); return; }
+    setStatus("Carregando o restante (" + rows.length + (total ? " de " + total : "") + ")…");
+    let chain = Promise.resolve();
+    for (let i = 1; i < chunks.length; i++) {
+      const url = chunks[i];
+      chain = chain.then(() => fetchJson(url)).then(part => {
+        if (!Array.isArray(part)) throw new Error("dados inválidos em " + url);
+        rows = rows.concat(part);
+        renderCounts();
+        render();
+        if (i + 1 < chunks.length) setStatus("Carregando o restante (" + rows.length + (total ? " de " + total : "") + ")…");
+        else setStatus("");
+      });
+    }
+    return chain;
+  });
+}).catch(err => {
+  const msg = "Não consegui carregar os dados: " + (err && err.message ? err.message : err);
+  setStatus(rows.length ? msg + " Mostrando as " + rows.length + " já carregadas." : msg, true);
+  if (rows.length) { renderCounts(); render(); }
+});
 </script>
 </body>
 </html>
