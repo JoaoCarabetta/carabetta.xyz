@@ -26,21 +26,8 @@ SSH_TARGET="${SSH_USER}@${SSH_HOST}"
 TRANSPARENCIA_AUTH_USER="${TRANSPARENCIA_AUTH_USER:-transparencia}"
 
 # Optional extra identity for CI; a local ssh config alias still works without this.
-ssh_cmd() {
-  if [[ -n "${SSH_IDENTITY_FILE:-}" ]]; then
-    command ssh -i "${SSH_IDENTITY_FILE}" -o StrictHostKeyChecking=accept-new "$@"
-  else
-    command ssh "$@"
-  fi
-}
-
-rsync_ssh() {
-  if [[ -n "${SSH_IDENTITY_FILE:-}" ]]; then
-    echo "ssh -i ${SSH_IDENTITY_FILE} -o StrictHostKeyChecking=accept-new"
-  else
-    echo "ssh"
-  fi
-}
+# shellcheck disable=SC1091
+source "${ROOT_DIR}/scripts/lib-ssh.sh"
 
 deploy_transparencia_auth() {
   local tmp_htpasswd tmp_caddy tmp_nginx
@@ -114,39 +101,45 @@ mkdir -p "\${new}"
 EOF
 
 echo "Deploying site files to ${SSH_TARGET}:${REMOTE_PATH}"
-# --delete would wipe the live map HTML/share card that CI uploads from the
-# dotsbr repo (this tree still carries a stale dotsbr/index.html).
-rsync -avz --delete -e "$(rsync_ssh)" \
-  --exclude '.git/' \
-  --exclude '.github/' \
-  --exclude '.cursor/' \
-  --exclude 'tests/__pycache__/' \
-  --exclude '**/__pycache__/' \
-  --exclude 'dotsbr/mapbox-token.js' \
-  --exclude 'deploy.env' \
-  --exclude 'deploy.env.example' \
-  --exclude 'deploy.sh' \
-  --exclude 'setup-vps.sh' \
-  --exclude 'finish-dns.sh' \
-  --exclude 'Caddyfile' \
-  --exclude 'nginx.carabetta.xyz.conf' \
-  --exclude 'nginx.carabetta.xyz.http.conf' \
-  --exclude 'README.md' \
-  --exclude '.gitignore' \
-  --exclude 'dotsbr/tiles/' \
-  --exclude 'dotsbr/data/*.mbtiles' \
-  --exclude 'dotsbr/data/tiles/' \
-  --exclude 'dotsbr/index.html' \
-  --exclude 'dotsbr/og.html' \
-  --exclude 'dotsbr/og.jpg' \
-  --exclude 'dotsbr/card.jpg' \
-  --exclude 'dotsbr/favicon.svg' \
-  --exclude 'dotsbr/favicon.ico' \
-  --exclude 'dotsbr/apple-touch-icon.png' \
-  --exclude 'dataviz/brazildots/tiles/' \
-  --exclude 'dataviz/brazildots/data/*.mbtiles' \
-  --exclude 'dataviz/brazildots/data/tiles/' \
-  "${ROOT_DIR}/" "${SSH_TARGET}:${REMOTE_PATH}/"
+# Prefixes in publishers.json belong to other repositories. Excluding the
+# directory keeps rsync --delete from wiping what those repos published.
+if ! publisher_list="$(python3 "${ROOT_DIR}/scripts/site_publish.py" excludes)"; then
+  echo "refusing to deploy: publishers.json could not be read" >&2
+  exit 1
+fi
+publisher_excludes=()
+if [[ -n "${publisher_list}" ]]; then
+  mapfile -t publisher_excludes <<< "${publisher_list}"
+else
+  echo "warning: publishers.json has no prefixes; a full --delete will cover the whole web root" >&2
+fi
+rsync_args=(-avz --delete -e "$(rsync_ssh)")
+for prefix in "${publisher_excludes[@]}"; do
+  [[ -n "${prefix}" ]] || continue
+  rsync_args+=(--exclude "${prefix}")
+done
+rsync_args+=(
+  --exclude '.git/'
+  --exclude '.github/'
+  --exclude '.cursor/'
+  --exclude 'tests/__pycache__/'
+  --exclude '**/__pycache__/'
+  --exclude 'deploy.env'
+  --exclude 'deploy.env.example'
+  --exclude 'deploy.sh'
+  --exclude 'setup-vps.sh'
+  --exclude 'finish-dns.sh'
+  --exclude 'Caddyfile'
+  --exclude 'nginx.carabetta.xyz.conf'
+  --exclude 'nginx.carabetta.xyz.http.conf'
+  --exclude 'README.md'
+  --exclude '.gitignore'
+  --exclude 'publishers.json'
+  --exclude 'dataviz/brazildots/tiles/'
+  --exclude 'dataviz/brazildots/data/*.mbtiles'
+  --exclude 'dataviz/brazildots/data/tiles/'
+)
+rsync "${rsync_args[@]}" "${ROOT_DIR}/" "${SSH_TARGET}:${REMOTE_PATH}/"
 
 # Archives are gitignored (~700MB). Local deploys sync from the sibling
 # dotmap repo; CI sets SKIP_TILES=1 so it does not fail without them.

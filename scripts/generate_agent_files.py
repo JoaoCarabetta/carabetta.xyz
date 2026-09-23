@@ -539,7 +539,7 @@ python3 -m http.server 8080
 
 ## Configuration
 
-Production is the `main` branch, deployed with `./deploy.sh` to a Hetzner VPS (`WEB_SERVER=nginx`). Copy `deploy.env.example` to `deploy.env` and set `SSH_HOST`, `SSH_USER`, and `REMOTE_PATH`. The live `/dotsbr/` HTML is owned by the sibling `dotsbr` / `dotmap` repository; this repo still ships `/dotsbr.md` and discovery files.
+Production is the `main` branch on a Hetzner VPS (`WEB_SERVER=nginx`, web root `/var/www/carabetta.xyz`). Pushing `main` deploys this repository and does not touch URL prefixes registered in `publishers.json`. Other repositories publish those prefixes through `.github/workflows/publish-path.yml` (today `JoaoCarabetta/dotsbr` owns `/dotsbr/`). This repository still ships `/dotsbr.md` and the other discovery files. Local deploys copy `deploy.env.example` to `deploy.env` (`SSH_HOST`, `SSH_USER`, `REMOTE_PATH`).
 
 `/transparencia/` is private (HTTP Basic Auth). Do not scrape it or add it to indexes.
 

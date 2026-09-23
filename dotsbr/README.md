@@ -13,7 +13,7 @@ Copy `mapbox-token.js.example` to `mapbox-token.js` and set a public Mapbox toke
 ./deploy.sh
 ```
 
-Push to `main` also deploys (GitHub Actions). CI skips the ~700MB PMTiles upload and leaves whatever is already on the VPS.
+The live page is published by [JoaoCarabetta/dotsbr](https://github.com/JoaoCarabetta/dotsbr) (`publishers.json`), not by this repo's full-site deploy. PMTiles stay on the VPS (~700MB). Neither workflow uploads them unless you sync tiles on purpose.
 
 Gotchas:
 
