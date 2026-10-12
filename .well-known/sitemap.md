@@ -19,6 +19,10 @@
 
 - [dotsbr — Brazil as census dots](/dotsbr.md): National Census 2022 dot-density map of Brazil. Switch race and household income; one point per N people or households, from settlements to census tracts.
 
+## Experiments
+
+- [todo — example AI feed](/todo.md): Example AI feed of to-dos. Invented demo cards only — no real personal information. Actions stay in this browser.
+
 ## Discovery files
 
 - [llms.txt](/llms.txt)

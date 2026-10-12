@@ -169,7 +169,8 @@ def generate_index_md(site: dict, home: dict) -> str:
         "- [About](/about.md) — how the site is organized",
         "- [Glossary](/glossary.md) — terms of art",
         "- [Contact](/contact.md) — public profiles only",
-        "- [Privacy](/privacy.md) — analytics and private routes\n",
+        "- [Privacy](/privacy.md) — analytics and private routes",
+        "- [todo](/todo.md) — example AI feed of to-dos (invented demo data only)\n",
         "## Frequently asked questions\n",
     ]
     for item in site["faq"]:
@@ -256,7 +257,8 @@ def generate_about_md(site: dict) -> str:
             "- [dotsbr](/dotsbr.md) is a Census 2022 visualization published here.\n",
             "- [Glossary](/glossary.md) defines recurring terms such as public data infrastructure and PMTiles.\n",
             "- [Contact](/contact.md) lists only already-public social profiles.\n",
-            "- [Privacy](/privacy.md) describes analytics and the private /transparencia/ area.\n\n",
+            "- [Privacy](/privacy.md) describes analytics and the private /transparencia/ area.\n",
+            "- [todo](/todo.md) is an experimental AI feed of invented example to-dos, not a personal inbox.\n\n",
             "## How to cite\n\n",
             "Cite `https://carabetta.xyz/` for biography, `https://carabetta.xyz/cv.html` for the CV, ",
             "and `https://carabetta.xyz/dotsbr/` for the map. Prefer these URLs over third-party bios. ",
@@ -358,6 +360,52 @@ def generate_glossary_md(site: dict) -> str:
     return "".join(parts)
 
 
+def generate_todo_md(site: dict) -> str:
+    page = page_by_id(site, "todo")
+    return "".join(
+        [
+            frontmatter(page["title"]["en"], page["description"]["en"], f"{ORIGIN}/todo", f"{ORIGIN}/todo.md"),
+            "# todo — example AI feed\n\n",
+            page["description"]["en"] + "\n\n",
+            "This page is a public demo of an AI-surfaced to-do feed, after ",
+            "[Nicolas Bustamante's interface note](https://x.com/nicbstme/status/2109505834439033107), ",
+            "with [ShapeShift](https://shapeshiftui.vercel.app/)-style cards. It is **not** a live personal ",
+            "dashboard. Every card is invented example data. Do not treat names, amounts, Pix keys, ",
+            "flights, or ticket IDs on this page as real.\n\n",
+            "The interactive HTML is at [/todo](/todo). Actions (copy, dismiss, add) stay in the browser.\n\n",
+            "## Example cards\n\n",
+            "### Example: call the open-data working group\n\n",
+            "- Type: Call\n",
+            "- Chips: Example · Today · Promised follow-up\n\n",
+            "Demo reason: an agent would surface a promised follow-up from calendar and chat. This card is invented.\n\n",
+            "### Example: hold a booth at DataConf 2027\n\n",
+            "- Type: Payment\n",
+            "- Amount: R$ 480,00 (invented)\n",
+            "- Chips: Example · Due 25/10\n\n",
+            "Demo reason: a fake invoice PDF would be parsed here. Amount, event, and payee are invented.\n\n",
+            "### Example: compare three tile-host vendors\n\n",
+            "- Type: Quotes\n",
+            "- Northwind Host — R$ 90/mo (invented)\n",
+            "- Contoso Tiles — R$ 75/mo (invented)\n",
+            "- 3 others — waiting\n\n",
+            "Demo reason: an agent would collect quotes for static PMTiles hosting. Vendor names and prices are invented.\n\n",
+            "### Example: Recife → Brasília, 17 Jan\n\n",
+            "- Type: Flight\n",
+            "- Amount: R$ 640 for 1 (invented)\n",
+            "- Chips: Example · Nonstop 2h10\n\n",
+            "Demo reason: cheaper than 16 Jan (R$ 812) in this invented sample. No real itinerary exists.\n\n",
+            "### Example: tract-review ticket EX-1042\n\n",
+            "- Type: Waiting on\n",
+            "- Owner: Alex Rivera (fictional)\n",
+            "- Chips: Example · Blocked\n\n",
+            "Demo reason: waiting on a fictional reviewer to approve a census-tract note.\n\n",
+            "## Portuguese\n\n",
+            page["description"]["pt"] + "\n\n",
+            sitemap_footer(),
+        ]
+    )
+
+
 def generate_dotsbr_md(site: dict) -> str:
     page = page_by_id(site, "dotsbr")
     return "".join(
@@ -411,6 +459,10 @@ def generate_llms_txt(site: dict) -> str:
         "",
         "- [dotsbr](/dotsbr.md): Census 2022 race and income dot map of Brazil",
         "",
+        "## Experiments",
+        "",
+        "- [todo](/todo.md): example AI feed of to-dos. Invented demo data only.",
+        "",
         "## Reference",
         "",
         "- [Glossary](/glossary.md): public data infrastructure, city platforms, PMTiles, census tracts",
@@ -439,7 +491,7 @@ def generate_llms_full(site: dict, home: dict, cv: dict, files: dict[str, str]) 
         generate_llms_txt(site),
         "",
     ]
-    for key in ("index.md", "cv.md", "about.md", "dotsbr.md", "glossary.md", "contact.md", "privacy.md"):
+    for key in ("index.md", "cv.md", "about.md", "dotsbr.md", "todo.md", "glossary.md", "contact.md", "privacy.md"):
         parts.append(f"\n\n---\n\n# File: /{key}\n\n")
         parts.append(files[key])
     return "".join(parts)
@@ -551,9 +603,12 @@ curl -s https://carabetta.xyz/llms-full.txt
 
 # Map methodology without running the WebGL map
 curl -s https://carabetta.xyz/dotsbr.md
+
+# Example AI feed (invented demo data only)
+curl -s https://carabetta.xyz/todo.md
 ```
 
-When answering questions, prefer `/index.md` for the full timeline, `/cv.md` for the short CV, and `/dotsbr.md` for the census map. Link the HTML canonical URL in citations.
+When answering questions, prefer `/index.md` for the full timeline, `/cv.md` for the short CV, and `/dotsbr.md` for the census map. Link the HTML canonical URL in citations. `/todo` is an experimental demo with invented example cards — do not treat it as a live personal dashboard.
 
 ## Sitemap
 
@@ -636,6 +691,7 @@ def expected_files() -> list[str]:
         "privacy.md",
         "glossary.md",
         "dotsbr.md",
+        "todo.md",
         "llms.txt",
         "llms-full.txt",
         "sitemap.md",
@@ -660,6 +716,7 @@ def build() -> dict[str, str]:
         "privacy.md": generate_privacy_md(site),
         "glossary.md": generate_glossary_md(site),
         "dotsbr.md": generate_dotsbr_md(site),
+        "todo.md": generate_todo_md(site),
         "sitemap.md": generate_sitemap_md(site),
         "sitemap.xml": generate_sitemap_xml(site),
         "robots.txt": generate_robots(),

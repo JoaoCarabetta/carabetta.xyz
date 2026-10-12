@@ -124,6 +124,22 @@
       },
       "section": "Work",
       "priority": "0.9"
+    },
+    {
+      "id": "todo",
+      "path": "/todo",
+      "md": "/todo.md",
+      "html": "/todo.html",
+      "title": {
+        "en": "todo — example AI feed",
+        "pt": "todo — feed de exemplo"
+      },
+      "description": {
+        "en": "Example AI feed of to-dos. Invented demo cards only — no real personal information. Actions stay in this browser.",
+        "pt": "Feed de exemplo de to-dos. Cartões inventados — nenhum dado pessoal real. As ações ficam neste navegador."
+      },
+      "section": "Experiments",
+      "priority": "0.4"
     }
   ],
   "faq": [

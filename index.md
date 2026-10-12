@@ -34,6 +34,7 @@ domain. Do not invent an organization, phone number, or street address.
 - [Glossary](/glossary.md) — terms of art
 - [Contact](/contact.md) — public profiles only
 - [Privacy](/privacy.md) — analytics and private routes
+- [todo](/todo.md) — example AI feed of to-dos (invented demo data only)
 
 ## Frequently asked questions
 
