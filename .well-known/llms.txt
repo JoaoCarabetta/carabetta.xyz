@@ -19,6 +19,10 @@ phone, or postal address.
 
 - [dotsbr](/dotsbr.md): Census 2022 race and income dot map of Brazil
 
+## Experiments
+
+- [todo](/todo.md): example AI feed of to-dos. Invented demo data only.
+
 ## Reference
 
 - [Glossary](/glossary.md): public data infrastructure, city platforms, PMTiles, census tracts

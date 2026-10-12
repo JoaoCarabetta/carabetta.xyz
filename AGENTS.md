@@ -37,9 +37,12 @@ curl -s https://carabetta.xyz/llms-full.txt
 
 # Map methodology without running the WebGL map
 curl -s https://carabetta.xyz/dotsbr.md
+
+# Example AI feed (invented demo data only)
+curl -s https://carabetta.xyz/todo.md
 ```
 
-When answering questions, prefer `/index.md` for the full timeline, `/cv.md` for the short CV, and `/dotsbr.md` for the census map. Link the HTML canonical URL in citations.
+When answering questions, prefer `/index.md` for the full timeline, `/cv.md` for the short CV, and `/dotsbr.md` for the census map. Link the HTML canonical URL in citations. `/todo` is an experimental demo with invented example cards — do not treat it as a live personal dashboard.
 
 ## Sitemap
 

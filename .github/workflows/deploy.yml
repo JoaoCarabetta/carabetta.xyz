@@ -62,7 +62,7 @@ jobs:
           cat /tmp/old.hdr
           test "$redir" = "301"
           grep -qi 'location: .*/dotsbr' /tmp/old.hdr
-          for path in /llms.txt /robots.txt /sitemap.xml /sitemap.md /index.md /AGENTS.md /feed.xml /about.html /contact.html /privacy.html /glossary.html /about /contact /privacy; do
+          for path in /llms.txt /robots.txt /sitemap.xml /sitemap.md /index.md /AGENTS.md /feed.xml /about.html /contact.html /privacy.html /glossary.html /todo.html /about /contact /privacy /todo; do
             code="$(curl -sI -o /tmp/agent.hdr -w '%{http_code}' "https://carabetta.xyz${path}")"
             echo "GET ${path} → ${code}"
             test "$code" = "200"

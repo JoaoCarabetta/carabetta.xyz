@@ -36,7 +36,7 @@ class FunctionalityTests(unittest.TestCase):
 
     def test_site_nav_is_hidden_but_still_in_html(self):
         # Agents read the page index from source; humans should not see the bar.
-        pages = ["index.html", "cv.html", "about.html", "glossary.html", "contact.html", "privacy.html"]
+        pages = ["index.html", "cv.html", "about.html", "glossary.html", "contact.html", "privacy.html", "todo.html"]
         for name in pages:
             html = (ROOT / name).read_text(encoding="utf-8")
             self.assertIn('class="site-nav" hidden', html, name)
@@ -56,7 +56,7 @@ class FunctionalityTests(unittest.TestCase):
         sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
         llms = (ROOT / "llms.txt").read_text(encoding="utf-8")
         robots = (ROOT / "robots.txt").read_text(encoding="utf-8")
-        for path in ["https://carabetta.xyz/", "https://carabetta.xyz/cv.html", "https://carabetta.xyz/dotsbr/"]:
+        for path in ["https://carabetta.xyz/", "https://carabetta.xyz/cv.html", "https://carabetta.xyz/dotsbr/", "https://carabetta.xyz/todo"]:
             self.assertIn(path, sitemap)
         self.assertIn("/index.md", llms)
         self.assertIn("When to use this site", llms)
@@ -70,7 +70,7 @@ class FunctionalityTests(unittest.TestCase):
         self.assertIn("Brazil", text)
 
     def test_markdown_mirrors_have_frontmatter(self):
-        for name in ["index.md", "cv.md", "about.md", "dotsbr.md"]:
+        for name in ["index.md", "cv.md", "about.md", "dotsbr.md", "todo.md"]:
             text = (ROOT / name).read_text(encoding="utf-8")
             self.assertTrue(text.startswith("---"))
             self.assertIn("canonical_url:", text)
@@ -134,9 +134,23 @@ class SecurityTests(unittest.TestCase):
         self.assertIn("brasilapi.com.br", conf)
 
     def test_html_does_not_use_javascript_urls(self):
-        for name in ["index.html", "cv.html", "about.html"]:
+        for name in ["index.html", "cv.html", "about.html", "todo.html"]:
             html = (ROOT / name).read_text(encoding="utf-8")
             self.assertNotIn("javascript:", html.lower())
+
+    def test_todo_page_is_labeled_example_data(self):
+        html = (ROOT / "todo.html").read_text(encoding="utf-8")
+        md = (ROOT / "todo.md").read_text(encoding="utf-8")
+        js = (ROOT / "assets" / "todo.js").read_text(encoding="utf-8")
+        blob = html + md + js
+        self.assertIn("Example feed", html)
+        self.assertIn("invented", md.lower())
+        self.assertNotIn("Rodrigo Haddad", blob)
+        self.assertNotIn("SulAmérica", blob)
+        self.assertNotIn("50229492000160", blob)
+        self.assertNotIn("7200056852", blob)
+        self.assertIn('class="site-nav" hidden', html)
+        self.assertIn("/todo.md", html)
 
 
 class SpeedTests(unittest.TestCase):

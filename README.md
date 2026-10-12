@@ -17,7 +17,7 @@ Open `index.html` in a browser, or visit `http://localhost:8080/`.
 
 ## Agent / LLM files
 
-Public pages are prerendered in HTML. Discovery files live at `/llms.txt`, `/llms-full.txt`, `/sitemap.xml`, `/sitemap.md`, `/robots.txt`, `/AGENTS.md`, and `/feed.xml`. Each public page has a `.md` mirror and `Accept: text/markdown` negotiation on nginx. The `.site-nav` (home / cv / dotsbr / about / glossary / contact / privacy / markdown) stays in the HTML for agents but is `hidden` on the visual page — humans use the brand, social links, and footer. `/transparencia/` stays private and is disallowed.
+Public pages are prerendered in HTML. Discovery files live at `/llms.txt`, `/llms-full.txt`, `/sitemap.xml`, `/sitemap.md`, `/robots.txt`, `/AGENTS.md`, and `/feed.xml`. Each public page has a `.md` mirror and `Accept: text/markdown` negotiation on nginx. The `.site-nav` (home / cv / dotsbr / todo / about / glossary / contact / privacy / markdown) stays in the HTML for agents but is `hidden` on the visual page — humans use the brand, social links, and footer. `/todo` is an experimental AI-feed demo with invented example cards only. `/transparencia/` stays private and is disallowed.
 
 ## One-time VPS setup
 

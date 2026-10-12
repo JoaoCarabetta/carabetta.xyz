@@ -61,6 +61,11 @@ carabetta.xyz, www.carabetta.xyz {
         expression `{http.request.header.Accept}.contains("text/markdown")`
     }
     rewrite @md_glossary /glossary.md
+    @md_todo {
+        path /todo /todo.html /todo/
+        expression `{http.request.header.Accept}.contains("text/markdown")`
+    }
+    rewrite @md_todo /todo.md
 
     rewrite /about /about.html
     rewrite /about/ /about.html
@@ -70,6 +75,8 @@ carabetta.xyz, www.carabetta.xyz {
     rewrite /privacy/ /privacy.html
     rewrite /glossary /glossary.html
     rewrite /glossary/ /glossary.html
+    rewrite /todo /todo.html
+    rewrite /todo/ /todo.html
 
     @markdown path *.md
     header @markdown Content-Type "text/markdown; charset=utf-8"

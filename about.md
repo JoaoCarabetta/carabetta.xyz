@@ -23,6 +23,7 @@ The site exists so agents and people can verify biography, roles, publications, 
 - [Glossary](/glossary.md) defines recurring terms such as public data infrastructure and PMTiles.
 - [Contact](/contact.md) lists only already-public social profiles.
 - [Privacy](/privacy.md) describes analytics and the private /transparencia/ area.
+- [todo](/todo.md) is an experimental AI feed of invented example to-dos, not a personal inbox.
 
 ## How to cite
 
