@@ -62,15 +62,18 @@ jobs:
           cat /tmp/old.hdr
           test "$redir" = "301"
           grep -qi 'location: .*/dotsbr' /tmp/old.hdr
-          for path in /llms.txt /robots.txt /sitemap.xml /sitemap.md /index.md /AGENTS.md /feed.xml /about.html /contact.html /privacy.html /glossary.html /todo.html /about /contact /privacy /todo; do
+          for path in /llms.txt /robots.txt /sitemap.xml /sitemap.md /index.md /AGENTS.md /feed.xml /about.html /contact.html /privacy.html /glossary.html /todo.html /todo.md /about /contact /privacy /todo; do
             code="$(curl -sI -o /tmp/agent.hdr -w '%{http_code}' "https://carabetta.xyz${path}")"
             echo "GET ${path} → ${code}"
             test "$code" = "200"
           done
-          md_type="$(curl -sI -H 'Accept: text/markdown' https://carabetta.xyz/ | tr -d '\r' | awk -F': ' 'tolower($1)==\"content-type\"{print $2}')"
+          # grep/cut — do not use awk with escaped quotes; YAML was passing \" into awk
+          # and failing every main deploy at this step (rsync itself succeeded).
+          md_headers="$(curl -sI -H 'Accept: text/markdown' https://carabetta.xyz/ | tr -d '\r')"
+          md_type="$(printf '%s\n' "${md_headers}" | grep -i '^content-type:' | head -n1 | cut -d' ' -f2-)"
           echo "Accept markdown → ${md_type}"
           echo "${md_type}" | grep -qi 'text/markdown\|text/plain'
-          vary="$(curl -sI -H 'Accept: text/markdown' https://carabetta.xyz/ | tr -d '\r' | awk -F': ' 'tolower($1)==\"vary\"{print $2}')"
+          vary="$(printf '%s\n' "${md_headers}" | grep -i '^vary:' | head -n1 | cut -d' ' -f2-)"
           echo "Vary → ${vary}"
           echo "${vary}" | grep -qi accept
           missing="$(curl -sI -o /tmp/missing.hdr -w '%{http_code}' https://carabetta.xyz/this-path-does-not-exist)"
