@@ -1,4 +1,7 @@
 deploy.env
+# Lulômetro Vite app
+lulometro/node_modules/
+lulometro/dist/
 # Extracted PBF dump (optional local cache). Production serves static PMTiles.
 dotsbr/tiles/
 dotsbr/data/*.mbtiles
