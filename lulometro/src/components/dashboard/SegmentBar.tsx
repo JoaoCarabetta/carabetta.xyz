@@ -5,6 +5,7 @@ type Segment = {
   color: string
   label: string
   count: number
+  pct: number
 }
 
 export function SegmentBar({
@@ -17,8 +18,8 @@ export function SegmentBar({
   const total = segments.reduce((sum, s) => sum + s.value, 0) || 1
 
   return (
-    <div className={cn('space-y-3', className)}>
-      <div className="flex h-3 overflow-hidden rounded-full bg-slate-100">
+    <div className={cn('space-y-4', className)}>
+      <div className="flex h-3.5 overflow-hidden rounded-full bg-slate-100">
         {segments.map((segment) => (
           <div
             key={segment.label}
@@ -31,7 +32,7 @@ export function SegmentBar({
           />
         ))}
       </div>
-      <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+      <div className="flex flex-wrap gap-x-8 gap-y-2 text-sm">
         {segments.map((segment) => (
           <div key={segment.label} className="flex items-center gap-2">
             <span
@@ -39,6 +40,8 @@ export function SegmentBar({
               style={{ backgroundColor: segment.color }}
             />
             <span className="font-semibold tabular-nums">{segment.count}</span>
+            <span className="text-muted">|</span>
+            <span className="tabular-nums text-muted">{segment.pct}%</span>
             <span className="text-muted">{segment.label}</span>
           </div>
         ))}
