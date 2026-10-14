@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ArrowUpRight, ScanLine } from 'lucide-react'
 import { AppHeader } from '@/components/layout/AppHeader'
+import { AppSidebar } from '@/components/layout/AppSidebar'
 import { BrazilMap } from '@/components/dashboard/BrazilMap'
 import { ScoreGauge } from '@/components/dashboard/ScoreGauge'
 import { SegmentBar } from '@/components/dashboard/SegmentBar'
@@ -37,8 +39,10 @@ function initials(name: string) {
 }
 
 export function DashboardPage() {
+  const navigate = useNavigate()
   const [filter, setFilter] = useState<ProfileFilter>('geral')
   const [query, setQuery] = useState('')
+  const [lang, setLang] = useState<'PT' | 'EN' | 'ES'>('PT')
 
   const filteredProfiles = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -57,9 +61,11 @@ export function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-page">
-      <AppHeader />
+      <AppSidebar />
+      <div className="pl-20">
+        <AppHeader lang={lang} onLangChange={setLang} />
 
-      <main className="mx-auto max-w-6xl space-y-6 px-6 py-8 lg:px-10">
+        <main className="mx-auto max-w-6xl space-y-6 px-6 py-8 lg:px-10">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
@@ -70,7 +76,7 @@ export function DashboardPage() {
             <h1 className="text-4xl font-bold tracking-tight">Lulômetro</h1>
             <p className="mt-2 max-w-2xl text-muted">{subtitle}</p>
           </div>
-          <Button className="shrink-0">
+          <Button className="shrink-0" onClick={() => navigate('/consulta')}>
             <ScanLine className="h-4 w-4" />
             Nova análise
           </Button>
@@ -314,7 +320,8 @@ export function DashboardPage() {
             <BrazilMap />
           </CardContent>
         </Card>
-      </main>
+        </main>
+      </div>
     </div>
   )
 }
