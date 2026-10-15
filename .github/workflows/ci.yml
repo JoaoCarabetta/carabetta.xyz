@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Action path resolves to the repo root
+        run: |
+          set -euo pipefail
+          root="$(cd .github/actions/publish-path/../../.. && pwd)"
+          test "${root}" = "$(pwd)"
+          test -f scripts/publish-path.sh
+          test -f publishers.json
+
+      - name: Run tests
+        run: python3 -m unittest tests/test_agent_files.py tests/test_publishers.py
